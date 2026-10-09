@@ -11,4 +11,8 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+  // Vite bloquea por seguridad los dominios que no conoce. Codespaces sirve el
+  // panel en https://<nombre>-5173.app.github.dev: hay que permitirlo.
+  server: { allowedHosts: ['.app.github.dev'] },
+  preview: { allowedHosts: ['.app.github.dev'] },
 })

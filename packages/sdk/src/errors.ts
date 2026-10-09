@@ -13,6 +13,8 @@ export type AppErrorCode =
   | 'auth_email_not_confirmed'
   | 'auth_user_exists'
   | 'auth_weak_password'
+  | 'auth_invalid_email'
+  | 'rate_limited'
   | 'network'
   | 'unknown'
 
@@ -74,8 +76,16 @@ export function fromAuthError(error: AuthLikeError): AppError {
       return new AppError('auth_user_exists', message)
     case 'weak_password':
       return new AppError('auth_weak_password', message)
+    case 'email_address_invalid':
+    case 'validation_failed':
+      return new AppError('auth_invalid_email', message)
+    case 'over_email_send_rate_limit':
+    case 'over_request_rate_limit':
+    case 'over_sms_send_rate_limit':
+      return new AppError('rate_limited', message)
     default:
       if (error.status === 0) return new AppError('network', message)
+      if (error.status === 429) return new AppError('rate_limited', message)
       return new AppError('unknown', message)
   }
 }
@@ -97,6 +107,8 @@ export function errorMessage(error: unknown): string {
     auth_email_not_confirmed: 'Confirmá tu email antes de ingresar. Revisá tu casilla.',
     auth_user_exists: 'Ya existe una cuenta con ese email. Probá ingresar.',
     auth_weak_password: 'La contraseña es muy débil. Usá al menos 8 caracteres.',
+    auth_invalid_email: 'Revisá el email: no parece válido.',
+    rate_limited: 'Demasiados intentos seguidos. Esperá unos minutos y probá de nuevo.',
     network: 'No hay conexión. Revisá tu internet.',
     unknown: 'Ocurrió un error inesperado. Probá de nuevo.',
   }
