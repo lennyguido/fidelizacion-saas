@@ -2,7 +2,7 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 
-select plan(19);
+select plan(26);
 
 select tests.create_user('duena@test.local') as owner \gset
 select tests.create_user('admin@test.local') as admin \gset
@@ -93,6 +93,43 @@ select tests.authenticate_as(:'cashier');
 select is_empty(
   format($$ select 1 from core.customers where business_id = %L $$, :'biz'),
   'a disabled member loses access immediately');
+
+-- Una invitación no reactiva a un miembro desactivado por el dueño.
+select tests.authenticate_as(:'admin');
+select throws_ok(
+  format($$ select * from core.create_invitation(%L, 'cajero@test.local', 'staff') $$, :'biz'),
+  '23505', 'member_disabled', 'a disabled member cannot be re-invited (only the owner reactivates)');
+
+-- Invitaciones de admin: solo el dueño las cancela o reemplaza.
+select tests.authenticate_as(:'owner');
+select invitation_id as admin_inv, token as admin_token
+  from core.create_invitation(:'biz', 'otro@test.local', 'admin') \gset
+select tests.authenticate_as(:'admin');
+select throws_ok(
+  format($$ select core.revoke_invitation(%L) $$, :'admin_inv'),
+  '42501', null, 'an admin cannot cancel an admin invitation');
+select throws_ok(
+  format($$ select * from core.create_invitation(%L, 'otro@test.local', 'staff') $$, :'biz'),
+  '42501', null, 'an admin cannot replace an admin invitation');
+
+-- Aceptar no cambia una membresía que ya existe.
+reset role;
+select tests.add_member(:'biz', :'other', 'staff');
+select tests.authenticate_as(:'other');
+select throws_ok(
+  format($$ select core.accept_invitation(%L) $$, :'admin_token'),
+  '23505', 'already_member', 'accepting never changes an existing membership');
+reset role;
+select results_eq(
+  format($$ select accepted_at is null from core.invitations where id = %L $$, :'admin_inv'),
+  $$ values (true) $$, 'the invitation stays pending when it could not be used');
+select results_eq(
+  format($$ select role from core.memberships where business_id = %L and user_id = %L $$, :'biz', :'other'),
+  $$ values ('staff') $$, 'the existing role is unchanged');
+select is_empty(
+  $$ select 1 from core.audit_log where table_name = 'core.invitations'
+      and (old_data ? 'token_hash' or new_data ? 'token_hash') $$,
+  'the audit log never stores the invitation code hash');
 
 -- No quedarse sin dueño (el control se hace al cerrar la transacción).
 select tests.authenticate_as(:'owner');

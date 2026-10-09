@@ -37,6 +37,7 @@ create policy invitations_select on core.invitations
   for select to authenticated
   using (business_id in (select core.my_business_ids_with_role(array['owner', 'admin'])));
 
+-- La auditoría no guarda token_hash (ver core.audit_row más abajo).
 create trigger invitations_audit after insert or update on core.invitations
   for each row execute function core.audit_row();
 
@@ -63,6 +64,7 @@ declare
   v_token text;
   v_id    uuid;
   v_exp   timestamptz;
+  v_status text;
 begin
   if p_role is null or p_role not in ('admin', 'staff') then
     raise exception 'invalid role' using errcode = '22023';
@@ -76,14 +78,27 @@ begin
     raise exception 'invalid email' using errcode = '22023';
   end if;
 
-  if exists (
-    select 1 from core.memberships m join auth.users u on u.id = m.user_id
-     where m.business_id = p_business_id and m.status = 'active' and lower(u.email) = v_email
-  ) then
+  -- Quien ya tiene una membresía (activa o desactivada) no se invita: un
+  -- desactivado solo lo reactiva el dueño con update_member.
+  select m.status into v_status
+    from core.memberships m join auth.users u on u.id = m.user_id
+   where m.business_id = p_business_id and lower(u.email) = v_email;
+  if v_status = 'active' then
     raise exception 'already_member' using errcode = '23505';
+  elsif v_status is not null then
+    raise exception 'member_disabled' using errcode = '23505';
   end if;
 
-  -- Reemplaza una invitación pendiente anterior para el mismo email.
+  -- Reemplaza una invitación pendiente anterior para el mismo email. Una
+  -- invitación de admin (la creó el dueño) solo la puede reemplazar el dueño.
+  if exists (
+    select 1 from core.invitations i
+     where i.business_id = p_business_id and i.email = v_email and i.role = 'admin'
+       and i.accepted_at is null and i.revoked_at is null
+  ) then
+    perform core.require_member(p_business_id, array['owner']);
+  end if;
+
   update core.invitations i
      set revoked_at = now()
    where i.business_id = p_business_id and i.email = v_email
@@ -115,7 +130,9 @@ begin
   if not found then
     raise exception 'invitation not found' using errcode = 'P0002';
   end if;
-  perform core.require_member(v_inv.business_id, array['owner', 'admin']);
+  -- Admin cancela invitaciones de staff; las de admin, solo el dueño.
+  perform core.require_member(v_inv.business_id,
+    case when v_inv.role = 'admin' then array['owner'] else array['owner', 'admin'] end);
   if v_inv.accepted_at is not null or v_inv.revoked_at is not null then
     raise exception 'invitation is no longer pending' using errcode = '22023';
   end if;
@@ -174,11 +191,15 @@ begin
     perform core.raise_forbidden('invitation_email_mismatch');
   end if;
 
+  -- Una invitación nunca cambia una membresía existente (ni reactiva a alguien
+  -- desactivado por el dueño): para eso está update_member.
+  if exists (select 1 from core.memberships
+              where business_id = v_inv.business_id and user_id = v_user_id) then
+    raise exception 'already_member' using errcode = '23505';
+  end if;
+
   insert into core.memberships (business_id, user_id, role)
-  values (v_inv.business_id, v_user_id, v_inv.role)
-  on conflict (business_id, user_id) do update
-    set role = excluded.role, status = 'active'
-    where core.memberships.role <> 'owner';
+  values (v_inv.business_id, v_user_id, v_inv.role);
 
   update core.invitations set accepted_at = now(), accepted_by = v_user_id where id = v_inv.id;
 
@@ -235,6 +256,59 @@ begin
   end if;
 
   update core.memberships set role = p_role, status = p_status where id = p_membership_id;
+end;
+$$;
+
+-- -----------------------------------------------------------------------------
+-- Auditoría: igual que antes, pero sin columnas secretas (token_hash).
+-- -----------------------------------------------------------------------------
+create or replace function core.audit_row() returns trigger
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  v_old jsonb := case when tg_op in ('UPDATE', 'DELETE') then to_jsonb(old) end;
+  v_new jsonb := case when tg_op in ('INSERT', 'UPDATE') then to_jsonb(new) end;
+  v_row jsonb := coalesce(v_new, v_old);
+  -- Columnas secretas que nunca se copian a la auditoría.
+  v_secret constant text[] := array['token_hash'];
+  v_business_id uuid;
+  v_changed_old jsonb;
+  v_changed_new jsonb;
+begin
+  v_business_id := case
+    when tg_table_schema = 'core' and tg_table_name = 'businesses' then (v_row ->> 'id')::uuid
+    else (v_row ->> 'business_id')::uuid
+  end;
+
+  v_old := v_old - v_secret;
+  v_new := v_new - v_secret;
+
+  if tg_op = 'UPDATE' then
+    -- Solo las columnas que cambiaron.
+    select jsonb_object_agg(key, v_old -> key), jsonb_object_agg(key, value)
+      into v_changed_old, v_changed_new
+      from jsonb_each(v_new)
+     where key <> 'updated_at' and v_old -> key is distinct from value;
+    if v_changed_new is null then
+      return null;
+    end if;
+    v_old := v_changed_old;
+    v_new := v_changed_new;
+  end if;
+
+  insert into core.audit_log (business_id, actor_id, table_name, record_id, action, old_data, new_data)
+  values (
+    v_business_id,
+    (select auth.uid()),
+    tg_table_schema || '.' || tg_table_name,
+    coalesce(v_row ->> 'id', v_row ->> 'customer_id', v_row ->> 'module_id'),
+    lower(tg_op),
+    v_old,
+    v_new
+  );
+  return null;
 end;
 $$;
 

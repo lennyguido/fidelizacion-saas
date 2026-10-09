@@ -39,13 +39,40 @@ begin
 
   delete from core.customer_accounts where customer_id = p_customer_id;
 
-  -- La auditoría guarda valores anteriores: se quitan los datos personales.
+  -- Las visitas tienen texto libre (notas, motivo de anulación) que puede tener
+  -- datos personales. Se borra; el motivo se reemplaza porque es obligatorio
+  -- en una visita anulada.
+  update core.visits
+     set notes = null,
+         void_reason = case when void_reason is not null then '(dato borrado)' end
+   where business_id = v_customer.business_id
+     and customer_id = p_customer_id
+     and (notes is not null or void_reason is not null);
+
+  -- La auditoría guarda valores anteriores: se quitan los datos personales
+  -- (incluye las filas que acaba de generar el update de visitas).
   update core.audit_log
      set old_data = old_data - v_personal,
          new_data = new_data - v_personal
    where business_id = v_customer.business_id
      and table_name = 'core.customers'
      and record_id = p_customer_id::text;
+
+  update core.audit_log a
+     set old_data = a.old_data - array['notes', 'void_reason'],
+         new_data = a.new_data - array['notes', 'void_reason']
+   where a.business_id = v_customer.business_id
+     and a.table_name = 'core.visits'
+     and a.record_id in (select v.id::text from core.visits v
+                          where v.business_id = v_customer.business_id
+                            and v.customer_id = p_customer_id);
+
+  -- El evento de anulación copia el motivo.
+  update core.events e
+     set payload = e.payload - 'reason'
+   where e.business_id = v_customer.business_id
+     and e.type = 'visit.voided'
+     and e.payload ->> 'customer_id' = p_customer_id::text;
 
   perform core.emit_event(v_customer.business_id, 'customer.anonymized',
                           jsonb_build_object('customer_id', p_customer_id));
