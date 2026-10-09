@@ -1,3 +1,4 @@
+import type { ComponentType } from 'react'
 import type { RouteObject } from 'react-router'
 
 export interface ModuleNavItem {
@@ -16,4 +17,11 @@ export interface ModuleManifest {
   name: string
   nav: ModuleNavItem[]
   routes: RouteObject[]
+  /** Tarjeta opcional que el módulo agrega en la ficha del cliente. */
+  customerPanel?: ComponentType<CustomerPanelProps>
+}
+
+export interface CustomerPanelProps {
+  customerId: string
+  archived: boolean
 }

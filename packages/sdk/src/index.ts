@@ -21,6 +21,17 @@ export {
   type CustomerStatus,
 } from './customers.ts'
 export * as visits from './visits.ts'
+export * as loyalty from './loyalty.ts'
+export type {
+  Member as LoyaltyMember,
+  Movement as LoyaltyMovement,
+  MovementReason as LoyaltyMovementReason,
+  Program as LoyaltyProgram,
+  ProgramInput as LoyaltyProgramInput,
+  ProgramKind as LoyaltyProgramKind,
+  Redemption as LoyaltyRedemption,
+  Reward as LoyaltyReward,
+} from './loyalty.ts'
 export type { Visit, VisitCounts } from './visits.ts'
 export { startOfDayInTimeZone } from './dates.ts'
 export { formatMoney, parseAmountToMinor } from './money.ts'

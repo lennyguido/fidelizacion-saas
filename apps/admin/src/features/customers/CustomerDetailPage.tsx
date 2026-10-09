@@ -12,6 +12,7 @@ import {
   type Visit,
 } from '@plataforma/sdk'
 import { Alert, Button, Card, FullPageSpinner, useToast } from '@plataforma/ui'
+import { CustomerModulePanels } from '../../modules/CustomerModulePanels'
 import { useActiveBusiness } from '../business/ActiveBusinessContext'
 import { formatDateTime, formatDaysAgo } from '../../lib/format'
 import { CustomerForm } from './CustomerForm'
@@ -35,6 +36,10 @@ export function CustomerDetailPage() {
       </Link>
       <CustomerHeader customer={customer.data} />
       <CustomerStatsCard customer={customer.data} />
+      <CustomerModulePanels
+        customerId={customer.data.id}
+        archived={customer.data.status === 'archived'}
+      />
       <Card>
         <h2 className="mb-2 text-base font-semibold">Historial de visitas</h2>
         {history.isPending && <p className="text-sm text-slate-500">Cargando…</p>}
