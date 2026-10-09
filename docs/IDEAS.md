@@ -168,3 +168,23 @@
 | 6 | Tarjeta en la billetera (16) | Lo que pide el cliente final; va con la Fase 4 |
 | 7 | Horas flojas (5) · encuesta + reseñas (6) · inflación (8) | Muy diferenciales; esfuerzo medio |
 | Después | Referidos, alertas raras, membresías, gift cards, integraciones | Necesitan validación o cobros |
+
+---
+
+## ¿Y la inteligencia artificial?
+
+**Primero, automatizar no es lo mismo que usar IA.** Mucho de lo "manual" se resuelve con tareas programadas (por ejemplo, "todos los lunes a las 9, mandá el resumen"), sin IA: gratis, exacto y predecible.
+
+**Dónde sí suma IA** (siempre con la persona aprobando antes de enviar):
+
+1. **Redactar mensajes** de recuperación, cumpleaños o campañas, personalizados y en el tono del negocio. El dueño solo toca "Enviar".
+2. **Contar el resumen semanal en lenguaje humano.** Regla de oro: **la IA nunca inventa números**; la base calcula y la IA solo explica lo que recibe.
+3. **Agrupar quejas y comentarios** ("5 por demora, 1 por precio").
+4. **Más adelante:** responder preguntas simples de los clientes por WhatsApp (puntos, horarios), cuando esté conectado WhatsApp.
+
+**Dónde NO usar IA:**
+
+* Estados, riesgo, puntos, canjes, atribución y dinero: tienen que ser exactos y explicables ("venía cada 7 días y hace 12 que no viene"). Ya estaba decidido en `TASKS.md` §33.
+* Cargar visitas por foto del ticket o por voz en el mostrador: falla con ruido, apuro y tickets arrugados. El botón de 5 segundos es más confiable.
+
+**Cuándo:** después del piloto con un negocio real, para poner la IA donde duela de verdad. Antes de usar IA con datos de clientes, revisar costos por uso y privacidad (Ley 25.326): enviarle a la IA solo lo necesario.
