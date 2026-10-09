@@ -1,5 +1,6 @@
 import { getSupabase } from './client.ts'
 import { AppError, fromPostgrestError } from './errors.ts'
+import type { FunctionReturns, Tables } from './tables.ts'
 
 export type CustomerStatus = 'NEW' | 'ACTIVE' | 'AT_RISK' | 'INACTIVE' | 'RECOVERED'
 
@@ -55,47 +56,36 @@ export interface CustomerInput {
   notes: string | null
 }
 
-interface SearchRow {
-  id: string
-  name: string
-  phone: string | null
-  email: string | null
-  status: CustomerStatus
-  risk_score: number
-  visit_count: number
-  last_visit_at: string | null
-  total_spend_minor: number
-}
+type SearchRow = FunctionReturns<'search_customers'>[number]
 
-interface StatsRow {
-  first_visit_at: string | null
-  last_visit_at: string | null
-  visit_count: number
-  total_spend_minor: number
-  avg_ticket_minor: number | null
-  median_interval_days: number | null
-  expected_next_visit_at: string | null
-  status: CustomerStatus
-  risk_score: number
-}
+type StatsRow = Pick<
+  Tables<'customer_stats'>,
+  | 'first_visit_at'
+  | 'last_visit_at'
+  | 'visit_count'
+  | 'total_spend_minor'
+  | 'avg_ticket_minor'
+  | 'median_interval_days'
+  | 'expected_next_visit_at'
+  | 'status'
+  | 'risk_score'
+>
 
-interface CustomerRow {
-  id: string
-  business_id: string
-  name: string
-  phone: string | null
-  email: string | null
-  birthdate: string | null
-  notes: string | null
-  status: 'active' | 'archived'
-  created_at: string
-  stats: StatsRow | null
-}
+type CustomerRow = Pick<
+  Tables<'customers'>,
+  | 'id'
+  | 'business_id'
+  | 'name'
+  | 'phone'
+  | 'email'
+  | 'birthdate'
+  | 'notes'
+  | 'status'
+  | 'created_at'
+> & { stats: StatsRow | StatsRow[] | null }
 
 const CUSTOMER_COLUMNS =
-  'id, business_id, name, phone, email, birthdate, notes, status, created_at, ' +
-  'stats:customer_stats(first_visit_at, last_visit_at, visit_count, total_spend_minor, ' +
-  'avg_ticket_minor, median_interval_days, expected_next_visit_at, status, risk_score)'
+  'id, business_id, name, phone, email, birthdate, notes, status, created_at, stats:customer_stats(first_visit_at, last_visit_at, visit_count, total_spend_minor, avg_ticket_minor, median_interval_days, expected_next_visit_at, status, risk_score)' as const
 
 function toStats(row: StatsRow): CustomerStats {
   return {
@@ -106,12 +96,14 @@ function toStats(row: StatsRow): CustomerStats {
     avgTicketMinor: row.avg_ticket_minor === null ? null : Number(row.avg_ticket_minor),
     medianIntervalDays: row.median_interval_days === null ? null : Number(row.median_interval_days),
     expectedNextVisitAt: row.expected_next_visit_at,
-    status: row.status,
+    status: row.status as CustomerStatus,
     riskScore: row.risk_score,
   }
 }
 
 function toCustomer(row: CustomerRow): Customer {
+  // customer_stats es 1 a 1 con customers; según cómo lo detecte PostgREST puede venir como objeto o lista.
+  const stats = Array.isArray(row.stats) ? (row.stats[0] ?? null) : row.stats
   return {
     id: row.id,
     businessId: row.business_id,
@@ -120,9 +112,9 @@ function toCustomer(row: CustomerRow): Customer {
     email: row.email,
     birthdate: row.birthdate,
     notes: row.notes,
-    status: row.status,
+    status: row.status as Customer['status'],
     createdAt: row.created_at,
-    stats: row.stats ? toStats(row.stats) : null,
+    stats: stats ? toStats(stats) : null,
   }
 }
 
@@ -166,14 +158,12 @@ export async function search(params: SearchParams): Promise<CustomerListItem[]> 
   })
 
   if (error) throw fromPostgrestError(error)
-  // Función que devuelve una tabla: PostgREST responde un array.
-  const rows = (data ?? []) as SearchRow[]
-  return rows.map((row) => ({
+  return (data ?? []).map((row: SearchRow) => ({
     id: row.id,
     name: row.name,
     phone: row.phone,
     email: row.email,
-    status: row.status,
+    status: row.status as CustomerStatus,
     riskScore: row.risk_score,
     visitCount: row.visit_count,
     lastVisitAt: row.last_visit_at,
@@ -186,10 +176,9 @@ export async function get(customerId: string): Promise<Customer> {
     .from('customers')
     .select(CUSTOMER_COLUMNS)
     .eq('id', customerId)
-    .returns<CustomerRow>()
     .single()
   if (error) throw fromPostgrestError(error)
-  return toCustomer(data)
+  return toCustomer(data as CustomerRow)
 }
 
 function duplicateAware(error: { code?: string; message?: string }): AppError {
@@ -214,10 +203,9 @@ export async function create(businessId: string, input: CustomerInput): Promise<
       notes: input.notes?.trim() || null,
     })
     .select(CUSTOMER_COLUMNS)
-    .returns<CustomerRow>()
     .single()
   if (error) throw duplicateAware(error)
-  return toCustomer(data)
+  return toCustomer(data as CustomerRow)
 }
 
 export async function update(customerId: string, input: CustomerInput): Promise<Customer> {
@@ -231,10 +219,9 @@ export async function update(customerId: string, input: CustomerInput): Promise<
     })
     .eq('id', customerId)
     .select(CUSTOMER_COLUMNS)
-    .returns<CustomerRow>()
     .single()
   if (error) throw duplicateAware(error)
-  return toCustomer(data)
+  return toCustomer(data as CustomerRow)
 }
 
 export async function archive(customerId: string): Promise<void> {
@@ -260,6 +247,6 @@ export async function importBatch(
     p_rows: rows,
   })
   if (error) throw fromPostgrestError(error)
-  const result = data as ImportBatchResult
+  const result = data as unknown as ImportBatchResult
   return { inserted: Number(result.inserted), skipped: result.skipped ?? [] }
 }

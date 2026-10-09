@@ -1,20 +1,19 @@
 import { getSupabase } from './client.ts'
 import { fromPostgrestError } from './errors.ts'
+import type { Tables } from './tables.ts'
 import type { Business, MemberRole, MyBusiness } from './types.ts'
 
-interface BusinessRow {
-  id: string
-  name: string
-  slug: string
-  timezone: string
-  currency: string
-  logo_path: string | null
-  primary_color: string | null
-  secondary_color: string | null
-}
-
-const BUSINESS_COLUMNS =
-  'id, name, slug, timezone, currency, logo_path, primary_color, secondary_color'
+type BusinessRow = Pick<
+  Tables<'businesses'>,
+  | 'id'
+  | 'name'
+  | 'slug'
+  | 'timezone'
+  | 'currency'
+  | 'logo_path'
+  | 'primary_color'
+  | 'secondary_color'
+>
 
 function toBusiness(row: BusinessRow): Business {
   return {
@@ -33,14 +32,15 @@ function toBusiness(row: BusinessRow): Business {
 export async function listMyBusinesses(userId: string): Promise<MyBusiness[]> {
   const { data, error } = await getSupabase()
     .from('memberships')
-    .select(`role, business:businesses!inner(${BUSINESS_COLUMNS})`)
+    .select(
+      'role, business:businesses!inner(id, name, slug, timezone, currency, logo_path, primary_color, secondary_color)',
+    )
     .eq('user_id', userId)
     .eq('status', 'active')
-    .returns<Array<{ role: MemberRole; business: BusinessRow }>>()
 
   if (error) throw fromPostgrestError(error)
   return (data ?? [])
-    .map((row) => ({ ...toBusiness(row.business), role: row.role }))
+    .map((row) => ({ ...toBusiness(row.business), role: row.role as MemberRole }))
     .sort((a, b) => a.name.localeCompare(b.name, 'es'))
 }
 
@@ -51,10 +51,7 @@ export async function isSlugAvailable(slug: string): Promise<boolean> {
 }
 
 export async function createBusiness(name: string, slug: string): Promise<Business> {
-  const { data, error } = await getSupabase()
-    .rpc('create_business', { p_name: name, p_slug: slug })
-    .returns<BusinessRow>()
-    .single()
+  const { data, error } = await getSupabase().rpc('create_business', { p_name: name, p_slug: slug })
   if (error) throw fromPostgrestError(error)
   return toBusiness(data)
 }
@@ -66,7 +63,6 @@ export async function listEnabledModules(businessId: string): Promise<string[]> 
     .select('module_id, starts_at, ends_at')
     .eq('business_id', businessId)
     .eq('enabled', true)
-    .returns<Array<{ module_id: string; starts_at: string; ends_at: string | null }>>()
 
   if (error) throw fromPostgrestError(error)
   const now = Date.now()

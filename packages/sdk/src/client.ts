@@ -1,8 +1,9 @@
 import { createClient } from '@supabase/supabase-js'
+import type { Database } from './database.types.ts'
 import type { PublicEnv } from './env.ts'
 
 function createPlatformClient(env: PublicEnv) {
-  return createClient(env.supabaseUrl, env.supabasePublishableKey, {
+  return createClient<Database, 'core'>(env.supabaseUrl, env.supabasePublishableKey, {
     db: { schema: 'core' },
     auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true },
   })
