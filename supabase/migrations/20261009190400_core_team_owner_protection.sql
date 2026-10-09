@@ -5,7 +5,7 @@
 -- ni desactivar a OTRO dueño. Cada dueño solo puede cambiarse a sí mismo
 -- (por ejemplo, pasar a admin), y el trigger memberships_keep_owner sigue
 -- impidiendo que el negocio quede sin ningún dueño activo.
--- Reemplaza core.update_member de 20261009130000_core_team (mismos parámetros).
+-- Reemplaza core.update_member de 20261009190100_core_team (mismos parámetros).
 -- =============================================================================
 
 create or replace function core.update_member(p_membership_id uuid, p_role text, p_status text) returns void

@@ -15,7 +15,8 @@ El dueño está aprendiendo a programar. Al hablarle:
 * usar palabras simples y ejemplos de la vida diaria;
 * explicar cada término técnico la primera vez que aparece (o evitarlo);
 * decir qué se hizo y qué tiene que hacer él, en pasos cortos y numerados;
-* no aplicar migraciones ni cambios en Supabase sin su aprobación explícita después de mostrarle qué cambian.
+* **Desde 2026-10-09 (pedido del dueño):** en el proyecto de **desarrollo** se aplican las migraciones sin preguntar, siempre que el CI esté en verde, no sean destructivas y queden explicadas en `PROGRESS.md`. Se sigue preguntando solo lo que el sistema le exige confirmar a él (acciones en el dashboard, credenciales) y todo lo de la lista "Checkpoint humano" (producción, borrar datos, pagos, WhatsApp real, dominios). Si el mentor dejó una revisión pendiente sobre una migración, se espera esa revisión.
+* trabajar de corrido la lista de tareas y dejar la prueba visual del dueño para el final.
 
 ## Regla principal
 

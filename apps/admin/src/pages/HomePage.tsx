@@ -5,6 +5,7 @@ import { Alert, Card, Spinner } from '@plataforma/ui'
 import { useActiveBusiness } from '../features/business/ActiveBusinessContext'
 import { useCustomerCounts } from '../features/customers/queries'
 import { statusInfo } from '../features/customers/status'
+import { MonthSummaryCard } from './MonthSummaryCard'
 
 const roleLabels = { owner: 'Dueño', admin: 'Administrador', staff: 'Empleado' } as const
 
@@ -28,6 +29,8 @@ export function HomePage() {
       </Link>
 
       <VisitsCard />
+
+      {business.role !== 'staff' && <MonthSummaryCard />}
 
       <Card>
         <h2 className="mb-4 text-base font-semibold">Tus clientes</h2>
@@ -56,8 +59,13 @@ export function HomePage() {
             </Link>{' '}
             o registralos al pasar por el mostrador.
           </li>
-          <li>Configurá el programa de puntos y la primera recompensa (próximamente).</li>
-          <li>Imprimí el QR del local (próximamente).</li>
+          <li>
+            <Link to={`${base}/fidelizacion`} className="underline">
+              Configurá el programa de puntos
+            </Link>{' '}
+            y la primera recompensa.
+          </li>
+          <li>Mandales a tus clientes su tarjeta digital desde su ficha.</li>
         </ol>
       </Card>
     </section>

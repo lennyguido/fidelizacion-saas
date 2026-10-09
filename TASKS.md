@@ -22,8 +22,8 @@
 * [x] Configurar Prettier y aliases de imports
 * [x] `supabase/config.toml` creado a mano (equivale a `supabase init`). El proyecto remoto se maneja con el conector de Supabase; `supabase link` solo hace falta para usar la CLI contra el remoto
 * [x] Exponer esquema `core` en `supabase/config.toml` (`loyalty`/`recovery` se agregan con sus módulos)
-* [ ] Exponer esquema `core` en el proyecto remoto (Project Settings → Data API) — HUMAN ACTION
-* [ ] `npm install` y commitear `package-lock.json` de la raíz — HUMAN ACTION (npm bloqueado en el entorno del agente)
+* [x] Exponer esquema `core` en el proyecto remoto (verificado 2026-10-09 con `chore/dev-smoke`)
+* [x] `npm install` y commitear `package-lock.json` de la raíz (commit del dueño `c48eb16`)
 * [x] GitHub Actions: install, typecheck, lint, build (los tests de base se suman en la Fase 1)
 
 ## Fase 1 — Núcleo de base de datos (`core`)
@@ -44,7 +44,7 @@ Ver secciones 8–13 y 46 para detalle.
 * [x] Tests pgTAP: acceso cross-tenant rechazado en todas las tablas del núcleo
 * [x] Tests pgTAP: `record_visit` (idempotencia, anónimas, permisos) y cálculo de estados
 * [x] Seed DEMO "Café Central" (+ un segundo negocio para probar aislamiento)
-* [ ] Generar tipos TypeScript para todos los esquemas (bloqueado: exponer `core` en el remoto)
+* [x] Generar tipos TypeScript para todos los esquemas (workflow `DB types`, D-016)
 * [x] Aplicar migraciones y seed al proyecto Supabase de desarrollo
 * [x] Sumar `supabase test db` al CI
 
@@ -72,29 +72,29 @@ Ver secciones 18–20.
 * [x] Búsqueda de clientes en la base (`core.search_customers`) + tests
 * [x] Test E2E del mostrador
 * [x] Aplicar migración `core_customer_search` al proyecto de desarrollo
-* [ ] **CHECKPOINT DE PRODUCTO:** probar con un negocio real que el personal registre visitas durante 2 semanas. Si no lo hace, rediseñar la carga antes de seguir.
+* [~] **CHECKPOINT DE PRODUCTO** (piloto en curso; Fase 4 en paralelo por decisión del dueño, D-017): probar con un negocio real que el personal registre visitas durante 2 semanas. Si no lo hace, rediseñar la carga antes de seguir.
 
 ## Fase 4 — Módulo Fidelización (`loyalty`)
 
 Ver secciones 21–26.
 
-* [ ] Programa por negocio (puntos por visita y/o por monto, sellos)
-* [ ] `loyalty.members` (alta opcional al programa) + QR personal
-* [ ] Ledger de puntos append-only, acreditación al recibir `visit.recorded`
-* [ ] Recompensas, desbloqueos, canjes con código único (función transaccional, anti doble canje)
-* [ ] Tests de reglas y de abuso
-* [ ] App del cliente (`apps/client`): login, puntos, progreso, recompensas, QR, historial
+* [x] Programa por negocio (puntos por visita y/o por monto, sellos)
+* [x] `loyalty.members` (alta opcional al programa) + QR personal con código de socio (D-020)
+* [x] Ledger de puntos append-only, acreditación al recibir `visit.recorded`
+* [x] Recompensas, canjes con código único (función transaccional, anti doble canje) + panel
+* [x] Tests de reglas y de abuso (`020-loyalty-points`, `021-loyalty-redemptions`)
+* [x] App del cliente (`apps/client`): acceso por link secreto (D-020), puntos, progreso, recompensas, QR, historial. El mostrador escanea el QR con la cámara (Chrome Android; en otros navegadores se escribe el código)
 
 ## Fase 5 — Dashboard y módulo Recuperación (`recovery`)
 
 Ver secciones 30–38.
 
-* [ ] Dashboard del negocio
-* [ ] Listas de clientes en riesgo / inactivos con valor histórico
-* [ ] Segmentos, campañas, destinatarios con grupo de control
-* [ ] Envío MVP sin API de WhatsApp: el dueño envía desde su WhatsApp con links `wa.me` armados por el sistema (sin costo ni aprobación de Meta)
-* [ ] Atribución (cupón y ventana) y "dinero recuperado" (total + incremental)
-* [ ] Tests de atribución y de las fórmulas
+* [x] Dashboard del negocio (mes en curso vs. mismo período del mes anterior, D-021)
+* [x] Listas de clientes en riesgo / inactivos con valor histórico
+* [x] Segmentos (filtros fijos validados), campañas, destinatarios con grupo de control
+* [x] Envío MVP sin API de WhatsApp: el dueño envía desde su WhatsApp con links `wa.me` armados por el sistema (sin costo ni aprobación de Meta); solo a clientes con consentimiento
+* [~] Atribución por ventana y "dinero recuperado" (total + incremental). Pendiente: atribución por cupón
+* [x] Tests de atribución y de las fórmulas (`030-campaigns`)
 
 ## Fase 6 — Mensajería real
 

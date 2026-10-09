@@ -21,7 +21,7 @@ jobs:
         with:
           version: latest
       - run: supabase db start
-      - run: supabase gen types typescript --local --schema core > packages/sdk/src/database.types.ts
+      - run: supabase gen types typescript --local --schema core,loyalty > packages/sdk/src/database.types.ts
       - name: Commit if changed
         run: |
           if git diff --quiet -- packages/sdk/src/database.types.ts; then
@@ -32,4 +32,5 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add packages/sdk/src/database.types.ts
           git commit -m "chore(sdk): regenerate database types"
+          git pull --rebase
           git push

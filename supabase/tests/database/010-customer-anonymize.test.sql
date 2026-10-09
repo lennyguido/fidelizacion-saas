@@ -2,7 +2,7 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 
-select plan(12);
+select plan(14);
 
 select tests.create_user('owner@test.local') as owner \gset
 select tests.create_user('staff@test.local') as staff \gset
@@ -25,6 +25,18 @@ select core.emit_event(:'biz', 'visit.voided',
 -- Un cambio previo deja datos personales en la auditoría.
 select tests.authenticate_as(:'owner');
 update core.customers set phone = '+5491166667777' where id = :'rosa';
+
+-- Una campaña ya lanzada guarda el mensaje personalizado ("Hola Rosa ...").
+reset role;
+insert into core.customer_consents (business_id, customer_id, channel, purpose, granted, source)
+values (:'biz', :'rosa', 'whatsapp', 'marketing', true, 'counter');
+select tests.authenticate_as(:'owner');
+select (core.create_campaign(:'biz', 'recovery', 'Te extrañamos', '{}',
+        'Hola {nombre}, te esperamos', null, 0, 14)).id as camp \gset
+select core.launch_campaign(:'camp');
+reset role;
+select is((select message from core.campaign_recipients where customer_id = :'rosa'),
+  'Hola Rosa, te esperamos', 'before erasing, the campaign message has the first name');
 
 select tests.authenticate_as(:'staff');
 select throws_ok(
@@ -62,6 +74,11 @@ select is_empty(
 select is_empty(
   $$ select 1 from core.events where payload::text like '%Rosa%' $$,
   'events no longer contain the void reason');
+
+select results_eq(
+  format($$ select message, is_control from core.campaign_recipients where customer_id = %L $$, :'rosa'),
+  $$ values (null::text, false) $$,
+  'the personalized campaign message (with the first name) is erased; the measurement row stays');
 
 select tests.authenticate_as(:'owner');
 select throws_ok(

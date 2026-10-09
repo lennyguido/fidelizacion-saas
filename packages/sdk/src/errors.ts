@@ -14,6 +14,14 @@ export type AppErrorCode =
   | 'invitation_email_mismatch'
   | 'invitation_unavailable'
   | 'limit_reached'
+  | 'insufficient_points'
+  | 'reward_unavailable'
+  | 'member_inactive'
+  | 'module_disabled'
+  | 'customer_not_active'
+  | 'empty_segment'
+  | 'campaign_not_draft'
+  | 'control_group'
   | 'auth_invalid_credentials'
   | 'auth_email_not_confirmed'
   | 'auth_user_exists'
@@ -44,19 +52,30 @@ interface AuthLikeError {
   status?: number
 }
 
+const DOMAIN_CODES = [
+  'empty_segment',
+  'campaign_not_draft',
+  'control_group',
+  'insufficient_points',
+  'reward_unavailable',
+  'member_inactive',
+  'module_disabled',
+  'customer_not_active',
+  'already_member',
+  'member_disabled',
+  'invitation_email_mismatch',
+  'invitation_unavailable',
+  'owner_protected',
+] as const
+
 /** Convierte un error de PostgREST (base de datos) en AppError. */
 export function fromPostgrestError(error: PostgrestLikeError): AppError {
   const message = error.message ?? 'Error desconocido'
   if (message.includes('slug_taken')) return new AppError('slug_taken', message)
   if (message.includes('duplicate_visit')) return new AppError('duplicate_visit', message)
-  if (message.includes('already_member')) return new AppError('already_member', message)
-  if (message.includes('member_disabled')) return new AppError('member_disabled', message)
-  if (message.includes('owner_protected')) return new AppError('owner_protected', message)
-  if (message.includes('invitation_email_mismatch')) {
-    return new AppError('invitation_email_mismatch', message)
+  for (const code of DOMAIN_CODES) {
+    if (message.includes(code)) return new AppError(code, message)
   }
-  if (message.includes('invitation_unavailable'))
-    return new AppError('invitation_unavailable', message)
 
   switch (error.code) {
     case '42501':
@@ -124,6 +143,15 @@ export function errorMessage(error: unknown): string {
       'Esta invitación es para otro email. Salí e ingresá con el email invitado.',
     invitation_unavailable: 'Esta invitación ya se usó, venció o fue cancelada. Pedí una nueva.',
     limit_reached: 'Llegaste al límite de tu plan.',
+    insufficient_points: 'No le alcanzan los puntos para esta recompensa.',
+    reward_unavailable: 'Esta recompensa no está disponible (desactivada o vencida).',
+    member_inactive: 'Este cliente ya no está en el programa de puntos.',
+    module_disabled: 'Tu plan no incluye esta función.',
+    customer_not_active: 'Primero reactivá a este cliente.',
+    empty_segment:
+      'Nadie de este grupo puede recibir el mensaje: necesitan teléfono y haber aceptado WhatsApp.',
+    campaign_not_draft: 'Esta campaña ya se lanzó o se canceló.',
+    control_group: 'Este cliente es del grupo de control: no hay que escribirle.',
     auth_invalid_credentials: 'Email o contraseña incorrectos.',
     auth_email_not_confirmed: 'Confirmá tu email antes de ingresar. Revisá tu casilla.',
     auth_user_exists: 'Ya existe una cuenta con ese email. Probá ingresar.',

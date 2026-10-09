@@ -72,11 +72,14 @@ jobs:
           {
             echo "VITE_SUPABASE_URL=${API_URL}"
             echo "VITE_SUPABASE_PUBLISHABLE_KEY=${PUBLISHABLE_KEY:-$ANON_KEY}"
+            echo "VITE_CLIENT_APP_URL=http://localhost:4174"
           } > apps/admin/.env.local
       - run: scripts/ci-run.sh "build admin" npm run build -w @plataforma/admin
+      - run: scripts/ci-run.sh "build client" npm run build -w @plataforma/client
       - run: npx playwright install --with-deps chromium
       - name: Serve panel
         run: |
           npm run preview -w @plataforma/admin -- --port 4173 --strictPort > preview.log 2>&1 &
-          npx --yes wait-on http://localhost:4173 --timeout 60000
+          npm run preview -w @plataforma/client -- --port 4174 --strictPort > preview-client.log 2>&1 &
+          npx --yes wait-on http://localhost:4173 http://localhost:4174 --timeout 60000
       - run: scripts/ci-run.sh e2e npx playwright test

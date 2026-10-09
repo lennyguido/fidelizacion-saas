@@ -299,3 +299,41 @@ export async function importBatch(
   const result = data as unknown as ImportBatchResult
   return { inserted: Number(result.inserted), skipped: result.skipped ?? [] }
 }
+
+export interface WhatsappConsent {
+  granted: boolean
+  recordedAt: string
+}
+
+/** Último registro de "acepta mensajes de WhatsApp del negocio" (null = nunca se preguntó). */
+export async function getWhatsappConsent(customerId: string): Promise<WhatsappConsent | null> {
+  const { data, error } = await getSupabase()
+    .from('customer_consent_status')
+    .select('granted, recorded_at')
+    .eq('customer_id', customerId)
+    .eq('channel', 'whatsapp')
+    .eq('purpose', 'marketing')
+    .maybeSingle()
+  if (error) throw fromPostgrestError(error)
+  return data && data.granted !== null && data.recorded_at !== null
+    ? { granted: data.granted, recordedAt: data.recorded_at }
+    : null
+}
+
+/** Registra si acepta o no recibir WhatsApp (queda el historial; nunca se edita). */
+export async function setWhatsappConsent(
+  businessId: string,
+  customerId: string,
+  granted: boolean,
+  source: 'counter' | 'admin' = 'admin',
+): Promise<void> {
+  const { error } = await getSupabase().from('customer_consents').insert({
+    business_id: businessId,
+    customer_id: customerId,
+    channel: 'whatsapp',
+    purpose: 'marketing',
+    granted,
+    source,
+  })
+  if (error) throw fromPostgrestError(error)
+}

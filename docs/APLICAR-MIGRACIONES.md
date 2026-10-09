@@ -14,10 +14,12 @@
 
 | # | Migración | Rama |
 |---|---|---|
-| 10 | `20261009120000_core_archive_owner_admin_only` | `fix/archive-owner-admin-only` |
-| 11 | `20261009130000_core_team` | `feat/equipo-y-privacidad` |
-| 12 | `20261009130100_core_customer_anonymize` | `feat/equipo-y-privacidad` |
-| 13 | `20261009130200_core_housekeeping` | `feat/equipo-y-privacidad` |
+| 10 | `20261009182015_core_archive_owner_admin_only` (**aplicada** 2026-10-09) | `fix/archive-owner-admin-only` |
+| 11 | `20261009190100_core_team` | `feat/equipo-y-privacidad` |
+| 12 | `20261009190200_core_customer_anonymize` | `feat/equipo-y-privacidad` |
+| 13 | `20261009190300_core_housekeeping` | `feat/equipo-y-privacidad` |
+
+Las 15–17 (puntos, tarjeta, campañas) ya están aplicadas. Por eso los archivos 11–13 se renombraron a versiones posteriores (`2026100919xxxx`): van **después** de la 17.
 
 Las cuatro son **aditivas o de permisos**: no borran tablas ni datos. La 10 quita un permiso a los usuarios (modificar `customers.status` directo) y la 11 reemplaza la función de auditoría para que no guarde secretos.
 
