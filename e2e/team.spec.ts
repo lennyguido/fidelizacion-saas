@@ -31,6 +31,8 @@ test('owner invites a staff member who joins from the link', async ({
   await cashier.goto(link)
   await expect(cashier).toHaveURL(/\/login$/)
   await cashier.getByRole('link', { name: 'Crear cuenta' }).click()
+  // Esperar a que cambie la página: login y registro tienen los mismos campos.
+  await expect(cashier).toHaveURL(/\/signup$/)
   await cashier.getByLabel('Email').fill(cashierEmail)
   await cashier.getByLabel('Contraseña').fill('clave-segura-123')
   await cashier.getByRole('button', { name: 'Crear cuenta' }).click()
