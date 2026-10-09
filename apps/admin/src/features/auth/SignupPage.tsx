@@ -29,12 +29,8 @@ export function SignupPage() {
     setError(null)
     setSubmitting(true)
     try {
-      const result = await auth.signUp(
-        email.trim(),
-        password,
-        `${window.location.origin}/onboarding`,
-      )
-      if (result.hasSession) navigate('/onboarding', { replace: true })
+      const result = await auth.signUp(email.trim(), password, `${window.location.origin}${next}`)
+      if (result.hasSession) navigate(next, { replace: true })
       else setCheckEmail(true)
     } catch (err) {
       setError(errorMessage(err))

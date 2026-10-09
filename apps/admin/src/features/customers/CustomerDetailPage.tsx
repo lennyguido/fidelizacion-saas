@@ -166,7 +166,45 @@ function CustomerHeader({ customer }: { customer: Customer }) {
               Archivar
             </Button>
           )}
+          {canManage && !erasing && (
+            <Button variant="ghost" size="lg" onClick={() => setErasing(true)}>
+              Borrar datos personales
+            </Button>
+          )}
         </div>
+      )}
+      {erasing && (
+        <form
+          className="flex flex-col gap-3 rounded-lg border border-red-200 bg-red-50 p-4"
+          onSubmit={(e) => {
+            e.preventDefault()
+            erase.mutate()
+          }}
+        >
+          <p className="text-sm text-red-800">
+            Se borran para siempre el nombre, teléfono, email y notas de este cliente. Sus visitas
+            quedan como anónimas para que tus estadísticas no cambien. Usalo cuando el cliente pide
+            que borres sus datos. Para confirmar, escribí <strong>BORRAR</strong>.
+          </p>
+          <TextField
+            label="Confirmación"
+            value={confirmErase}
+            onChange={(e) => setConfirmErase(e.target.value)}
+          />
+          <div className="flex gap-2">
+            <Button
+              type="submit"
+              variant="danger"
+              loading={erase.isPending}
+              disabled={confirmErase !== 'BORRAR'}
+            >
+              Borrar datos
+            </Button>
+            <Button variant="secondary" onClick={() => setErasing(false)}>
+              Cancelar
+            </Button>
+          </div>
+        </form>
       )}
     </Card>
   )
