@@ -24,7 +24,7 @@ test('a new owner signs up, creates a business and gets back in', async ({ page 
   await expect(page).toHaveURL(/\/b\/cafe-e2e-/)
   await expect(page.getByRole('heading', { name: businessName })).toBeVisible()
   await expect(page.getByText('Dueño')).toBeVisible()
-  await expect(page.getByText('Tus clientes')).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Tus clientes' })).toBeVisible()
   await expect(
     page.locator('nav:visible').getByRole('link', { name: 'Fidelización' }),
   ).toBeVisible()
