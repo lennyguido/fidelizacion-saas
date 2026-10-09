@@ -89,12 +89,12 @@ Ver secciones 21–26.
 
 Ver secciones 30–38.
 
-* [ ] Dashboard del negocio
-* [ ] Listas de clientes en riesgo / inactivos con valor histórico
-* [ ] Segmentos, campañas, destinatarios con grupo de control
-* [ ] Envío MVP sin API de WhatsApp: el dueño envía desde su WhatsApp con links `wa.me` armados por el sistema (sin costo ni aprobación de Meta)
-* [ ] Atribución (cupón y ventana) y "dinero recuperado" (total + incremental)
-* [ ] Tests de atribución y de las fórmulas
+* [x] Dashboard del negocio (mes en curso vs. mismo período del mes anterior, D-021)
+* [x] Listas de clientes en riesgo / inactivos con valor histórico
+* [x] Segmentos (filtros fijos validados), campañas, destinatarios con grupo de control
+* [x] Envío MVP sin API de WhatsApp: el dueño envía desde su WhatsApp con links `wa.me` armados por el sistema (sin costo ni aprobación de Meta); solo a clientes con consentimiento
+* [~] Atribución por ventana y "dinero recuperado" (total + incremental). Pendiente: atribución por cupón
+* [x] Tests de atribución y de las fórmulas (`030-campaigns`)
 
 ## Fase 6 — Mensajería real
 

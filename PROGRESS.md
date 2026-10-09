@@ -4,7 +4,7 @@
 
 ## Current phase
 
-Fase 3 validada en desarrollo por el dueño (2026-10-09). **Fase 4 (Fidelización) en curso** en `feat/loyalty-db`, en paralelo con el piloto (D-017).
+Fases 0–5 construidas (2026-10-09). Fase 4 y 5 integradas en `main` y aplicadas en desarrollo. **Siguiente:** Fase 6 (mensajería real) requiere checkpoint humano (WhatsApp real); mientras tanto, pendientes chicos de las fases 4–5 y Fase 7 (PWA/deploy).
 
 ## Current task
 
@@ -34,6 +34,7 @@ Proyecto de **desarrollo**: `fidelizacion-saas`, ref `dqpnqcumlyfifewgzyvh` (ún
 | 14 | 20261009130300 | core_team_owner_protection | **pendiente de revisión — NO aplicada** (rama `feat/proteger-duenos`) |
 | 15 | 20261009182137 | loyalty_core | aplicada 2026-10-09 15:21 (OK del dueño, D-019; merge a `main`) |
 | 16 | 20261009183337 | loyalty_cards | aplicada 2026-10-09 15:33 (D-019; merge a `main`) |
+| 17 | 20261009184605 | core_campaigns | aplicada 2026-10-09 15:46 (D-019; merge a `main`) |
 
 Regla vigente desde 2026-10-09: ninguna migración se aplica sin aprobación explícita del dueño después de revisarla.
 
@@ -90,6 +91,15 @@ Rama `chore/calidad-pre-piloto` (llevada a `main` con CI en verde; no toca la ba
 * **Revisión de seguridad independiente** de `feat/equipo-y-privacidad`: sin fugas entre negocios; 5 problemas corregidos en `10f360a` (detalle en `docs/REVISION-PENDIENTE.md`). Tests de base locales: **154/154 OK** (11 archivos).
 * **Alertas de Supabase** del proyecto de desarrollo leídas (solo lectura). Una función agregada por Supabase (`public.rls_auto_enable`) queda abierta: quitarle el permiso **necesita aprobación**.
 * `SECURITY.md`, `CONTRIBUTING.md`, `CHANGELOG.md` y `docs/APLICAR-MIGRACIONES.md` (paso a paso para cuando se aprueben).
+
+## Viernes 9, 15:50 — Fase 5 (Tablero + Recuperación) hecha
+
+* Integrado en `main` y aplicado en desarrollo (migración 17, D-021).
+* **Inicio** (dueño/admin): resumen del mes — visitas, ventas, ticket promedio, nuevos, recuperados y "en juego" — comparado con los mismos días del mes pasado.
+* **Ficha del cliente:** "Mensajes por WhatsApp" para anotar si acepta o no (consentimiento, Ley 25.326).
+* **Recuperación:** listas de en riesgo e inactivos ordenadas por lo que gastaron; campañas con vista previa en vivo, grupo de control al azar, mensaje personalizado, envío por `wa.me` y resultados (volvieron, gastaron, incremental vs. control).
+* Tests: `030-campaigns` (21) + unitarios + e2e. CI verde.
+* Pendiente de Fase 5: atribución por cupón.
 
 ## Viernes 9, 15:40 — Fase 4 (Fidelización) terminada
 
