@@ -12,6 +12,9 @@ test('a new owner signs up, creates a business and gets back in', async ({ page 
   await expect(page).toHaveURL(/\/login$/)
 
   await page.getByRole('link', { name: 'Crear cuenta' }).click()
+  // El login también tiene "Email": esperar al registro antes de escribir.
+  await expect(page).toHaveURL(/\/signup$/)
+  await expect(page.getByRole('heading', { name: 'Creá tu cuenta' })).toBeVisible()
   await page.getByLabel('Email').fill(email)
   await page.getByLabel('Contraseña').fill(password)
   await page.getByRole('button', { name: 'Crear cuenta' }).click()
