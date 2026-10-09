@@ -1,15 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { formatPhone, normalizePhone, type CustomerInput } from '@plataforma/sdk'
 import { Alert, Button, TextField } from '@plataforma/ui'
-
-export interface CustomerFormValues {
-  name: string
-  phone: string
-  email: string
-  notes: string
-}
-
-export const emptyCustomerForm: CustomerFormValues = { name: '', phone: '', email: '', notes: '' }
+import { emptyCustomerForm, type CustomerFormValues } from './customerFormValues'
 
 interface Props {
   initial?: CustomerFormValues

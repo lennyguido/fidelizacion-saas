@@ -157,14 +157,13 @@ export interface SearchParams {
 }
 
 export async function search(params: SearchParams): Promise<CustomerListItem[]> {
-  const { data, error } = await getSupabase()
-    .rpc('search_customers', {
-      p_business_id: params.businessId,
-      p_query: params.query?.trim() || null,
-      p_status: params.status ?? null,
-      p_limit: params.limit ?? 20,
-      p_offset: params.offset ?? 0,
-    })
+  const { data, error } = await getSupabase().rpc('search_customers', {
+    p_business_id: params.businessId,
+    p_query: params.query?.trim() || null,
+    p_status: params.status ?? null,
+    p_limit: params.limit ?? 20,
+    p_offset: params.offset ?? 0,
+  })
 
   if (error) throw fromPostgrestError(error)
   // Función que devuelve una tabla: PostgREST responde un array.

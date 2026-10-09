@@ -6,7 +6,7 @@ export default defineConfig({
   testDir: './e2e',
   timeout: 60_000,
   retries: process.env.CI ? 1 : 0,
-  reporter: process.env.CI ? 'line' : 'list',
+  reporter: process.env.CI ? [['github'], ['line']] : 'list',
   use: {
     baseURL: process.env.E2E_BASE_URL ?? 'http://localhost:4173',
     trace: 'retain-on-failure',

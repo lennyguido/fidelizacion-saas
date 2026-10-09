@@ -25,7 +25,9 @@ test('a new owner signs up, creates a business and gets back in', async ({ page 
   await expect(page.getByRole('heading', { name: businessName })).toBeVisible()
   await expect(page.getByText('Dueño')).toBeVisible()
   await expect(page.getByText('Tus clientes')).toBeVisible()
-  await expect(page.getByRole('link', { name: 'Fidelización' }).first()).toBeVisible()
+  await expect(
+    page.locator('nav:visible').getByRole('link', { name: 'Fidelización' }),
+  ).toBeVisible()
 
   // Un negocio ajeno (seed DEMO) no es accesible por URL.
   await page.goto('/b/cafe-central')
@@ -81,9 +83,9 @@ test('the counter registers a new customer with a visit', async ({ page }, testI
   await expect(page.getByText('Visita registrada')).toBeVisible()
 
   // La ficha del cliente muestra la visita y el gasto.
-  await page.getByRole('link', { name: 'Clientes' }).first().click()
+  await page.locator('nav:visible').getByRole('link', { name: 'Clientes' }).click()
   await page.getByRole('link', { name: /Don Carlos/ }).click()
   await expect(page.getByRole('heading', { name: 'Don Carlos' })).toBeVisible()
   await expect(page.getByText('$ 3.800').first()).toBeVisible()
-  await expect(page.getByText('Mostrador', { exact: true }).last()).toBeVisible()
+  await expect(page.getByRole('listitem').filter({ hasText: 'Mostrador' })).toContainText('$ 3.800')
 })
