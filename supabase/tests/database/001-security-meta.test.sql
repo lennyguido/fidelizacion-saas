@@ -90,7 +90,12 @@ select set_eq(
        ('core.is_slug_available(text)'),
        ('core.create_business(text,text,text)'),
        ('core.search_customers(uuid,text,text,integer,integer)'),
-       ('core.import_customers(uuid,jsonb)') $$,
+       ('core.import_customers(uuid,jsonb)'),
+       ('loyalty.enroll_customer(uuid)'),
+       ('loyalty.leave_program(uuid)'),
+       ('loyalty.redeem_reward(uuid,uuid,uuid)'),
+       ('loyalty.cancel_redemption(uuid,text)'),
+       ('loyalty.adjust_points(uuid,bigint,text)') $$,
   'authenticated can execute only the intended functions'
 );
 
