@@ -32,20 +32,28 @@ El producto permite a los negocios:
 
 ## Estructura
 
-* `app/` — frontend (React + TypeScript + Vite + Tailwind).
-* `supabase/` — configuración local, migraciones y seed (se crea en la sección 5 de `TASKS.md`).
+```text
+apps/admin/        panel del negocio (React + TypeScript + Vite + Tailwind)
+apps/client/       app del cliente final (PWA) — Fase 4
+packages/config/   configuración compartida de TypeScript
+packages/ui/       componentes reutilizables
+packages/sdk/      acceso a datos (único lugar que habla con Supabase)
+supabase/          migraciones, tests de base de datos y seed
+docs/              arquitectura
+```
 
 ## Desarrollo local
 
 ```bash
-cd app
-npm install
-cp .env.example .env.local   # completar con los datos del proyecto Supabase de desarrollo
-npm run dev
+npm install                                       # en la raíz: instala todos los workspaces
+cp apps/admin/.env.example apps/admin/.env.local  # completar con el proyecto Supabase de DESARROLLO
+npm run dev                                       # levanta el panel del negocio
 ```
 
-Comandos oficiales (desde `app/`):
+Comandos oficiales (desde la raíz):
 
-* `npm run dev` — servidor de desarrollo.
-* `npm run build` — typecheck + build de producción.
+* `npm run dev` — servidor de desarrollo del panel.
+* `npm run build` — typecheck + build de todas las apps.
+* `npm run typecheck` — TypeScript en todos los workspaces.
 * `npm run lint` — ESLint.
+* `npm run format` / `npm run format:check` — Prettier.
