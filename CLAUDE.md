@@ -8,6 +8,15 @@ El backlog completo se encuentra en `TASKS.md`.
 
 La arquitectura obligatoria está en `docs/ARCHITECTURE.md`. Leerla antes de crear tablas, funciones, módulos o carpetas nuevas.
 
+## Comunicación con el dueño del proyecto
+
+El dueño está aprendiendo a programar. Al hablarle:
+
+* usar palabras simples y ejemplos de la vida diaria;
+* explicar cada término técnico la primera vez que aparece (o evitarlo);
+* decir qué se hizo y qué tiene que hacer él, en pasos cortos y numerados;
+* no aplicar migraciones ni cambios en Supabase sin su aprobación explícita después de mostrarle qué cambian.
+
 ## Regla principal
 
 Antes de implementar cualquier cosa:
