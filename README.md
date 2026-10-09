@@ -29,6 +29,8 @@ El producto permite a los negocios:
 * `PROGRESS.md` — progreso actual.
 * `DECISIONS.md` — decisiones importantes de arquitectura y producto.
 * `docs/ARCHITECTURE.md` — arquitectura de la plataforma (núcleo + módulos).
+* `docs/DEPLOY.md` — publicar el panel y la tarjeta gratis (Cloudflare Pages) y pasar a producción.
+* `docs/CHECKLIST-PRODUCCION.md` — lista antes del primer cliente real (quién hace cada cosa).
 
 ## Estructura
 

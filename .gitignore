@@ -36,3 +36,7 @@ Thumbs.db
 # Supabase local
 
 .supabase/
+
+# Copias de la base (tienen datos personales; docs/DEPLOY.md, D7)
+
+/backups/
