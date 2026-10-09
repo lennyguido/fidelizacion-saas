@@ -43,7 +43,7 @@ function CardView({ card, onForget }: { card: Card; onForget: () => void }) {
   const color = card.business.primaryColor
   const brand = color && isValidHexColor(color) ? color : '#0f172a'
   const logo = businesses.logoUrl(card.business.logoPath)
-  useDocumentBranding(card.business.name, brand)
+  useDocumentBranding(card.business.name, brand, logo)
   const unit = card.program?.kind === 'stamps' ? 'sellos' : 'puntos'
   const money = (minor: number) => formatMoney(minor, card.business.currency)
 
