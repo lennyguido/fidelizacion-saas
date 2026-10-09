@@ -5,6 +5,7 @@ export const customerKeys = {
   all: (businessId: string) => ['customers', businessId] as const,
   search: (businessId: string, query: string, status: CustomerStatus | null, limit: number) =>
     ['customers', businessId, 'search', query, status, limit] as const,
+  archived: (businessId: string) => ['customers', businessId, 'archived'] as const,
   counts: (businessId: string) => ['customers', businessId, 'count-by-status'] as const,
   detail: (businessId: string, customerId: string) =>
     ['customers', businessId, 'detail', customerId] as const,
@@ -22,6 +23,14 @@ export function useCustomerSearch(
     queryKey: customerKeys.search(businessId, query, status, limit),
     queryFn: () => customers.search({ businessId, query, status, limit }),
     placeholderData: (previous) => previous,
+  })
+}
+
+export function useArchivedCustomers(businessId: string, enabled: boolean) {
+  return useQuery({
+    queryKey: customerKeys.archived(businessId),
+    queryFn: () => customers.listArchived(businessId),
+    enabled,
   })
 }
 

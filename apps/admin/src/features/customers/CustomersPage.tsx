@@ -5,6 +5,7 @@ import { Alert, Card, EmptyState, Spinner, TextField, cn } from '@plataforma/ui'
 import { useActiveBusiness } from '../business/ActiveBusinessContext'
 import { useDebouncedValue } from '../../hooks/useDebouncedValue'
 import { formatDaysAgo } from '../../lib/format'
+import { ArchivedCustomersList } from './ArchivedCustomersList'
 import { useCustomerSearch } from './queries'
 import { StatusBadge } from './StatusBadge'
 import { statusInfo } from './status'
@@ -13,6 +14,7 @@ export function CustomersPage() {
   const { business } = useActiveBusiness()
   const [query, setQuery] = useState('')
   const [status, setStatus] = useState<CustomerStatus | null>(null)
+  const [showArchived, setShowArchived] = useState(false)
   const debouncedQuery = useDebouncedValue(query)
   const results = useCustomerSearch(business.id, debouncedQuery, status, 50)
 
@@ -51,27 +53,59 @@ export function CustomersPage() {
           <button
             key={value ?? 'all'}
             type="button"
-            aria-pressed={status === value}
-            onClick={() => setStatus(value)}
-            className={cn(
-              'whitespace-nowrap rounded-full px-3 py-1 text-sm font-medium ring-1 ring-inset',
-              status === value
-                ? 'bg-slate-900 text-white ring-slate-900'
-                : 'bg-white text-slate-700 ring-slate-300',
-            )}
+            aria-pressed={!showArchived && status === value}
+            onClick={() => {
+              setShowArchived(false)
+              setStatus(value)
+            }}
+            className={chipClass(!showArchived && status === value)}
           >
             {value ? statusInfo[value].plural : 'Todos'}
           </button>
         ))}
+        <button
+          type="button"
+          aria-pressed={showArchived}
+          onClick={() => setShowArchived(true)}
+          className={chipClass(showArchived)}
+        >
+          Archivados
+        </button>
       </div>
 
+      {showArchived ? (
+        <ArchivedCustomersList />
+      ) : (
+        <SearchResults results={results} filtered={Boolean(query || status)} />
+      )}
+    </section>
+  )
+}
+
+function chipClass(active: boolean): string {
+  return cn(
+    'whitespace-nowrap rounded-full px-3 py-1 text-sm font-medium ring-1 ring-inset',
+    active ? 'bg-slate-900 text-white ring-slate-900' : 'bg-white text-slate-700 ring-slate-300',
+  )
+}
+
+function SearchResults({
+  results,
+  filtered,
+}: {
+  results: ReturnType<typeof useCustomerSearch>
+  filtered: boolean
+}) {
+  const { business } = useActiveBusiness()
+  return (
+    <>
       {results.isPending && <Spinner />}
       {results.error && <Alert tone="error">{errorMessage(results.error)}</Alert>}
       {results.data && results.data.length === 0 && (
         <EmptyState
-          title={query || status ? 'Sin resultados' : 'Todavía no hay clientes'}
+          title={filtered ? 'Sin resultados' : 'Todavía no hay clientes'}
           description={
-            query || status
+            filtered
               ? 'Probá con otra búsqueda.'
               : 'Cargá el primero o registralo desde el mostrador.'
           }
@@ -98,6 +132,6 @@ export function CustomersPage() {
           ))}
         </Card>
       )}
-    </section>
+    </>
   )
 }

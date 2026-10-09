@@ -159,7 +159,7 @@ function CustomerHeader({ customer }: { customer: Customer }) {
         <Alert>Los datos personales de este cliente fueron borrados.</Alert>
       ) : customer.status === 'archived' ? (
         <div className="flex flex-col gap-3">
-          <Alert>Este cliente está archivado.</Alert>
+          <Alert>Este cliente está archivado: no aparece en la lista ni en el mostrador.</Alert>
           {canManage && (
             <div className="flex flex-wrap gap-2">
               <Button
