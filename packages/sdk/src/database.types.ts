@@ -67,9 +67,9 @@ isOneToOne: false
                   ]
                 },"campaign_recipients": {
                   Row: {
-                    "business_id": string,"campaign_id": string,"contacted_at": string | null,"coupon_code": string | null,"coupon_redeemed_at": string | null,"coupon_redeemed_by": string | null,"coupon_visit_id": string | null,"customer_id": string,"id": string,"is_control": boolean,"message": string | null,"risk_score_at_send": number,"status_at_send": string,"coupon_info": Json | null
+                    "business_id": string,"campaign_id": string,"contacted_at": string | null,"coupon_code": string | null,"coupon_redeemed_at": string | null,"coupon_redeemed_by": string | null,"coupon_visit_id": string | null,"customer_id": string,"id": string,"is_control": boolean,"message": string | null,"risk_score_at_send": number,"status_at_send": string
                   }
-                  ComputedFields: "coupon_info"
+                  ComputedFields: never
                   Insert: {
                     "business_id": string,"campaign_id": string,"contacted_at"?: string | null,"coupon_code"?: string | null,"coupon_redeemed_at"?: string | null,"coupon_redeemed_by"?: string | null,"coupon_visit_id"?: string | null,"customer_id": string,"id"?: string,"is_control": boolean,"message"?: string | null,"risk_score_at_send"?: number,"status_at_send": string
                   }
@@ -500,7 +500,7 @@ isOneToOne: false
 { Args: { "p_first_visit_at": string,"p_is_new_visit": boolean,"p_last_visit_at": string,"p_median_interval": number,"p_now": string,"p_prev_changed_at": string,"p_prev_status": string,"p_settings": Json,"p_visit_count": number }; Returns: Record<string, unknown>
                            },
 "coupon_info":
-{ Args: { "p_recipient": Omit<Database["core"]['Tables']["campaign_recipients"]['Row'], Database["core"]['Tables']["campaign_recipients"]['ComputedFields']> }; Returns: Json
+{ Args: { "p_recipient_id": string }; Returns: Json
                            },
 "create_business":
 { Args: { "p_name": string,"p_slug": string,"p_timezone"?: string }; Returns: {
