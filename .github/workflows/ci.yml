@@ -24,7 +24,20 @@ jobs:
       - run: scripts/ci-run.sh lint npm run lint
       - run: scripts/ci-run.sh format npm run format:check
       - run: scripts/ci-run.sh unit npm test
-      - run: scripts/ci-run.sh build npm run build
+      # Build como en Cloudflare Pages (docs/DEPLOY.md): sin .env.local, las variables vienen
+      # del entorno. Son valores públicos de mentira; el check revisa dist/ (_headers, SPA, env).
+      - name: Build (as on Cloudflare Pages)
+        env:
+          VITE_SUPABASE_URL: https://ci-dummy-ref.supabase.co
+          VITE_SUPABASE_PUBLISHABLE_KEY: sb_publishable_ci_dummy_not_a_real_key
+          VITE_CLIENT_APP_URL: https://tarjeta-ci.pages.dev
+        run: scripts/ci-run.sh build npm run build
+      - name: Check deploy output
+        env:
+          VITE_SUPABASE_URL: https://ci-dummy-ref.supabase.co
+          VITE_SUPABASE_PUBLISHABLE_KEY: sb_publishable_ci_dummy_not_a_real_key
+          VITE_CLIENT_APP_URL: https://tarjeta-ci.pages.dev
+        run: scripts/ci-run.sh "deploy check" scripts/check-deploy-build.sh
 
   database:
     name: Database (migrations + pgTAP)
