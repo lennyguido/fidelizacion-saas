@@ -1,6 +1,6 @@
 # Progreso del proyecto
 
-> Estado verificado el 2026-10-09 ~16:30 (hora Argentina).
+> Estado verificado el 2026-10-09 ~19:30 (hora Argentina).
 
 ## Current phase
 
@@ -35,9 +35,9 @@ Proyecto de **desarrollo**: `fidelizacion-saas`, ref `dqpnqcumlyfifewgzyvh` (ún
 | 15 | 20261009182137 | loyalty_core | aplicada 2026-10-09 15:21 (OK del dueño, D-019; merge a `main`) |
 | 16 | 20261009183337 | loyalty_cards | aplicada 2026-10-09 15:33 (D-019; merge a `main`) |
 | 17 | 20261009184605 | core_campaigns | aplicada 2026-10-09 15:46 (D-019; merge a `main`) |
-| 18 | 20261009191000 | loyalty_hardening | **en `main`, NO aplicada**: Supabase pidió confirmación y nadie la contestó (17:50). Aplicar al volver |
-| 19 | 20261009191100 | core_campaigns_hardening | **en `main`, NO aplicada** (incluye `drop function`/`drop index` de reemplazo: pide confirmación) |
-| 20 | 20261009191200 | core_timezone_check_grant | **en `main`, NO aplicada** |
+| 18 | 20261009191000 | loyalty_hardening | aplicada 2026-10-09 ~19:30 (CI de `main` en verde, no destructiva) |
+| 19 | 20261009191100 | core_campaigns_hardening | aplicada 2026-10-09 ~19:30 (los `drop` solo reemplazan funciones internas y un índice; no borra datos) |
+| 20 | 20261009191200 | core_timezone_check_grant | aplicada 2026-10-09 19:03 (en Supabase figura con versión `20261009220309`) |
 
 Regla vigente desde 2026-10-09: ninguna migración se aplica sin aprobación explícita del dueño después de revisarla.
 
@@ -70,6 +70,12 @@ Rama `fix/archive-owner-admin-only` (commit `62a7b19`):
 | Punta a punta (Playwright) | CI: `supabase start` + build + `vite preview` + `npx playwright test` (celular y escritorio) | OK: registro → onboarding → panel → login; credenciales incorrectas; mostrador; importación CSV |
 
 Limitación: los tests de punta a punta corren contra un Supabase **local** en CI. El panel todavía **no se probó contra el proyecto de desarrollo remoto**. Eso es lo que falta validar ahora.
+
+## Viernes 9, ~19:30 — CI en verde y migraciones 18–20 aplicadas
+
+* El CI de `main` estaba rojo por una prueba de registro inestable: escribía el email antes de que cargara la pantalla de registro. Arreglado en `e2e/onboarding.spec.ts` (PR #1, merge `7b06b77`). CI de `main`: verde.
+* Migraciones 18 y 19 aplicadas en desarrollo; la 20 ya estaba aplicada. Alertas de Supabase después de aplicar: nada nuevo (`loyalty.event_failures` sin policies es a propósito: solo service role).
+* La PC del dueño todavía no tiene Node ni `gh`: los tests se corren en el CI de GitHub.
 
 ## Trabajo del viernes 9 a la mañana (sin Supabase, sin Fase 4)
 
@@ -160,7 +166,7 @@ Cómo volver atrás: cada cosa está en su rama; lo único integrado en `main` e
 
 ## Current blockers
 
-**Para probar lo nuevo:** (1) Data API → Exposed schemas → agregar `loyalty` (verificado 17:10: todavía no está); (2) aplicar migraciones 18–20 (confirmar el aviso). Guía: `docs/GUIA-PRUEBA-COMPLETA.md`.
+**Para probar lo nuevo:** (1) Data API → Exposed schemas → agregar `loyalty` (verificado 17:10: todavía no está). Las migraciones 18–20 ya están aplicadas. Guía: `docs/GUIA-PRUEBA-COMPLETA.md`.
 
 **Fase 6 (mensajería real con WhatsApp API) es checkpoint humano:** cuenta de Meta Business, número verificado, plantillas aprobadas y costos por mensaje. No se avanza sin decisión del dueño.
 
