@@ -86,7 +86,9 @@ select set_eq(
        ('core.has_module(uuid,text)'),
        ('core.is_platform_admin()'),
        ('core.record_visit(uuid,uuid,uuid,bigint,timestamp with time zone,text,text,text)'),
-       ('core.void_visit(uuid,text)') $$,
+       ('core.void_visit(uuid,text)'),
+       ('core.is_slug_available(text)'),
+       ('core.create_business(text,text,text)') $$,
   'authenticated can execute only the intended functions'
 );
 
