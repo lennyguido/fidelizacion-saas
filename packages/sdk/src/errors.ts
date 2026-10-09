@@ -10,6 +10,7 @@ export type AppErrorCode =
   | 'duplicate_email'
   | 'already_member'
   | 'member_disabled'
+  | 'owner_protected'
   | 'invitation_email_mismatch'
   | 'invitation_unavailable'
   | 'limit_reached'
@@ -50,6 +51,7 @@ export function fromPostgrestError(error: PostgrestLikeError): AppError {
   if (message.includes('duplicate_visit')) return new AppError('duplicate_visit', message)
   if (message.includes('already_member')) return new AppError('already_member', message)
   if (message.includes('member_disabled')) return new AppError('member_disabled', message)
+  if (message.includes('owner_protected')) return new AppError('owner_protected', message)
   if (message.includes('invitation_email_mismatch')) {
     return new AppError('invitation_email_mismatch', message)
   }
@@ -114,6 +116,8 @@ export function errorMessage(error: unknown): string {
     duplicate_phone: 'Ya hay un cliente con ese teléfono.',
     duplicate_email: 'Ya hay un cliente con ese email.',
     already_member: 'Esa persona ya es parte del equipo.',
+    owner_protected:
+      'No podés cambiar el rol de otro dueño. Cada dueño solo puede cambiarse a sí mismo.',
     member_disabled:
       'Esa persona está desactivada en el equipo. El dueño puede reactivarla desde la lista de miembros.',
     invitation_email_mismatch:
