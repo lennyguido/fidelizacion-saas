@@ -97,6 +97,15 @@ function CustomerHeader({ customer }: { customer: Customer }) {
     onError: (err) => toast.show(errorMessage(err), 'error'),
   })
 
+  const reactivate = useMutation({
+    mutationFn: () => customers.reactivate(customer.id),
+    onSuccess: async () => {
+      await invalidate()
+      toast.show(`${customer.name} volvió a la lista de clientes`, 'success')
+    },
+    onError: (err) => toast.show(errorMessage(err), 'error'),
+  })
+
   if (editing) {
     return (
       <Card>
@@ -135,7 +144,21 @@ function CustomerHeader({ customer }: { customer: Customer }) {
         {customer.stats && <StatusBadge status={customer.stats.status} />}
       </div>
       {customer.status === 'archived' ? (
-        <Alert>Este cliente está archivado.</Alert>
+        <div className="flex flex-col gap-3">
+          <Alert>Este cliente está archivado: no aparece en la lista ni en el mostrador.</Alert>
+          {canManage && (
+            <div>
+              <Button
+                variant="secondary"
+                size="lg"
+                loading={reactivate.isPending}
+                onClick={() => reactivate.mutate()}
+              >
+                Reactivar
+              </Button>
+            </div>
+          )}
+        </div>
       ) : (
         <div className="flex flex-wrap gap-2">
           <Button size="lg" loading={recordVisit.isPending} onClick={() => recordVisit.mutate()}>

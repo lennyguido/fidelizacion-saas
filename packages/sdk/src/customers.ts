@@ -232,6 +232,44 @@ export async function archive(customerId: string): Promise<void> {
   if (error) throw fromPostgrestError(error)
 }
 
+/** Vuelve a poner activo un cliente archivado. */
+export async function reactivate(customerId: string): Promise<void> {
+  const { error } = await getSupabase()
+    .from('customers')
+    .update({ status: 'active' })
+    .eq('id', customerId)
+  if (error) throw fromPostgrestError(error)
+}
+
+export interface ArchivedCustomer {
+  id: string
+  name: string
+  phone: string | null
+  email: string | null
+  /** Última modificación (normalmente, cuando se archivó). */
+  archivedAt: string
+}
+
+/** Clientes archivados del negocio (no aparecen en la búsqueda normal). */
+export async function listArchived(businessId: string, limit = 100): Promise<ArchivedCustomer[]> {
+  const { data, error } = await getSupabase()
+    .from('customers')
+    .select('id, name, phone, email, updated_at')
+    .eq('business_id', businessId)
+    .eq('status', 'archived')
+    .is('anonymized_at', null)
+    .order('updated_at', { ascending: false })
+    .limit(limit)
+  if (error) throw fromPostgrestError(error)
+  return (data ?? []).map((row) => ({
+    id: row.id,
+    name: row.name,
+    phone: row.phone,
+    email: row.email,
+    archivedAt: row.updated_at,
+  }))
+}
+
 export interface ImportBatchResult {
   inserted: number
   skipped: Array<{ index: number; reason: string }>
