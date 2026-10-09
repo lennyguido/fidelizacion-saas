@@ -112,3 +112,19 @@ El dueño pidió no tener que aprobar cada migración. En el proyecto de **desar
 * **"Volvió":** tiene al menos una visita válida entre el lanzamiento y N días después (por defecto 14). Se calcula al consultar desde `core.visits`, así una visita anulada deja de contar sola.
 * **Resultados:** total de los que volvieron y gastaron, y lo **incremental** comparando con el grupo de control: `(tasa contactados − tasa control) × contactados` y `(gasto promedio contactados − gasto promedio control) × contactados`. Sin grupo de control no se muestra incremental. Nunca se promete un resultado: se muestra estimado y con la explicación.
 * **Tablero del mes** (`core.dashboard_summary`): visitas, ventas registradas, ticket promedio, nuevos, recuperados y "en juego" (lo que gastaron los que dejaron de venir), comparado con los mismos días del mes anterior, en la zona horaria del negocio. Solo dueño/admin.
+
+## D-022 — Topes contra puntos fabricados (2026-10-09, vigente)
+
+Una visita suma puntos solo si se cargó en el momento (su hora es como mucho 30 minutos antes de la carga); las atrasadas se registran en el núcleo pero no dan puntos (si hace falta, ajuste manual con motivo). Cada programa tiene topes configurables: `max_points_per_visit` (por defecto 1.000) y `max_visits_per_day` por socio (por defecto 3, en la zona horaria del negocio; las anuladas no cuentan). El trigger lee la visita desde `core.visits` en vez de confiar en el evento. Si falla, la visita se registra igual y la falla queda en `loyalty.event_failures` (solo service role). La tarjeta no se muestra para clientes archivados o anonimizados, y salir del programa (o anonimizar) borra el link.
+
+## D-023 — Endurecimiento de campañas (2026-10-09, vigente)
+
+El consentimiento se vuelve a mirar al escribir: si el cliente se da de baja o se archiva después del lanzamiento, el panel oculta su teléfono y mensaje (`blocked_reason`) y no se lo puede marcar como contactado (`consent_revoked`); sigue contando en los resultados de su grupo. Un cliente no puede estar en dos campañas con ventana abierta (se excluye al lanzar; la vista previa lo informa como `busy`). Entre consentimientos del mismo instante gana el último (`seq`). Números de segmento enteros y acotados. "Nuevos" del tablero = primera visita en el mes. Corte del mes anterior en hora local. Fórmulas explicadas en `docs/RESULTADOS.md`.
+
+## D-024 — Marca del negocio: logos públicos (2026-10-09, vigente)
+
+Los logos van al bucket `logos` (ya existente, lectura pública, escritura solo owner/admin en la carpeta de su negocio): un logo no es dato sensible y la tarjeta anónima lo necesita. Cada subida usa nombre nuevo (`logo-<timestamp>`), sin sobrescribir; los viejos no se borran. La tarjeta usa el color y el logo del negocio. Panel y tarjeta son PWA con un service worker propio que nunca guarda respuestas de Supabase (`docs/PWA.md`).
+
+## D-025 — Hosting gratuito: Cloudflare Pages (2026-10-09, propuesta; la cuenta la crea el dueño)
+
+Vercel Hobby prohíbe uso comercial y Netlify gratis pausa los sitios al quedarse sin créditos; Cloudflare Pages gratis da 500 publicaciones/mes sin límite de tráfico estático. Dos proyectos (panel y tarjeta), encabezados de seguridad en `apps/*/public/_headers`, chequeo en CI (`scripts/check-deploy-build.sh`). Pasos: `docs/DEPLOY.md`; antes del primer cliente real: `docs/CHECKLIST-PRODUCCION.md` (proyecto Supabase de producción separado, SMTP propio, backups).

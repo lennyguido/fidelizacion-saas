@@ -35,6 +35,9 @@ Proyecto de **desarrollo**: `fidelizacion-saas`, ref `dqpnqcumlyfifewgzyvh` (ún
 | 15 | 20261009182137 | loyalty_core | aplicada 2026-10-09 15:21 (OK del dueño, D-019; merge a `main`) |
 | 16 | 20261009183337 | loyalty_cards | aplicada 2026-10-09 15:33 (D-019; merge a `main`) |
 | 17 | 20261009184605 | core_campaigns | aplicada 2026-10-09 15:46 (D-019; merge a `main`) |
+| 18 | 20261009191000 | loyalty_hardening | **en `main`, NO aplicada**: Supabase pidió confirmación y nadie la contestó (17:50). Aplicar al volver |
+| 19 | 20261009191100 | core_campaigns_hardening | **en `main`, NO aplicada** (incluye `drop function`/`drop index` de reemplazo: pide confirmación) |
+| 20 | 20261009191200 | core_timezone_check_grant | **en `main`, NO aplicada** |
 
 Regla vigente desde 2026-10-09: ninguna migración se aplica sin aprobación explícita del dueño después de revisarla.
 
@@ -92,6 +95,15 @@ Rama `chore/calidad-pre-piloto` (llevada a `main` con CI en verde; no toca la ba
 * **Alertas de Supabase** del proyecto de desarrollo leídas (solo lectura). Una función agregada por Supabase (`public.rls_auto_enable`) queda abierta: quitarle el permiso **necesita aprobación**.
 * `SECURITY.md`, `CONTRIBUTING.md`, `CHANGELOG.md` y `docs/APLICAR-MIGRACIONES.md` (paso a paso para cuando se aprueben).
 
+## Viernes 9, 17–18 h — revisión de seguridad, arreglos, marca, PWA y deploy preparado
+
+* Revisión independiente de puntos, tarjeta y campañas: sin fugas entre negocios. Arreglado: un empleado podía fabricar puntos con visitas atrasadas (D-022); bajas de WhatsApp después de lanzar, campañas superpuestas, "nuevos" del tablero, desempate de consentimientos, números de segmento, horario de verano (D-023); tarjeta de clientes archivados, cámara que quedaba prendida, botón de WhatsApp sin teléfono.
+* **Mi negocio** (nombre, color, zona horaria, logo) y tarjeta con la marca del negocio; panel y tarjeta instalables (PWA) (D-024).
+* **Deploy preparado** en Cloudflare Pages (gratis), sin crear cuentas: `docs/DEPLOY.md`, `docs/CHECKLIST-PRODUCCION.md` (D-025).
+* Ramas del mentor (`feat/equipo-y-privacidad`, `feat/proteger-duenos`) puestas al día con `main`; sus migraciones renombradas a `20261009190100`–`190400` (11–14). Además el borrado de datos ahora limpia los mensajes de campañas. CI verde.
+* Tests de base en `main`: **246** (17 archivos). CI verde en `main`.
+* **Pendiente:** aplicar en desarrollo las migraciones 18–20 (requiere que el dueño confirme el aviso de Supabase).
+
 ## Viernes 9, 15:50 — Fase 5 (Tablero + Recuperación) hecha
 
 * Integrado en `main` y aplicado en desarrollo (migración 17, D-021).
@@ -148,7 +160,7 @@ Cómo volver atrás: cada cosa está en su rama; lo único integrado en `main` e
 
 ## Current blockers
 
-**Para probar lo nuevo:** Data API → Exposed schemas → agregar `loyalty` (dueño, en el dashboard). Guía: `docs/GUIA-PRUEBA-COMPLETA.md`.
+**Para probar lo nuevo:** (1) Data API → Exposed schemas → agregar `loyalty` (verificado 17:10: todavía no está); (2) aplicar migraciones 18–20 (confirmar el aviso). Guía: `docs/GUIA-PRUEBA-COMPLETA.md`.
 
 **Fase 6 (mensajería real con WhatsApp API) es checkpoint humano:** cuenta de Meta Business, número verificado, plantillas aprobadas y costos por mensaje. No se avanza sin decisión del dueño.
 

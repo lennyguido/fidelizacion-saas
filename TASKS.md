@@ -972,16 +972,16 @@ Opciones posibles:
 
 # 27. WHITE-LABEL
 
-* [ ] Crear branding dinámico
-* [ ] Nombre dinámico
-* [ ] Logo dinámico
-* [ ] Colores dinámicos
+* [x] Crear branding dinámico
+* [x] Nombre dinámico
+* [x] Logo dinámico
+* [x] Colores dinámicos
 * [ ] Textos configurables
 * [ ] Recompensas dinámicas
 * [ ] Puntos dinámicos
 * [ ] Favicon dinámico
 * [ ] Metadata dinámica
-* [ ] Title dinámico
+* [x] Title dinámico
 * [ ] Open Graph dinámico
 * [ ] Test business A
 * [ ] Test business B
@@ -1009,7 +1009,7 @@ Opciones posibles:
 
 Separar frontend hosting de Supabase.
 
-* [ ] Definir proveedor de hosting
+* [x] Definir proveedor de hosting (Cloudflare Pages, D-025)
 * [ ] Definir arquitectura de dominios
 * [ ] Definir wildcard subdomain
 * [ ] Diseñar `club.negocio.com`
