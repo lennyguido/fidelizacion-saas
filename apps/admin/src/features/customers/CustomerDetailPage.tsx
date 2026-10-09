@@ -19,6 +19,7 @@ import { CustomerForm } from './CustomerForm'
 import { useCustomer, useCustomerVisits, useInvalidateCustomers } from './queries'
 import { StatusBadge } from './StatusBadge'
 import { VisitHistory } from './VisitHistory'
+import { WhatsappConsentCard } from './WhatsappConsentCard'
 
 export function CustomerDetailPage() {
   const { customerId = '' } = useParams()
@@ -36,6 +37,7 @@ export function CustomerDetailPage() {
       </Link>
       <CustomerHeader customer={customer.data} />
       <CustomerStatsCard customer={customer.data} />
+      <WhatsappConsentCard customerId={customer.data.id} hasPhone={Boolean(customer.data.phone)} />
       <CustomerModulePanels
         customerId={customer.data.id}
         customerName={customer.data.name}

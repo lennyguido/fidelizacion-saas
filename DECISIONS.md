@@ -104,3 +104,11 @@ El dueño pidió no tener que aprobar cada migración. En el proyecto de **desar
 * `loyalty.get_card(token)` es la **única función ejecutable sin sesión** (lo verifica el meta-test). Es solo lectura y muestra lo mínimo: nombre de pila, saldo, código de socio, recompensas y últimos movimientos. Nunca teléfono, email ni apellido.
 * El **código de socio** (8 caracteres, va en el QR) no es secreto: sirve para encontrar al cliente en el mostrador escribiéndolo o escaneándolo.
 * Más adelante, si hace falta (por ejemplo, para que el cliente canjee desde su teléfono), se agrega inicio de sesión con email/OTP usando `core.customer_accounts`.
+
+## D-021 — Campañas de recuperación con grupo de control y atribución por ventana (2026-10-09, vigente)
+
+* **Quién recibe:** clientes del segmento (filtros fijos validados: estados, visitas mínimas, gasto mínimo, días sin venir) que estén activos, tengan teléfono y **consentimiento de WhatsApp vigente** (último registro en `core.customer_consents`). Sin consentimiento no entran.
+* **Envío MVP:** sin API de WhatsApp. Al lanzar, la base congela la lista, elige al azar el **grupo de control** (por defecto 10–20%) y arma el mensaje de cada uno. El dueño lo manda desde su WhatsApp con un link `wa.me`; se registra que lo abrió.
+* **"Volvió":** tiene al menos una visita válida entre el lanzamiento y N días después (por defecto 14). Se calcula al consultar desde `core.visits`, así una visita anulada deja de contar sola.
+* **Resultados:** total de los que volvieron y gastaron, y lo **incremental** comparando con el grupo de control: `(tasa contactados − tasa control) × contactados` y `(gasto promedio contactados − gasto promedio control) × contactados`. Sin grupo de control no se muestra incremental. Nunca se promete un resultado: se muestra estimado y con la explicación.
+* **Tablero del mes** (`core.dashboard_summary`): visitas, ventas registradas, ticket promedio, nuevos, recuperados y "en juego" (lo que gastaron los que dejaron de venir), comparado con los mismos días del mes anterior, en la zona horaria del negocio. Solo dueño/admin.
