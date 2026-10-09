@@ -19,11 +19,11 @@ jobs:
         with:
           node-version-file: .nvmrc
       # Hasta que exista package-lock.json en la raíz se usa install; después, npm ci.
-      - run: if [ -f package-lock.json ]; then npm ci; else npm install; fi
-      - run: npm run typecheck
-      - run: npm run lint
-      - run: npm run format:check
-      - run: npm run build
+      - run: scripts/ci-run.sh install bash -c 'if [ -f package-lock.json ]; then npm ci; else npm install; fi'
+      - run: scripts/ci-run.sh typecheck npm run typecheck
+      - run: scripts/ci-run.sh lint npm run lint
+      - run: scripts/ci-run.sh format npm run format:check
+      - run: scripts/ci-run.sh build npm run build
 
   database:
     name: Database (migrations + pgTAP)
