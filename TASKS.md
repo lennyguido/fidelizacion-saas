@@ -83,7 +83,7 @@ Ver secciones 21–26.
 * [x] Ledger de puntos append-only, acreditación al recibir `visit.recorded`
 * [x] Recompensas, canjes con código único (función transaccional, anti doble canje) + panel
 * [x] Tests de reglas y de abuso (`020-loyalty-points`, `021-loyalty-redemptions`)
-* [x] App del cliente (`apps/client`): acceso por link secreto (D-020), puntos, progreso, recompensas, QR, historial. Pendiente: escanear el QR con la cámara en el mostrador (hoy se escribe el código)
+* [x] App del cliente (`apps/client`): acceso por link secreto (D-020), puntos, progreso, recompensas, QR, historial. El mostrador escanea el QR con la cámara (Chrome Android; en otros navegadores se escribe el código)
 
 ## Fase 5 — Dashboard y módulo Recuperación (`recovery`)
 

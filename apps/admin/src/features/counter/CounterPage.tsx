@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+import { useCallback, useState, type FormEvent } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import {
   customers,
@@ -13,6 +13,7 @@ import {
 import { Alert, Button, Card, Spinner, TextField, useToast } from '@plataforma/ui'
 import { useCustomerCodeMatch } from '../../modules/useCustomerCodeMatch'
 import { useActiveBusiness } from '../business/ActiveBusinessContext'
+import { QrScanner, canScanQr } from './QrScanner'
 import { StatusBadge } from '../customers/StatusBadge'
 import { useCustomerSearch, useInvalidateCustomers } from '../customers/queries'
 import { useDebouncedValue } from '../../hooks/useDebouncedValue'
@@ -29,6 +30,12 @@ export function CounterPage() {
   const [query, setQuery] = useState('')
   const [amountText, setAmountText] = useState('')
   const [creating, setCreating] = useState(false)
+  const [scanning, setScanning] = useState(false)
+  const onScanned = useCallback((text: string) => {
+    setScanning(false)
+    setCreating(false)
+    setQuery(text)
+  }, [])
   const debouncedQuery = useDebouncedValue(query)
   const results = useCustomerSearch(business.id, debouncedQuery, null, 8)
   const codeMatch = useCustomerCodeMatch(debouncedQuery)
@@ -75,6 +82,15 @@ export function CounterPage() {
             setCreating(false)
           }}
         />
+        {scanning ? (
+          <QrScanner onResult={onScanned} onClose={() => setScanning(false)} />
+        ) : (
+          canScanQr() && (
+            <Button variant="secondary" onClick={() => setScanning(true)}>
+              Escanear QR de la tarjeta
+            </Button>
+          )
+        )}
         <TextField
           label="Monto (opcional)"
           inputMode="decimal"
