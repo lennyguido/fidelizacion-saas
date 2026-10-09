@@ -25,4 +25,4 @@ jobs:
         with:
           version: latest
       - run: supabase db start
-      - run: bash scripts/backup-drill.sh
+      - run: scripts/ci-run.sh "backup drill" bash scripts/backup-drill.sh
