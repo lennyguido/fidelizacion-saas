@@ -89,7 +89,8 @@ select set_eq(
        ('core.void_visit(uuid,text)'),
        ('core.is_slug_available(text)'),
        ('core.create_business(text,text,text)'),
-       ('core.search_customers(uuid,text,text,integer,integer)') $$,
+       ('core.search_customers(uuid,text,text,integer,integer)'),
+       ('core.import_customers(uuid,jsonb)') $$,
   'authenticated can execute only the intended functions'
 );
 
