@@ -46,5 +46,9 @@
 | 20 | "Guardar y revisar" | Borrador con "Lanzar campaña" (deshabilitado si nadie aceptó WhatsApp) |
 | 21 | Si hay alguien: "Lanzar campaña" → "WhatsApp" en un cliente | Se abre WhatsApp con el mensaje armado; al volver dice "mensaje enviado" |
 | 22 | Registrale una visita a ese cliente y volvé a la campaña | En Resultados: "Volvieron (les escribiste)" sube y aparece "Volvió · $…" |
+| 23 | En la lista "A quiénes escribirles", mirá el código que dice "Cupón ……" de otro cliente | Cada cliente tiene un código distinto de 6 letras y números, y el mensaje de WhatsApp lo incluye |
+| 24 | **Mostrador** → "¿Trae un cupón de una campaña?" → escribí ese código (con o sin guion, en minúscula también) | Aparece el nombre del cliente, el beneficio y "Vence el …" |
+| 25 | "Usar cupón y registrar visita" | Mensaje "Cupón usado: …". En la campaña, el cliente dice "Cupón …… · usado" y Resultados muestra "Cupones usados: 1" |
+| 26 | Escribí el mismo código otra vez | Dice "Este cupón ya se usó." y no deja usarlo |
 
 > Para tener clientes "en riesgo" en la prueba sin esperar semanas, se pueden cargar visitas viejas con la importación CSV… o pedirle a Claude que cree datos de demo en desarrollo.
