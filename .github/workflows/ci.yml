@@ -23,6 +23,7 @@ jobs:
       - run: scripts/ci-run.sh typecheck npm run typecheck
       - run: scripts/ci-run.sh lint npm run lint
       - run: scripts/ci-run.sh format npm run format:check
+      - run: scripts/ci-run.sh unit npm test
       - run: scripts/ci-run.sh build npm run build
 
   database:

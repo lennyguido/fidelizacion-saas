@@ -7,6 +7,10 @@ import { SignupPage } from '../features/auth/SignupPage'
 import { BusinessLayout } from '../features/business/BusinessLayout'
 import { HomeRedirect } from '../features/business/HomeRedirect'
 import { OnboardingPage } from '../features/business/OnboardingPage'
+import { CounterPage } from '../features/counter/CounterPage'
+import { CustomerDetailPage } from '../features/customers/CustomerDetailPage'
+import { CustomersPage } from '../features/customers/CustomersPage'
+import { NewCustomerPage } from '../features/customers/NewCustomerPage'
 import { moduleManifests } from '../modules/registry'
 import { RequireModule } from '../modules/RequireModule'
 import { HomePage } from '../pages/HomePage'
@@ -68,7 +72,14 @@ export const router = createBrowserRouter([
         <BusinessLayout />
       </RequireAuth>
     ),
-    children: [{ index: true, element: <HomePage /> }, ...moduleRoutes],
+    children: [
+      { index: true, element: <HomePage /> },
+      { path: 'mostrador', element: <CounterPage /> },
+      { path: 'clientes', element: <CustomersPage /> },
+      { path: 'clientes/nuevo', element: <NewCustomerPage /> },
+      { path: 'clientes/:customerId', element: <CustomerDetailPage /> },
+      ...moduleRoutes,
+    ],
   },
   { path: '*', element: <NotFoundPage /> },
 ])

@@ -17,7 +17,12 @@ function useNavItems(): NavItem[] {
   const moduleItems = moduleManifests
     .filter((m) => modules.includes(m.id))
     .flatMap((m) => m.nav.map((item) => ({ label: item.label, to: `${base}/${item.path}` })))
-  return [{ label: 'Inicio', to: base, end: true }, ...moduleItems]
+  return [
+    { label: 'Inicio', to: base, end: true },
+    { label: 'Mostrador', to: `${base}/mostrador` },
+    { label: 'Clientes', to: `${base}/clientes` },
+    ...moduleItems,
+  ]
 }
 
 function navClass({ isActive }: { isActive: boolean }) {

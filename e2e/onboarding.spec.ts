@@ -50,3 +50,40 @@ test('wrong credentials show a clear error', async ({ page }) => {
   await page.getByRole('button', { name: 'Ingresar' }).click()
   await expect(page.getByRole('alert')).toContainText('Email o contraseña incorrectos')
 })
+
+// Mostrador: alta rápida de cliente + visita con monto, y la ficha refleja la visita.
+test('the counter registers a new customer with a visit', async ({ page }, testInfo) => {
+  const suffix = `${Date.now()}-${testInfo.project.name}`
+  await page.goto('/signup')
+  await page.getByLabel('Email').fill(`counter-${suffix}@e2e.test`)
+  await page.getByLabel('Contraseña').fill('clave-segura-123')
+  await page.getByRole('button', { name: 'Crear cuenta' }).click()
+  await page.getByLabel('Nombre del negocio').fill(`Kiosco ${suffix}`)
+  await expect(page.getByText(/Disponible/)).toBeVisible()
+  await page.getByRole('button', { name: 'Crear negocio' }).click()
+  await expect(page).toHaveURL(/\/b\/kiosco-/)
+
+  await page.getByRole('link', { name: 'Registrar una visita' }).click()
+  await page.getByLabel('Buscar cliente').fill('Don Carlos')
+  await page.getByLabel('Monto (opcional)').fill('3.800')
+  await page.getByRole('button', { name: '+ Cliente nuevo' }).click()
+  await expect(page.getByLabel('Nombre')).toHaveValue('Don Carlos')
+  await page.getByRole('button', { name: 'Guardar y registrar visita' }).click()
+  await expect(page.getByText('Visita de Don Carlos registrada ($ 3.800)')).toBeVisible()
+
+  // Una segunda carga inmediata se rechaza (doble carga accidental).
+  await page.getByLabel('Buscar cliente').fill('Don')
+  await page.getByRole('button', { name: 'Registrar visita de Don Carlos' }).click()
+  await expect(page.getByText('Esta visita ya se registró hace un momento.')).toBeVisible()
+
+  // Visita anónima.
+  await page.getByRole('button', { name: '+ Visita sin identificar' }).click()
+  await expect(page.getByText('Visita registrada')).toBeVisible()
+
+  // La ficha del cliente muestra la visita y el gasto.
+  await page.getByRole('link', { name: 'Clientes' }).first().click()
+  await page.getByRole('link', { name: /Don Carlos/ }).click()
+  await expect(page.getByRole('heading', { name: 'Don Carlos' })).toBeVisible()
+  await expect(page.getByText('$ 3.800').first()).toBeVisible()
+  await expect(page.getByText('Mostrador', { exact: true }).last()).toBeVisible()
+})

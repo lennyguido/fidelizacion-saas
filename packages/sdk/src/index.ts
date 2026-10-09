@@ -12,6 +12,17 @@ export type { Business, MemberRole, MyBusiness } from './types.ts'
 export * as auth from './auth.ts'
 export * as businesses from './businesses.ts'
 export * as customers from './customers.ts'
-export { CUSTOMER_STATUSES, type CustomerStatus } from './customers.ts'
+export {
+  CUSTOMER_STATUSES,
+  type Customer,
+  type CustomerInput,
+  type CustomerListItem,
+  type CustomerStats,
+  type CustomerStatus,
+} from './customers.ts'
+export * as visits from './visits.ts'
+export type { Visit } from './visits.ts'
+export { formatMoney, parseAmountToMinor } from './money.ts'
+export { formatPhone, normalizePhone } from './phone.ts'
 export { isValidSlug, slugify } from './slug.ts'
 export type { Session } from '@supabase/supabase-js'

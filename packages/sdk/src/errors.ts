@@ -6,6 +6,8 @@ export type AppErrorCode =
   | 'conflict'
   | 'slug_taken'
   | 'duplicate_visit'
+  | 'duplicate_phone'
+  | 'duplicate_email'
   | 'limit_reached'
   | 'auth_invalid_credentials'
   | 'auth_email_not_confirmed'
@@ -88,6 +90,8 @@ export function errorMessage(error: unknown): string {
     conflict: 'Ya existe un registro con esos datos.',
     slug_taken: 'Esa dirección ya está en uso. Probá con otra.',
     duplicate_visit: 'Esta visita ya se registró hace un momento.',
+    duplicate_phone: 'Ya hay un cliente con ese teléfono.',
+    duplicate_email: 'Ya hay un cliente con ese email.',
     limit_reached: 'Llegaste al límite de tu plan.',
     auth_invalid_credentials: 'Email o contraseña incorrectos.',
     auth_email_not_confirmed: 'Confirmá tu email antes de ingresar. Revisá tu casilla.',
