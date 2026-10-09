@@ -2,6 +2,7 @@ import { useRef, useState, type FormEvent } from 'react'
 import { Link } from 'react-router'
 import { useMutation } from '@tanstack/react-query'
 import {
+  card,
   errorMessage,
   loyalty,
   type LoyaltyMember,
@@ -11,6 +12,7 @@ import {
 } from '@plataforma/sdk'
 import { Alert, Button, Card, TextField, useToast } from '@plataforma/ui'
 import { useActiveBusiness } from '../../features/business/ActiveBusinessContext'
+import { clientAppUrl, whatsappLink } from '../../lib/clientAppUrl'
 import { formatDateTime } from '../../lib/format'
 import type { CustomerPanelProps } from '../types'
 import {
@@ -23,7 +25,12 @@ import {
 } from './queries'
 
 /** Tarjeta de puntos en la ficha del cliente. */
-export function CustomerLoyaltyPanel({ customerId, archived }: CustomerPanelProps) {
+export function CustomerLoyaltyPanel({
+  customerId,
+  customerName,
+  phone,
+  archived,
+}: CustomerPanelProps) {
   const { business } = useActiveBusiness()
   const program = useProgram(business.id)
   const member = useMember(business.id, customerId)
@@ -47,7 +54,7 @@ export function CustomerLoyaltyPanel({ customerId, archived }: CustomerPanelProp
       ) : !member.data || member.data.status === 'left' ? (
         <JoinProgram customerId={customerId} disabled={archived} rejoining={Boolean(member.data)} />
       ) : (
-        <MemberView member={member.data} />
+        <MemberView member={member.data} customerName={customerName} phone={phone} />
       )}
     </Card>
   )
@@ -89,7 +96,15 @@ function JoinProgram({
   )
 }
 
-function MemberView({ member }: { member: LoyaltyMember }) {
+function MemberView({
+  member,
+  customerName,
+  phone,
+}: {
+  member: LoyaltyMember
+  customerName: string
+  phone: string | null
+}) {
   const { business } = useActiveBusiness()
   const canManage = business.role !== 'staff'
   const [lastCode, setLastCode] = useState<string | null>(null)
@@ -109,6 +124,7 @@ function MemberView({ member }: { member: LoyaltyMember }) {
         </Alert>
       )}
       <RedeemList member={member} onRedeemed={setLastCode} />
+      <DigitalCard member={member} customerName={customerName} phone={phone} />
       <RecentActivity member={member} canManage={canManage} />
       {canManage && <AdjustPointsForm member={member} />}
       <LeaveProgram member={member} />
@@ -356,6 +372,80 @@ function LeaveProgram({ member }: { member: LoyaltyMember }) {
       <Button variant="ghost" loading={leave.isPending} onClick={() => leave.mutate()}>
         Sacar del programa
       </Button>
+    </div>
+  )
+}
+
+function DigitalCard({
+  member,
+  customerName,
+  phone,
+}: {
+  member: LoyaltyMember
+  customerName: string
+  phone: string | null
+}) {
+  const { business } = useActiveBusiness()
+  const toast = useToast()
+  const invalidate = useInvalidateLoyalty(business.id)
+  const [link, setLink] = useState<string | null>(null)
+  const issue = useMutation({
+    mutationFn: () => loyalty.issueCard(member.id),
+    onSuccess: async (token) => {
+      setLink(card.cardUrl(clientAppUrl(import.meta.env, window.location), token))
+      await invalidate()
+    },
+    onError: (err) => toast.show(errorMessage(err), 'error'),
+  })
+  const firstName = customerName.split(' ')[0]
+  const message = link
+    ? `¡Hola ${firstName}! Esta es tu tarjeta de puntos de ${business.name}: ${link}`
+    : ''
+
+  async function copy() {
+    if (!link) return
+    try {
+      await navigator.clipboard.writeText(link)
+      toast.show('Link copiado', 'success')
+    } catch {
+      toast.show('No se pudo copiar: seleccioná el link y copialo a mano', 'error')
+    }
+  }
+
+  return (
+    <div className="flex flex-col gap-2 rounded-lg bg-slate-50 p-3 text-sm">
+      <p>
+        Código de socio:{' '}
+        <span className="font-mono font-semibold tracking-widest">{member.memberCode}</span>
+        <span className="ml-1 text-slate-500">(escribilo en el mostrador para encontrarlo)</span>
+      </p>
+      {link ? (
+        <>
+          <p className="break-all rounded bg-white p-2 font-mono text-xs" data-testid="card-link">
+            {link}
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <a
+              href={whatsappLink(phone, message)}
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-lg bg-green-600 px-4 py-2 font-medium text-white hover:bg-green-500"
+            >
+              Mandar por WhatsApp
+            </a>
+            <Button variant="secondary" onClick={copy}>
+              Copiar link
+            </Button>
+          </div>
+          <p className="text-xs text-slate-500">Si generás otro link, este deja de funcionar.</p>
+        </>
+      ) : (
+        <div>
+          <Button variant="secondary" loading={issue.isPending} onClick={() => issue.mutate()}>
+            {member.cardIssuedAt ? 'Generar link nuevo de la tarjeta' : 'Crear tarjeta digital'}
+          </Button>
+        </div>
+      )}
     </div>
   )
 }

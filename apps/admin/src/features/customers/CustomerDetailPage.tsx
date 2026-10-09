@@ -38,6 +38,8 @@ export function CustomerDetailPage() {
       <CustomerStatsCard customer={customer.data} />
       <CustomerModulePanels
         customerId={customer.data.id}
+        customerName={customer.data.name}
+        phone={customer.data.phone}
         archived={customer.data.status === 'archived'}
       />
       <Card>

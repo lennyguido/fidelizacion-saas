@@ -611,7 +611,27 @@ isOneToOne: false
           }
         },"loyalty": {
           Tables: {
-            "ledger": {
+            "cards": {
+                  Row: {
+                    "business_id": string,"issued_at": string,"member_id": string,"token_hash": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "business_id": string,"issued_at"?: string,"member_id": string,"token_hash": string
+                  }
+                  Update: {
+                    "business_id"?: string,"issued_at"?: string,"member_id"?: string,"token_hash"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "cards_business_id_member_id_fkey"
+      columns: ["business_id","member_id"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["business_id","id"]
+    }
+                  ]
+                },"ledger": {
                   Row: {
                     "business_id": string,"created_at": string,"created_by": string | null,"delta": number,"id": number,"member_id": string,"note": string | null,"reason": string,"redemption_id": string | null,"visit_id": string | null
                   }
@@ -639,14 +659,14 @@ isOneToOne: false
                   ]
                 },"members": {
                   Row: {
-                    "business_id": string,"created_by": string | null,"customer_id": string,"id": string,"joined_at": string,"left_at": string | null,"lifetime_points": number,"points_balance": number,"status": string,"updated_at": string
+                    "business_id": string,"card_issued_at": string | null,"created_by": string | null,"customer_id": string,"id": string,"joined_at": string,"left_at": string | null,"lifetime_points": number,"member_code": string,"points_balance": number,"status": string,"updated_at": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "business_id": string,"created_by"?: string | null,"customer_id": string,"id"?: string,"joined_at"?: string,"left_at"?: string | null,"lifetime_points"?: number,"points_balance"?: number,"status"?: string,"updated_at"?: string
+                    "business_id": string,"card_issued_at"?: string | null,"created_by"?: string | null,"customer_id": string,"id"?: string,"joined_at"?: string,"left_at"?: string | null,"lifetime_points"?: number,"member_code": string,"points_balance"?: number,"status"?: string,"updated_at"?: string
                   }
                   Update: {
-                    "business_id"?: string,"created_by"?: string | null,"customer_id"?: string,"id"?: string,"joined_at"?: string,"left_at"?: string | null,"lifetime_points"?: number,"points_balance"?: number,"status"?: string,"updated_at"?: string
+                    "business_id"?: string,"card_issued_at"?: string | null,"created_by"?: string | null,"customer_id"?: string,"id"?: string,"joined_at"?: string,"left_at"?: string | null,"lifetime_points"?: number,"member_code"?: string,"points_balance"?: number,"status"?: string,"updated_at"?: string
                   }
                   Relationships: [
                     
@@ -714,12 +734,14 @@ isOneToOne: false
             "adjust_points":
 { Args: { "p_delta": number,"p_member_id": string,"p_note": string }; Returns: {
               "business_id": string,
+"card_issued_at": string | null,
 "created_by": string | null,
 "customer_id": string,
 "id": string,
 "joined_at": string,
 "left_at": string | null,
 "lifetime_points": number,
+"member_code": string,
 "points_balance": number,
 "status": string,
 "updated_at": string
@@ -756,12 +778,14 @@ isOneToOne: false
 "enroll_customer":
 { Args: { "p_customer_id": string }; Returns: {
               "business_id": string,
+"card_issued_at": string | null,
 "created_by": string | null,
 "customer_id": string,
 "id": string,
 "joined_at": string,
 "left_at": string | null,
 "lifetime_points": number,
+"member_code": string,
 "points_balance": number,
 "status": string,
 "updated_at": string
@@ -772,15 +796,26 @@ isOneToOne: false
         isOneToOne: true
         isSetofReturn: false
       } },
+"find_member_by_code":
+{ Args: { "p_business_id": string,"p_code": string }; Returns: string
+                           },
+"get_card":
+{ Args: { "p_token": string }; Returns: Json
+                           },
+"issue_card":
+{ Args: { "p_member_id": string }; Returns: string
+                           },
 "leave_program":
 { Args: { "p_member_id": string }; Returns: {
               "business_id": string,
+"card_issued_at": string | null,
 "created_by": string | null,
 "customer_id": string,
 "id": string,
 "joined_at": string,
 "left_at": string | null,
 "lifetime_points": number,
+"member_code": string,
 "points_balance": number,
 "status": string,
 "updated_at": string
@@ -791,6 +826,9 @@ isOneToOne: false
         isOneToOne: true
         isSetofReturn: false
       } },
+"new_member_code":
+{ Args: { "p_business_id": string }; Returns: string
+                           },
 "new_redemption_code":
 { Args: { "p_business_id": string }; Returns: string
                            },

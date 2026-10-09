@@ -22,6 +22,8 @@ export {
 } from './customers.ts'
 export * as visits from './visits.ts'
 export * as loyalty from './loyalty.ts'
+export * as card from './card.ts'
+export type { Card, CardMovement, CardReward } from './card.ts'
 export type {
   Member as LoyaltyMember,
   Movement as LoyaltyMovement,

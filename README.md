@@ -34,7 +34,7 @@ El producto permite a los negocios:
 
 ```text
 apps/admin/        panel del negocio (React + TypeScript + Vite + Tailwind)
-apps/client/       app del cliente final (PWA) — Fase 4
+apps/client/       tarjeta digital del cliente final (PWA, sin cuenta: link secreto, D-020)
 packages/config/   configuración compartida de TypeScript
 packages/ui/       componentes reutilizables
 packages/sdk/      acceso a datos (único lugar que habla con Supabase)
@@ -47,7 +47,8 @@ docs/              arquitectura
 ```bash
 npm install                                       # en la raíz: instala todos los workspaces
 cp apps/admin/.env.example apps/admin/.env.local  # completar con el proyecto Supabase de DESARROLLO
-npm run dev                                       # levanta el panel del negocio
+npm run dev                                       # panel del negocio (puerto 5173)
+npm run dev:client                                # tarjeta digital del cliente (puerto 5174; usa el mismo .env.local)
 ```
 
 Comandos oficiales (desde la raíz):
