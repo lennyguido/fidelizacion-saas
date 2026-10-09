@@ -20,12 +20,22 @@ export function CustomersPage() {
     <section className="flex flex-col gap-4">
       <div className="flex items-center justify-between gap-3">
         <h1 className="text-2xl font-bold tracking-tight">Clientes</h1>
-        <Link
-          to={`/b/${business.slug}/clientes/nuevo`}
-          className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700"
-        >
-          Nuevo cliente
-        </Link>
+        <div className="flex gap-2">
+          {business.role !== 'staff' && (
+            <Link
+              to={`/b/${business.slug}/clientes/importar`}
+              className="rounded-lg px-4 py-2 text-sm font-medium text-slate-700 ring-1 ring-inset ring-slate-300 hover:bg-slate-50"
+            >
+              Importar
+            </Link>
+          )}
+          <Link
+            to={`/b/${business.slug}/clientes/nuevo`}
+            className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700"
+          >
+            Nuevo cliente
+          </Link>
+        </div>
       </div>
 
       <TextField

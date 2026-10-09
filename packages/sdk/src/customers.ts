@@ -244,3 +244,22 @@ export async function archive(customerId: string): Promise<void> {
     .eq('id', customerId)
   if (error) throw fromPostgrestError(error)
 }
+
+export interface ImportBatchResult {
+  inserted: number
+  skipped: Array<{ index: number; reason: string }>
+}
+
+/** Importa hasta 500 clientes ya normalizados (core.import_customers). */
+export async function importBatch(
+  businessId: string,
+  rows: Array<{ name: string; phone: string | null; email: string | null; notes: string | null }>,
+): Promise<ImportBatchResult> {
+  const { data, error } = await getSupabase().rpc('import_customers', {
+    p_business_id: businessId,
+    p_rows: rows,
+  })
+  if (error) throw fromPostgrestError(error)
+  const result = data as ImportBatchResult
+  return { inserted: Number(result.inserted), skipped: result.skipped ?? [] }
+}

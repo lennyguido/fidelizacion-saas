@@ -23,6 +23,18 @@ export {
 export * as visits from './visits.ts'
 export type { Visit } from './visits.ts'
 export { formatMoney, parseAmountToMinor } from './money.ts'
+export { detectDelimiter, parseCsv, toCsv } from './csv.ts'
+export {
+  IMPORT_TEMPLATE,
+  buildImportRows,
+  detectColumns,
+  importRejectionLabels,
+  type ColumnMapping,
+  type ImportField,
+  type ImportRejection,
+  type ImportRow,
+  type InvalidRow,
+} from './customerImport.ts'
 export { formatPhone, normalizePhone } from './phone.ts'
 export { isValidSlug, slugify } from './slug.ts'
 export type { Session } from '@supabase/supabase-js'

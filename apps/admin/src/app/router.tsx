@@ -10,6 +10,7 @@ import { OnboardingPage } from '../features/business/OnboardingPage'
 import { CounterPage } from '../features/counter/CounterPage'
 import { CustomerDetailPage } from '../features/customers/CustomerDetailPage'
 import { CustomersPage } from '../features/customers/CustomersPage'
+import { ImportCustomersPage } from '../features/customers/ImportCustomersPage'
 import { NewCustomerPage } from '../features/customers/NewCustomerPage'
 import { moduleManifests } from '../modules/registry'
 import { RequireModule } from '../modules/RequireModule'
@@ -77,6 +78,7 @@ export const router = createBrowserRouter([
       { path: 'mostrador', element: <CounterPage /> },
       { path: 'clientes', element: <CustomersPage /> },
       { path: 'clientes/nuevo', element: <NewCustomerPage /> },
+      { path: 'clientes/importar', element: <ImportCustomersPage /> },
       { path: 'clientes/:customerId', element: <CustomerDetailPage /> },
       ...moduleRoutes,
     ],
