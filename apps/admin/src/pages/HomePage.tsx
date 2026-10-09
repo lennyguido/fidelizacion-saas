@@ -1,5 +1,6 @@
 import { Link } from 'react-router'
-import { CUSTOMER_STATUSES, errorMessage } from '@plataforma/sdk'
+import { useQuery } from '@tanstack/react-query'
+import { CUSTOMER_STATUSES, errorMessage, startOfDayInTimeZone, visits } from '@plataforma/sdk'
 import { Alert, Card, Spinner } from '@plataforma/ui'
 import { useActiveBusiness } from '../features/business/ActiveBusinessContext'
 import { useCustomerCounts } from '../features/customers/queries'
@@ -25,6 +26,8 @@ export function HomePage() {
       >
         Registrar una visita
       </Link>
+
+      <VisitsCard />
 
       <Card>
         <h2 className="mb-4 text-base font-semibold">Tus clientes</h2>
@@ -58,5 +61,49 @@ export function HomePage() {
         </ol>
       </Card>
     </section>
+  )
+}
+
+/** Visitas de hoy y de los últimos 7 días (en la hora del negocio). */
+function VisitsCard() {
+  const { business } = useActiveBusiness()
+  const counts = useQuery({
+    queryKey: ['customers', business.id, 'visit-counts'],
+    queryFn: async () => {
+      const today = startOfDayInTimeZone(business.timezone)
+      const weekAgo = startOfDayInTimeZone(business.timezone, new Date(), 6)
+      const [day, week] = await Promise.all([
+        visits.countBetween(business.id, today),
+        visits.countBetween(business.id, weekAgo),
+      ])
+      return { day, week }
+    },
+  })
+
+  const percent = (part: number, total: number) =>
+    total === 0 ? 0 : Math.round((part / total) * 100)
+
+  return (
+    <Card>
+      <h2 className="mb-4 text-base font-semibold">Visitas</h2>
+      {counts.isPending && <Spinner />}
+      {counts.error && <Alert tone="error">{errorMessage(counts.error)}</Alert>}
+      {counts.data && (
+        <dl className="grid grid-cols-2 gap-4">
+          {[
+            { label: 'Hoy', value: counts.data.day },
+            { label: 'Últimos 7 días', value: counts.data.week },
+          ].map((item) => (
+            <div key={item.label} className="rounded-lg bg-slate-50 p-3">
+              <dt className="text-xs font-medium text-slate-500">{item.label}</dt>
+              <dd className="mt-1 text-2xl font-bold">{item.value.total}</dd>
+              <dd className="text-xs text-slate-500">
+                {percent(item.value.identified, item.value.total)}% con cliente identificado
+              </dd>
+            </div>
+          ))}
+        </dl>
+      )}
+    </Card>
   )
 }

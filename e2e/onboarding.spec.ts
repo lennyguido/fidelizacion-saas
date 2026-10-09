@@ -82,6 +82,10 @@ test('the counter registers a new customer with a visit', async ({ page }, testI
   await page.getByRole('button', { name: '+ Visita sin identificar' }).click()
   await expect(page.getByText('Visita registrada')).toBeVisible()
 
+  // El inicio cuenta las visitas de hoy (1 identificada + 1 anónima).
+  await page.locator('nav:visible').getByRole('link', { name: 'Inicio' }).click()
+  await expect(page.getByText('50% con cliente identificado').first()).toBeVisible()
+
   // La ficha del cliente muestra la visita y el gasto.
   await page.locator('nav:visible').getByRole('link', { name: 'Clientes' }).click()
   await page.getByRole('link', { name: /Don Carlos/ }).click()

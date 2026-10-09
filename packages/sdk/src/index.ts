@@ -21,7 +21,8 @@ export {
   type CustomerStatus,
 } from './customers.ts'
 export * as visits from './visits.ts'
-export type { Visit } from './visits.ts'
+export type { Visit, VisitCounts } from './visits.ts'
+export { startOfDayInTimeZone } from './dates.ts'
 export { formatMoney, parseAmountToMinor } from './money.ts'
 export { detectDelimiter, parseCsv, toCsv } from './csv.ts'
 export {

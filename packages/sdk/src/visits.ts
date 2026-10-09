@@ -84,3 +84,31 @@ export async function listForCustomer(customerId: string, limit = 50): Promise<V
   if (error) throw fromPostgrestError(error)
   return (data ?? []).map(toVisit)
 }
+
+export interface VisitCounts {
+  total: number
+  identified: number
+}
+
+/** Visitas válidas (no anuladas) entre dos instantes: total y con cliente identificado. */
+export async function countBetween(
+  businessId: string,
+  fromIso: string,
+  toIso?: string,
+): Promise<VisitCounts> {
+  const supabase = getSupabase()
+  const base = () => {
+    let query = supabase
+      .from('visits')
+      .select('id', { count: 'exact', head: true })
+      .eq('business_id', businessId)
+      .is('voided_at', null)
+      .gte('occurred_at', fromIso)
+    if (toIso) query = query.lt('occurred_at', toIso)
+    return query
+  }
+  const [total, identified] = await Promise.all([base(), base().not('customer_id', 'is', null)])
+  if (total.error) throw fromPostgrestError(total.error)
+  if (identified.error) throw fromPostgrestError(identified.error)
+  return { total: total.count ?? 0, identified: identified.count ?? 0 }
+}
