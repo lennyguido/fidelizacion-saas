@@ -57,3 +57,17 @@ Comandos oficiales (desde la raíz):
 * `npm run typecheck` — TypeScript en todos los workspaces.
 * `npm run lint` — ESLint.
 * `npm run format` / `npm run format:check` — Prettier.
+
+## Base de datos
+
+* Migraciones en `supabase/migrations/` (núcleo `core_*` primero, después cada módulo).
+* Tests pgTAP en `supabase/tests/database/`.
+* Datos demo en `supabase/seed.sql` (Café Central y Panadería Sur).
+
+```bash
+npx supabase db start   # Postgres local con migraciones + seed (requiere Docker)
+npx supabase test db    # corre los tests
+```
+
+Sin Docker: `scripts/db-test-local.sh` contra cualquier Postgres 16+ con pgTAP.
+

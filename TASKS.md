@@ -15,35 +15,37 @@
 
 ## Fase 0 — Base del repositorio
 
-* [ ] Convertir a monorepo con npm workspaces: `app/` → `apps/admin/`
-* [ ] Crear `packages/config` (tsconfig, eslint, tailwind compartidos)
-* [ ] Crear `packages/ui` (vacío, listo para componentes)
-* [ ] Crear `packages/sdk` (cliente Supabase tipado + lectura de variables de entorno)
-* [ ] Configurar Prettier y aliases de imports
-* [ ] `supabase init` en la raíz y `supabase link` al proyecto de desarrollo (HUMAN ACTION: login y contraseña)
-* [ ] Exponer esquemas `core`, `loyalty`, `recovery` en `supabase/config.toml`
-* [ ] GitHub Actions: install, typecheck, lint, build (los tests de base se suman en la Fase 1)
+* [x] Convertir a monorepo con npm workspaces: `app/` → `apps/admin/`
+* [x] Crear `packages/config` (tsconfig, eslint, tailwind compartidos)
+* [x] Crear `packages/ui` (vacío, listo para componentes)
+* [x] Crear `packages/sdk` (cliente Supabase tipado + lectura de variables de entorno)
+* [x] Configurar Prettier y aliases de imports
+* [x] `supabase/config.toml` creado a mano (equivale a `supabase init`). El proyecto remoto se maneja con el conector de Supabase; `supabase link` solo hace falta para usar la CLI contra el remoto
+* [x] Exponer esquema `core` en `supabase/config.toml` (`loyalty`/`recovery` se agregan con sus módulos)
+* [ ] Exponer esquema `core` en el proyecto remoto (Project Settings → Data API) — HUMAN ACTION
+* [ ] `npm install` y commitear `package-lock.json` de la raíz — HUMAN ACTION (npm bloqueado en el entorno del agente)
+* [x] GitHub Actions: install, typecheck, lint, build (los tests de base se suman en la Fase 1)
 
 ## Fase 1 — Núcleo de base de datos (`core`)
 
 Ver secciones 8–13 y 46 para detalle.
 
-* [ ] Migración: `core.businesses`, `core.locations`
-* [ ] Migración: `core.memberships`, `core.platform_admins`
-* [ ] Migración: helpers RLS `core.is_member`, `core.has_role`, `core.has_module`
-* [ ] Migración: `core.modules`, `core.plans`, `core.subscriptions`, `core.business_modules`
-* [ ] Migración: `core.customers`, `core.customer_consents`, `core.customer_accounts`
-* [ ] Migración: `core.visits` + función `core.record_visit()` (idempotente)
-* [ ] Migración: `core.customer_stats`, `core.customer_status_history` + cálculo de estado y riesgo
-* [ ] Job nocturno con `pg_cron` para recalcular estadísticas
-* [ ] Migración: `core.events` (outbox) y `core.audit_log` con trigger genérico
-* [ ] Storage: bucket de logos con policies por `business_id`
-* [ ] Tests pgTAP: meta-test (toda tabla de negocio con RLS + `business_id` + índice)
-* [ ] Tests pgTAP: acceso cross-tenant rechazado en todas las tablas del núcleo
-* [ ] Tests pgTAP: `record_visit` (idempotencia, anónimas, permisos) y cálculo de estados
-* [ ] Seed DEMO "Café Central" (+ un segundo negocio para probar aislamiento)
+* [x] Migración: `core.businesses`, `core.locations`
+* [x] Migración: `core.memberships`, `core.platform_admins`
+* [x] Migración: helpers RLS `core.is_member`, `core.has_role`, `core.has_module`
+* [x] Migración: `core.modules`, `core.plans`, `core.subscriptions`, `core.business_modules`
+* [x] Migración: `core.customers`, `core.customer_consents`, `core.customer_accounts`
+* [x] Migración: `core.visits` + función `core.record_visit()` (idempotente)
+* [x] Migración: `core.customer_stats`, `core.customer_status_history` + cálculo de estado y riesgo
+* [x] Job nocturno con `pg_cron` para recalcular estadísticas
+* [x] Migración: `core.events` (outbox) y `core.audit_log` con trigger genérico
+* [x] Storage: bucket de logos con policies por `business_id`
+* [x] Tests pgTAP: meta-test (toda tabla de negocio con RLS + `business_id` + índice)
+* [x] Tests pgTAP: acceso cross-tenant rechazado en todas las tablas del núcleo
+* [x] Tests pgTAP: `record_visit` (idempotencia, anónimas, permisos) y cálculo de estados
+* [x] Seed DEMO "Café Central" (+ un segundo negocio para probar aislamiento)
 * [ ] Generar tipos TypeScript para todos los esquemas
-* [ ] Sumar `supabase test db` al CI
+* [x] Sumar `supabase test db` al CI
 
 ## Fase 2 — Auth, onboarding y shell del panel
 

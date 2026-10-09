@@ -99,23 +99,29 @@ create table core.visits (
 
 ### 3.3 Helpers de RLS (se escriben una vez y los usa todo módulo)
 
+Para **policies** se usan funciones que devuelven conjuntos, con el patrón
+`business_id in (select core.my_business_ids())`, que Postgres evalúa una sola vez por consulta (no por fila):
+
 ```sql
-core.is_member(p_business_id uuid) returns boolean
-core.has_role(p_business_id uuid, p_roles text[]) returns boolean
-core.has_module(p_business_id uuid, p_module text) returns boolean
+core.my_business_ids()                          -- negocios donde soy miembro activo
+core.my_business_ids_with_role(array['owner','admin'])
+core.my_business_ids_with_module('loyalty')      -- mis negocios con el módulo activo
+core.my_customer_ids()                           -- mis fichas como cliente final
 ```
 
-* `security definer`, `stable`, `set search_path = ''`.
-* Las policies usan `(select auth.uid())` para que Postgres lo evalúe una vez por consulta (performance).
+Dentro de **funciones** se usan las variantes booleanas: `core.is_member()`, `core.has_role()`, `core.has_module()` y `core.require_member()` (lanza 403).
+
+Todas son `security definer`, `stable`, `set search_path = ''`.
 
 Ejemplo de policy típica de un módulo:
 
 ```sql
-create policy "members read rewards" on loyalty.rewards
-  for select using (
-    core.is_member(business_id) and core.has_module(business_id, 'loyalty')
-  );
+create policy rewards_select on loyalty.rewards
+  for select to authenticated
+  using (business_id in (select core.my_business_ids_with_module('loyalty')));
 ```
+
+**Permisos de funciones:** Postgres permite ejecutar cualquier función nueva a todos (`PUBLIC`). Cada migración termina con `revoke execute on all functions in schema <esquema> from public, anon;` y se habilita explícitamente lo que el usuario puede llamar. El meta-test compara la lista exacta de funciones ejecutables por `authenticated`.
 
 ### 3.4 Escrituras críticas solo por función
 

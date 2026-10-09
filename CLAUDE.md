@@ -71,6 +71,8 @@ Cuando sea necesario detenerse, explicar:
 
 ## Calidad
 
+Tests de base de datos: `supabase test db` (CI / Codespaces) o `scripts/db-test-local.sh` (Postgres común).
+
 Antes de marcar una tarea como terminada:
 
 * debe compilar;
@@ -106,7 +108,9 @@ Los datos deben aislarse mediante `business_id` y RLS.
 
 Nunca permitir que un negocio pueda acceder a datos de otro negocio.
 
-Toda tabla de negocio debe tener: `business_id not null`, RLS habilitado, índice por `business_id` y foreign keys compuestas `(business_id, id)` hacia otras tablas del mismo negocio. Las policies usan los helpers `core.is_member`, `core.has_role` y `core.has_module`.
+Toda tabla de negocio debe tener: `business_id not null`, RLS habilitado, índice por `business_id` y foreign keys compuestas `(business_id, id)` hacia otras tablas del mismo negocio. Las policies usan `business_id in (select core.my_business_ids())` (o sus variantes con rol/módulo); dentro de funciones se usan `core.require_member`, `core.has_role` y `core.has_module`.
+
+Cada migración termina con `revoke execute on all functions in schema <esquema> from public, anon;`. Toda función nueva que deba llamar un usuario se agrega con `grant execute` y a la lista del meta-test (`supabase/tests/database/001-security-meta.test.sql`).
 
 ## Núcleo y módulos
 
