@@ -151,8 +151,8 @@ export interface SearchParams {
 export async function search(params: SearchParams): Promise<CustomerListItem[]> {
   const { data, error } = await getSupabase().rpc('search_customers', {
     p_business_id: params.businessId,
-    p_query: params.query?.trim() || null,
-    p_status: params.status ?? null,
+    p_query: params.query?.trim() || undefined,
+    p_status: params.status ?? undefined,
     p_limit: params.limit ?? 20,
     p_offset: params.offset ?? 0,
   })

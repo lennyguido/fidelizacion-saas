@@ -56,10 +56,10 @@ export interface RecordVisitInput {
 export async function record(input: RecordVisitInput): Promise<Visit> {
   const { data, error } = await getSupabase().rpc('record_visit', {
     p_business_id: input.businessId,
-    p_location_id: input.locationId ?? null,
-    p_customer_id: input.customerId ?? null,
-    p_amount_minor: input.amountMinor ?? null,
-    p_notes: input.notes ?? null,
+    p_location_id: input.locationId ?? undefined,
+    p_customer_id: input.customerId ?? undefined,
+    p_amount_minor: input.amountMinor ?? undefined,
+    p_notes: input.notes ?? undefined,
   })
   if (error) throw fromPostgrestError(error)
   return toVisit(data)
