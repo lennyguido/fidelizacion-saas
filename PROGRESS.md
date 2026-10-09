@@ -56,7 +56,7 @@ Rama `fix/archive-owner-admin-only` (commit `62a7b19`):
 
 | Nivel | Dónde / comando | Último resultado |
 |---|---|---|
-| Base de datos (pgTAP) | Postgres 16 local del agente: `scripts/db-test-local.sh` | 132/132 OK (9 archivos) |
+| Base de datos (pgTAP) | Postgres 16 local del agente: `scripts/db-test-local.sh` | main: 132/132 OK (9 archivos) · rama `feat/equipo-y-privacidad`: 154/154 OK (11 archivos) |
 | Base de datos (pgTAP) | CI: `supabase db start` + `supabase test db` (Supabase real en Docker) | OK en `main` |
 | Unitarios (Vitest) | CI: `npm test` · local del agente: runner mínimo con Node (npm no disponible) | OK |
 | Frontend | CI: `npm run typecheck`, `npm run lint`, `npm run format:check`, `npm run build` | OK |
@@ -81,6 +81,12 @@ Rama `chore/calidad-pre-piloto` (llevada a `main` con CI en verde; no toca la ba
 2. **Cuentas de empleados:** resuelto en la rama `feat/equipo-y-privacidad` (pendiente de revisión).
 3. **Limpieza de registros:** resuelto en la rama `feat/equipo-y-privacidad` (pendiente de revisión).
 4. **Pedido de baja de datos** (Ley 25.326): resuelto en la rama `feat/equipo-y-privacidad` (pendiente de revisión).
+
+## Viernes 9, mediodía (sin tocar Supabase)
+
+* **Revisión de seguridad independiente** de `feat/equipo-y-privacidad`: sin fugas entre negocios; 5 problemas corregidos en `10f360a` (detalle en `docs/REVISION-PENDIENTE.md`). Tests de base locales: **154/154 OK** (11 archivos).
+* **Alertas de Supabase** del proyecto de desarrollo leídas (solo lectura). Una función agregada por Supabase (`public.rls_auto_enable`) queda abierta: quitarle el permiso **necesita aprobación**.
+* `SECURITY.md`, `CONTRIBUTING.md`, `CHANGELOG.md` y `docs/APLICAR-MIGRACIONES.md` (paso a paso para cuando se aprueben).
 
 ## Marketing (solo documentos)
 
