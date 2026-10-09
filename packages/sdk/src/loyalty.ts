@@ -159,9 +159,13 @@ export interface Member {
   pointsBalance: number
   lifetimePoints: number
   joinedAt: string
+  /** Código de 8 caracteres para encontrarlo en el mostrador (va en el QR). */
+  memberCode: string
+  /** Cuándo se generó el último link de su tarjeta digital. */
+  cardIssuedAt: string | null
 }
 
-function toMember(row: Row<'members'>): Member {
+function toMember(row: MemberRow): Member {
   return {
     id: row.id,
     customerId: row.customer_id,
@@ -169,8 +173,12 @@ function toMember(row: Row<'members'>): Member {
     pointsBalance: Number(row.points_balance),
     lifetimePoints: Number(row.lifetime_points),
     joinedAt: row.joined_at,
+    memberCode: row.member_code,
+    cardIssuedAt: row.card_issued_at,
   }
 }
+
+type MemberRow = Row<'members'>
 
 export async function getMemberByCustomer(customerId: string): Promise<Member | null> {
   const { data, error } = await db()
@@ -185,13 +193,38 @@ export async function getMemberByCustomer(customerId: string): Promise<Member | 
 export async function enroll(customerId: string): Promise<Member> {
   const { data, error } = await db().rpc('enroll_customer', { p_customer_id: customerId })
   if (error) throw fromPostgrestError(error)
-  return toMember(data as Row<'members'>)
+  return toMember(data as MemberRow)
 }
 
 export async function leave(memberId: string): Promise<Member> {
   const { data, error } = await db().rpc('leave_program', { p_member_id: memberId })
   if (error) throw fromPostgrestError(error)
-  return toMember(data as Row<'members'>)
+  return toMember(data as MemberRow)
+}
+
+/** Genera un link nuevo para la tarjeta digital (el anterior deja de funcionar). */
+export async function issueCard(memberId: string): Promise<string> {
+  const { data, error } = await db().rpc('issue_card', { p_member_id: memberId })
+  if (error) throw fromPostgrestError(error)
+  return data as string
+}
+
+/** Busca el cliente por código de socio (QR o escrito). Null si no existe. */
+export async function findCustomerByMemberCode(
+  businessId: string,
+  code: string,
+): Promise<string | null> {
+  const { data, error } = await db().rpc('find_member_by_code', {
+    p_business_id: businessId,
+    p_code: code,
+  })
+  if (error) throw fromPostgrestError(error)
+  return (data as string | null) ?? null
+}
+
+/** Un código de socio tiene 8 letras/números (sin 0, O, 1 ni I). */
+export function looksLikeMemberCode(text: string): boolean {
+  return /^[A-HJ-NP-Z2-9]{8}$/.test(text.trim().toUpperCase())
 }
 
 /** Ajuste manual (positivo o negativo) con motivo. Solo dueño/admin. */
@@ -202,7 +235,7 @@ export async function adjustPoints(memberId: string, delta: number, note: string
     p_note: note,
   })
   if (error) throw fromPostgrestError(error)
-  return toMember(data as Row<'members'>)
+  return toMember(data as MemberRow)
 }
 
 // Movimientos y canjes ------------------------------------------------------------

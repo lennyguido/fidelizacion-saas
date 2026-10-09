@@ -1,7 +1,8 @@
 import { expect, test } from '@playwright/test'
 
-test('the owner sets up points, a customer joins, earns and redeems', async ({
+test('points: set up, join, digital card, earn at the counter by code, redeem', async ({
   page,
+  browser,
 }, testInfo) => {
   const suffix = `${Date.now()}-${testInfo.project.name}`
   await page.goto('/signup')
@@ -23,17 +24,47 @@ test('the owner sets up points, a customer joins, earns and redeems', async ({
   await page.getByRole('button', { name: 'Agregar recompensa' }).click()
   await expect(page.getByText('Café gratis')).toBeVisible()
 
-  // Cliente: se suma, viene una vez y canjea.
+  // Cliente: se suma al programa y recibe su tarjeta digital.
   await page.goto(`${base}/clientes/nuevo`)
   await page.getByLabel('Nombre').fill('Lola Puntos')
   await page.getByRole('button', { name: 'Guardar cliente' }).click()
   await page.getByRole('button', { name: 'Sumar al programa' }).click()
   await expect(page.getByTestId('points-balance')).toHaveText('0')
+  const customerUrl = page.url()
 
-  await page.getByRole('button', { name: '+ Registrar visita' }).click()
+  await page.getByRole('button', { name: 'Crear tarjeta digital' }).click()
+  const link = (await page.getByTestId('card-link').textContent())?.trim() ?? ''
+  expect(link).toContain('/tarjeta#')
+
+  // La tarjeta se abre sin iniciar sesión.
+  const customerContext = await browser.newContext({ ...testInfo.project.use })
+  const card = await customerContext.newPage()
+  await card.goto(link)
+  await expect(card.getByText('Hola, Lola')).toBeVisible()
+  await expect(card.getByTestId('card-balance')).toHaveText('0')
+  await expect(card.getByText(/Te faltan/)).toBeVisible()
+  const memberCode = (await card.getByTestId('member-code').textContent())?.trim() ?? ''
+  expect(memberCode).toMatch(/^[A-Z2-9]{8}$/)
+
+  // En el mostrador se encuentra por el código de la tarjeta.
+  await page.goto(`${base}/mostrador`)
+  await page.getByLabel('Buscar cliente').fill(memberCode.toLowerCase())
+  await expect(page.getByText('Socio encontrado por código')).toBeVisible()
+  await page.getByRole('button', { name: '+1', exact: true }).first().click()
+  await expect(page.getByText('Visita de Lola Puntos registrada')).toBeVisible()
+
+  await card.reload()
+  await expect(card.getByTestId('card-balance')).toHaveText('1')
+  await expect(card.getByText('¡Ya podés canjearla!')).toBeVisible()
+
+  // Canje en la ficha del cliente.
+  await page.goto(customerUrl)
   await expect(page.getByTestId('points-balance')).toHaveText('1')
-
   await page.getByRole('button', { name: 'Canjear' }).click()
   await expect(page.getByText(/Canje confirmado/)).toBeVisible()
   await expect(page.getByTestId('points-balance')).toHaveText('0')
+
+  await card.reload()
+  await expect(card.getByTestId('card-balance')).toHaveText('0')
+  await customerContext.close()
 })

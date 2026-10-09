@@ -11,6 +11,7 @@ import {
   type CustomerListItem,
 } from '@plataforma/sdk'
 import { Alert, Button, Card, Spinner, TextField, useToast } from '@plataforma/ui'
+import { useCustomerCodeMatch } from '../../modules/useCustomerCodeMatch'
 import { useActiveBusiness } from '../business/ActiveBusinessContext'
 import { StatusBadge } from '../customers/StatusBadge'
 import { useCustomerSearch, useInvalidateCustomers } from '../customers/queries'
@@ -30,6 +31,7 @@ export function CounterPage() {
   const [creating, setCreating] = useState(false)
   const debouncedQuery = useDebouncedValue(query)
   const results = useCustomerSearch(business.id, debouncedQuery, null, 8)
+  const codeMatch = useCustomerCodeMatch(debouncedQuery)
 
   const amountMinor = parseAmountToMinor(amountText)
   const amountInvalid = amountText.trim() !== '' && amountMinor === null
@@ -66,7 +68,7 @@ export function CounterPage() {
           label="Buscar cliente"
           type="search"
           autoFocus
-          placeholder="Nombre o teléfono"
+          placeholder="Nombre, teléfono o código de socio"
           value={query}
           onChange={(e) => {
             setQuery(e.target.value)
@@ -83,6 +85,22 @@ export function CounterPage() {
           hint={amountMinor !== null ? formatMoney(amountMinor, business.currency) : undefined}
         />
       </Card>
+
+      {codeMatch.data && !creating && (
+        <Card className="flex items-center justify-between gap-3">
+          <div className="min-w-0">
+            <p className="text-xs font-medium text-slate-500">Socio encontrado por código</p>
+            <p className="truncate font-medium">{codeMatch.data.name}</p>
+          </div>
+          <Button
+            size="lg"
+            disabled={busy || amountInvalid}
+            onClick={() => codeMatch.data && record.mutate(codeMatch.data)}
+          >
+            +1
+          </Button>
+        </Card>
+      )}
 
       {creating ? (
         <QuickCreate

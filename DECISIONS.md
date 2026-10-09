@@ -93,3 +93,14 @@ El dueño validó en el proyecto de desarrollo registro, login, negocio, cliente
 ## D-019 — Migraciones en desarrollo sin pedir permiso cada vez (2026-10-09, vigente)
 
 El dueño pidió no tener que aprobar cada migración. En el proyecto de **desarrollo** (`dqpnqcumlyfifewgzyvh`) se aplican las migraciones no destructivas con CI en verde, registrándolas en `PROGRESS.md`. Siguen necesitando aprobación: producción, migraciones destructivas, borrar datos y lo que el mentor haya pedido revisar (migraciones 11–14 de equipo y dueños). Cada migración aplicada se integra a `main` en el mismo momento (rama con merge `--no-ff`, reversible).
+
+## D-020 — Tarjeta digital del cliente por link, sin cuenta (2026-10-09, vigente)
+
+**Contexto:** `TASKS.md` §15 pedía elegir cómo se identifica el cliente final. Mails de Supabase gratis: muy pocos por hora; SMS: cuesta plata. El cliente de barrio no quiere crear cuentas.
+
+**Decisión:** la tarjeta se abre con un **link secreto** que el negocio le manda (por WhatsApp, desde la ficha del cliente). El código va después de `#` (no viaja a ningún servidor) y se guarda en el teléfono para volver a abrirla desde el ícono.
+
+* En la base se guarda solo el hash (`loyalty.cards`, sin permisos para nadie). Generar un link nuevo invalida el anterior.
+* `loyalty.get_card(token)` es la **única función ejecutable sin sesión** (lo verifica el meta-test). Es solo lectura y muestra lo mínimo: nombre de pila, saldo, código de socio, recompensas y últimos movimientos. Nunca teléfono, email ni apellido.
+* El **código de socio** (8 caracteres, va en el QR) no es secreto: sirve para encontrar al cliente en el mostrador escribiéndolo o escaneándolo.
+* Más adelante, si hace falta (por ejemplo, para que el cliente canjee desde su teléfono), se agrega inicio de sesión con email/OTP usando `core.customer_accounts`.

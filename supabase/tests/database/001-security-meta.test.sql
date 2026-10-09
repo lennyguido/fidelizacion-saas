@@ -51,13 +51,15 @@ select is_empty(
   'every business table has an index starting with business_id'
 );
 
--- 4. anon no puede ejecutar ninguna función de la plataforma.
-select is_empty(
+-- 4. anon (sin sesión) solo puede ejecutar las funciones públicas previstas:
+--    la tarjeta digital del cliente (D-020). Ninguna otra.
+select set_eq(
   $$ select p.oid::regprocedure::text
        from pg_proc p join pg_namespace n on n.oid = p.pronamespace
       where n.nspname in (select name from platform_schemas)
         and has_function_privilege('anon', p.oid, 'execute') $$,
-  'anon cannot execute platform functions'
+  $$ values ('loyalty.get_card(text)') $$,
+  'anon can execute only the public card function'
 );
 
 -- 5. Ninguna función queda ejecutable por PUBLIC (default de Postgres).
@@ -96,7 +98,10 @@ select set_eq(
        ('loyalty.leave_program(uuid)'),
        ('loyalty.redeem_reward(uuid,uuid,uuid)'),
        ('loyalty.cancel_redemption(uuid,text)'),
-       ('loyalty.adjust_points(uuid,bigint,text)') $$,
+       ('loyalty.adjust_points(uuid,bigint,text)'),
+       ('loyalty.issue_card(uuid)'),
+       ('loyalty.get_card(text)'),
+       ('loyalty.find_member_by_code(uuid,text)') $$,
   'authenticated can execute only the intended functions'
 );
 
