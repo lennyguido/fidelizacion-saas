@@ -165,10 +165,11 @@ export async function search(params: SearchParams): Promise<CustomerListItem[]> 
       p_limit: params.limit ?? 20,
       p_offset: params.offset ?? 0,
     })
-    .returns<SearchRow[]>()
 
   if (error) throw fromPostgrestError(error)
-  return (data ?? []).map((row) => ({
+  // Función que devuelve una tabla: PostgREST responde un array.
+  const rows = (data ?? []) as SearchRow[]
+  return rows.map((row) => ({
     id: row.id,
     name: row.name,
     phone: row.phone,
