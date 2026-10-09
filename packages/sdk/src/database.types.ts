@@ -65,6 +65,64 @@ isOneToOne: false
                   Relationships: [
                     
                   ]
+                },"campaign_recipients": {
+                  Row: {
+                    "business_id": string,"campaign_id": string,"contacted_at": string | null,"customer_id": string,"id": string,"is_control": boolean,"message": string | null,"risk_score_at_send": number,"status_at_send": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "business_id": string,"campaign_id": string,"contacted_at"?: string | null,"customer_id": string,"id"?: string,"is_control": boolean,"message"?: string | null,"risk_score_at_send"?: number,"status_at_send": string
+                  }
+                  Update: {
+                    "business_id"?: string,"campaign_id"?: string,"contacted_at"?: string | null,"customer_id"?: string,"id"?: string,"is_control"?: boolean,"message"?: string | null,"risk_score_at_send"?: number,"status_at_send"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "campaign_recipients_business_id_campaign_id_fkey"
+      columns: ["business_id","campaign_id"]
+isOneToOne: false
+      referencedRelation: "campaigns"
+      referencedColumns: ["business_id","id"]
+    },{
+      foreignKeyName: "campaign_recipients_business_id_customer_id_fkey"
+      columns: ["business_id","customer_id"]
+isOneToOne: false
+      referencedRelation: "customers"
+      referencedColumns: ["business_id","id"]
+    },{
+      foreignKeyName: "campaign_recipients_business_id_fkey"
+      columns: ["business_id"]
+isOneToOne: false
+      referencedRelation: "businesses"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"campaigns": {
+                  Row: {
+                    "attribution_days": number,"benefit": string | null,"business_id": string,"cancelled_at": string | null,"channel": string,"control_pct": number,"created_at": string,"created_by": string | null,"id": string,"message": string,"module_id": string,"name": string,"recipients_count": number,"segment": NonNullable<Json>,"sent_at": string | null,"status": string,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "attribution_days"?: number,"benefit"?: string | null,"business_id": string,"cancelled_at"?: string | null,"channel"?: string,"control_pct"?: number,"created_at"?: string,"created_by"?: string | null,"id"?: string,"message": string,"module_id": string,"name": string,"recipients_count"?: number,"segment": NonNullable<Json>,"sent_at"?: string | null,"status"?: string,"updated_at"?: string
+                  }
+                  Update: {
+                    "attribution_days"?: number,"benefit"?: string | null,"business_id"?: string,"cancelled_at"?: string | null,"channel"?: string,"control_pct"?: number,"created_at"?: string,"created_by"?: string | null,"id"?: string,"message"?: string,"module_id"?: string,"name"?: string,"recipients_count"?: number,"segment"?: NonNullable<Json>,"sent_at"?: string | null,"status"?: string,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "campaigns_business_id_fkey"
+      columns: ["business_id"]
+isOneToOne: false
+      referencedRelation: "businesses"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "campaigns_module_id_fkey"
+      columns: ["module_id"]
+isOneToOne: false
+      referencedRelation: "modules"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"customer_accounts": {
                   Row: {
                     "business_id": string,"created_at": string,"customer_id": string,"id": string,"user_id": string
@@ -401,7 +459,38 @@ isOneToOne: false
                 }
           }
           Functions: {
-            "compute_customer_status":
+            "campaign_results":
+{ Args: { "p_campaign_id": string }; Returns: {
+              "contacted_count": number,"control_count": number,"control_rate": number,"control_returned": number,"control_revenue_minor": number,"incremental_customers": number,"incremental_revenue_minor": number,"treatment_count": number,"treatment_rate": number,"treatment_returned": number,"treatment_revenue_minor": number,"window_ends_at": string,"window_open": boolean
+            }[]
+                           },
+"cancel_campaign":
+{ Args: { "p_campaign_id": string }; Returns: {
+              "attribution_days": number,
+"benefit": string | null,
+"business_id": string,
+"cancelled_at": string | null,
+"channel": string,
+"control_pct": number,
+"created_at": string,
+"created_by": string | null,
+"id": string,
+"message": string,
+"module_id": string,
+"name": string,
+"recipients_count": number,
+"segment": NonNullable<Json>,
+"sent_at": string | null,
+"status": string,
+"updated_at": string
+            }
+                          SetofOptions: {
+        from: "*"
+        to: "campaigns"
+        isOneToOne: true
+        isSetofReturn: false
+      } },
+"compute_customer_status":
 { Args: { "p_first_visit_at": string,"p_is_new_visit": boolean,"p_last_visit_at": string,"p_median_interval": number,"p_now": string,"p_prev_changed_at": string,"p_prev_status": string,"p_settings": Json,"p_visit_count": number }; Returns: Record<string, unknown>
                            },
 "create_business":
@@ -428,6 +517,35 @@ isOneToOne: false
         isOneToOne: true
         isSetofReturn: false
       } },
+"create_campaign":
+{ Args: { "p_attribution_days"?: number,"p_benefit"?: string,"p_business_id": string,"p_control_pct"?: number,"p_message": string,"p_module_id": string,"p_name": string,"p_segment": Json }; Returns: {
+              "attribution_days": number,
+"benefit": string | null,
+"business_id": string,
+"cancelled_at": string | null,
+"channel": string,
+"control_pct": number,
+"created_at": string,
+"created_by": string | null,
+"id": string,
+"message": string,
+"module_id": string,
+"name": string,
+"recipients_count": number,
+"segment": NonNullable<Json>,
+"sent_at": string | null,
+"status": string,
+"updated_at": string
+            }
+                          SetofOptions: {
+        from: "*"
+        to: "campaigns"
+        isOneToOne: true
+        isSetofReturn: false
+      } },
+"dashboard_summary":
+{ Args: { "p_business_id": string }; Returns: Json
+                           },
 "emit_event":
 { Args: { "p_business_id": string,"p_payload"?: Json,"p_type": string }; Returns: number
                            },
@@ -455,6 +573,55 @@ isOneToOne: false
 "is_valid_timezone":
 { Args: { "p_tz": string }; Returns: boolean
                            },
+"launch_campaign":
+{ Args: { "p_campaign_id": string }; Returns: {
+              "attribution_days": number,
+"benefit": string | null,
+"business_id": string,
+"cancelled_at": string | null,
+"channel": string,
+"control_pct": number,
+"created_at": string,
+"created_by": string | null,
+"id": string,
+"message": string,
+"module_id": string,
+"name": string,
+"recipients_count": number,
+"segment": NonNullable<Json>,
+"sent_at": string | null,
+"status": string,
+"updated_at": string
+            }
+                          SetofOptions: {
+        from: "*"
+        to: "campaigns"
+        isOneToOne: true
+        isSetofReturn: false
+      } },
+"list_campaign_recipients":
+{ Args: { "p_campaign_id": string }; Returns: {
+              "contacted_at": string,"customer_id": string,"is_control": boolean,"message": string,"name": string,"phone": string,"recipient_id": string,"returned_amount_minor": number,"returned_at": string,"status_at_send": string
+            }[]
+                           },
+"mark_recipient_contacted":
+{ Args: { "p_recipient_id": string }; Returns: {
+              "business_id": string,
+"campaign_id": string,
+"contacted_at": string | null,
+"customer_id": string,
+"id": string,
+"is_control": boolean,
+"message": string | null,
+"risk_score_at_send": number,
+"status_at_send": string
+            }
+                          SetofOptions: {
+        from: "*"
+        to: "campaign_recipients"
+        isOneToOne: true
+        isSetofReturn: false
+      } },
 "my_business_ids":
 { Args: Record<PropertyKey, never>; Returns: string[]
                            },
@@ -466,6 +633,11 @@ isOneToOne: false
                            },
 "my_customer_ids":
 { Args: Record<PropertyKey, never>; Returns: string[]
+                           },
+"preview_segment":
+{ Args: { "p_business_id": string,"p_segment": Json }; Returns: {
+              "matching": number,"reachable": number
+            }[]
                            },
 "raise_forbidden":
 { Args: { "p_message"?: string }; Returns: undefined
@@ -552,6 +724,11 @@ isOneToOne: false
               "email": string,"id": string,"last_visit_at": string,"name": string,"phone": string,"risk_score": number,"status": string,"total_spend_minor": number,"visit_count": number
             }[]
                            },
+"segment_members":
+{ Args: { "p_business_id": string,"p_segment": Json }; Returns: {
+              "customer_id": string,"first_name": string,"reachable": boolean,"risk_score": number,"status": string
+            }[]
+                           },
 "set_customer_status":
 { Args: { "p_customer_id": string,"p_status": string }; Returns: {
               "anonymized_at": string | null,
@@ -577,6 +754,9 @@ isOneToOne: false
       } },
 "status_settings":
 { Args: { "p_settings": Json }; Returns: Json
+                           },
+"validate_segment":
+{ Args: { "p_segment": Json }; Returns: undefined
                            },
 "void_visit":
 { Args: { "p_reason": string,"p_visit_id": string }; Returns: {
