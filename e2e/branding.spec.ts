@@ -30,7 +30,12 @@ test('the owner edits the business branding and the card uses it', async ({
   await page.getByLabel('Color de marca (hex)').fill('#zzzzzz')
   await expect(page.getByText('Usá el formato #RRGGBB')).toBeVisible()
   await page.getByLabel('Color de marca (hex)').fill('#b91c1c')
+  const patch = page.waitForResponse(
+    (r) => r.url().includes('/rest/v1/businesses') && r.request().method() === 'PATCH',
+  )
   await page.getByRole('button', { name: 'Guardar cambios' }).click()
+  const resp = await patch
+  expect(`${resp.status()} ${await resp.text()} ${resp.url()}`).toBe('debug')
   await expect(page.locator('body')).toContainText('Datos del negocio guardados')
   await expect(page.getByText(newName, { exact: true }).filter({ visible: true })).toBeVisible()
   await expect(page).toHaveURL(new RegExp(`${base}/negocio$`)) // el slug no cambia
