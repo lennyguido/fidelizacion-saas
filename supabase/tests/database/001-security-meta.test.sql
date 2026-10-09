@@ -102,6 +102,8 @@ select set_eq(
        ('core.mark_recipient_contacted(uuid)'),
        ('core.list_campaign_recipients(uuid)'),
        ('core.campaign_results(uuid)'),
+       ('core.find_campaign_coupon(uuid,text)'),
+       ('core.redeem_campaign_coupon(uuid,text,uuid)'),
        ('core.dashboard_summary(uuid)'),
        ('loyalty.enroll_customer(uuid)'),
        ('loyalty.leave_program(uuid)'),
