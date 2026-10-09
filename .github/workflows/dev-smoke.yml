@@ -16,3 +16,6 @@ jobs:
       - run: bash scripts/dev-smoke.sh | tee smoke.txt
       - run: |
           { echo '```'; cat smoke.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          # También como anotación (se lee con la API sin descargar logs).
+          body=$(sed -e 's/%/%25/g' smoke.txt | awk '{printf "%s%%0A", $0}')
+          echo "::notice title=Dev smoke::${body}"
