@@ -21,6 +21,18 @@ export {
   type CustomerStatus,
 } from './customers.ts'
 export * as visits from './visits.ts'
+export * as campaigns from './campaigns.ts'
+export type {
+  Campaign,
+  CampaignInput,
+  CampaignResults,
+  CampaignStatus,
+  Recipient as CampaignRecipient,
+  Segment,
+  SegmentPreview,
+} from './campaigns.ts'
+export * as dashboard from './dashboard.ts'
+export type { DashboardSummary } from './dashboard.ts'
 export * as loyalty from './loyalty.ts'
 export * as card from './card.ts'
 export type { Card, CardMovement, CardReward } from './card.ts'
