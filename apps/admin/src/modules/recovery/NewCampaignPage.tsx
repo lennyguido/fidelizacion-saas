@@ -5,6 +5,7 @@ import { campaigns, errorMessage, type CustomerStatus, type Segment } from '@pla
 import { Alert, Button, Card, TextField } from '@plataforma/ui'
 import { useActiveBusiness } from '../../features/business/ActiveBusinessContext'
 import { useDebouncedValue } from '../../hooks/useDebouncedValue'
+import { busyText } from './previewText'
 import { RECOVERY_MODULE, useInvalidateCampaigns, useSegmentPreview } from './queries'
 
 const AUDIENCES: Array<{ id: string; label: string; statuses: CustomerStatus[] }> = [
@@ -16,7 +17,8 @@ const AUDIENCES: Array<{ id: string; label: string; statuses: CustomerStatus[] }
 function buildSegment(audience: string, minVisits: string): Segment {
   return {
     statuses: AUDIENCES.find((a) => a.id === audience)?.statuses ?? ['AT_RISK'],
-    min_visits: Number(minVisits) || 0,
+    // La base acepta enteros de 0 a 100000.
+    min_visits: Math.min(100000, Math.max(0, Math.trunc(Number(minVisits)) || 0)),
   }
 }
 
@@ -121,7 +123,7 @@ export function NewCampaignPage() {
           />
           <p className="rounded-lg bg-slate-50 p-3 text-sm" data-testid="segment-preview">
             {preview.data
-              ? `${preview.data.matching} clientes entran en este grupo; ${preview.data.reachable} tienen teléfono y aceptaron WhatsApp.`
+              ? `${preview.data.matching} clientes entran en este grupo; ${preview.data.reachable} pueden recibir el mensaje (tienen teléfono y aceptaron WhatsApp).${busyText(preview.data.busy)}`
               : 'Calculando…'}
           </p>
         </Card>

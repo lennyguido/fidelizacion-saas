@@ -28,6 +28,7 @@ export type {
   CampaignResults,
   CampaignStatus,
   Recipient as CampaignRecipient,
+  RecipientBlockedReason,
   Segment,
   SegmentPreview,
 } from './campaigns.ts'

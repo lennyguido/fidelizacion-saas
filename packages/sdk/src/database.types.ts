@@ -601,7 +601,7 @@ isOneToOne: false
       } },
 "list_campaign_recipients":
 { Args: { "p_campaign_id": string }; Returns: {
-              "contacted_at": string,"customer_id": string,"is_control": boolean,"message": string,"name": string,"phone": string,"recipient_id": string,"returned_amount_minor": number,"returned_at": string,"status_at_send": string
+              "blocked_reason": string,"contacted_at": string,"customer_id": string,"is_control": boolean,"message": string,"name": string,"phone": string,"recipient_id": string,"returned_amount_minor": number,"returned_at": string,"status_at_send": string
             }[]
                            },
 "mark_recipient_contacted":
@@ -636,7 +636,7 @@ isOneToOne: false
                            },
 "preview_segment":
 { Args: { "p_business_id": string,"p_segment": Json }; Returns: {
-              "matching": number,"reachable": number
+              "busy": number,"matching": number,"reachable": number
             }[]
                            },
 "raise_forbidden":

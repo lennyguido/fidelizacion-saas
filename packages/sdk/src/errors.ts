@@ -17,6 +17,7 @@ export type AppErrorCode =
   | 'empty_segment'
   | 'campaign_not_draft'
   | 'control_group'
+  | 'consent_revoked'
   | 'auth_invalid_credentials'
   | 'auth_email_not_confirmed'
   | 'auth_user_exists'
@@ -51,6 +52,7 @@ const DOMAIN_CODES = [
   'empty_segment',
   'campaign_not_draft',
   'control_group',
+  'consent_revoked',
   'insufficient_points',
   'reward_unavailable',
   'member_inactive',
@@ -134,6 +136,8 @@ export function errorMessage(error: unknown): string {
       'Nadie de este grupo puede recibir el mensaje: necesitan teléfono y haber aceptado WhatsApp.',
     campaign_not_draft: 'Esta campaña ya se lanzó o se canceló.',
     control_group: 'Este cliente es del grupo de control: no hay que escribirle.',
+    consent_revoked:
+      'Este cliente ya no quiere recibir mensajes (o fue archivado): no hay que escribirle.',
     auth_invalid_credentials: 'Email o contraseña incorrectos.',
     auth_email_not_confirmed: 'Confirmá tu email antes de ingresar. Revisá tu casilla.',
     auth_user_exists: 'Ya existe una cuenta con ese email. Probá ingresar.',
