@@ -1,1 +1,12 @@
 @import 'tailwindcss';
+
+/* Los componentes compartidos viven fuera de esta app: Tailwind debe escanearlos. */
+@source "../../../packages/ui/src";
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  @apply bg-slate-50 text-slate-900 antialiased;
+}
