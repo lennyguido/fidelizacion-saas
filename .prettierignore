@@ -3,3 +3,4 @@ dist
 package-lock.json
 supabase/.temp
 *.md
+packages/sdk/src/database.types.ts

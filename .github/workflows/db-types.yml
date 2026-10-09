@@ -1,0 +1,35 @@
+name: DB types
+
+# Genera los tipos TypeScript de la base desde las migraciones (Supabase local) y
+# los guarda en packages/sdk/src/database.types.ts. Corre al pushear a cualquier
+# rama si cambian las migraciones; si los tipos cambiaron, commitea el archivo.
+on:
+  push:
+    paths:
+      - 'supabase/migrations/**'
+      - '.github/workflows/db-types.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  types:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - run: supabase db start
+      - run: supabase gen types typescript --local --schema core > packages/sdk/src/database.types.ts
+      - name: Commit if changed
+        run: |
+          if git diff --quiet -- packages/sdk/src/database.types.ts; then
+            echo "types up to date"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add packages/sdk/src/database.types.ts
+          git commit -m "chore(sdk): regenerate database types"
+          git push

@@ -7,7 +7,7 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import tseslint from 'typescript-eslint'
 
 export default defineConfig([
-  globalIgnores(['**/dist', '**/node_modules', 'supabase/functions']),
+  globalIgnores(['**/dist', '**/node_modules', 'supabase/functions', '**/database.types.ts']),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [js.configs.recommended, tseslint.configs.recommended, prettier],
