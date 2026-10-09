@@ -91,7 +91,14 @@ select set_eq(
        ('core.create_business(text,text,text)'),
        ('core.search_customers(uuid,text,text,integer,integer)'),
        ('core.import_customers(uuid,jsonb)'),
-       ('core.set_customer_status(uuid,text)') $$,
+       ('core.set_customer_status(uuid,text)'),
+       ('core.create_invitation(uuid,text,text)'),
+       ('core.revoke_invitation(uuid)'),
+       ('core.get_invitation(text)'),
+       ('core.accept_invitation(text)'),
+       ('core.list_members(uuid)'),
+       ('core.update_member(uuid,text,text)'),
+       ('core.anonymize_customer(uuid)') $$,
   'authenticated can execute only the intended functions'
 );
 
