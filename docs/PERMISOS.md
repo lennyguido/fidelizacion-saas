@@ -2,7 +2,7 @@
 
 > Estado con las ramas `fix/archive-owner-admin-only` + `feat/equipo-y-privacidad` + `feat/proteger-duenos` aplicadas. **Nada de esto está aplicado todavía en Supabase.**
 > Todas las reglas se aplican **en la base de datos**: aunque alguien se saltee el panel y le hable directo a la base, la respuesta es la misma.
-> Columna "Prueba": archivo en `supabase/tests/database/` y nombre del test. Última corrida: **161/161 OK** (12 archivos, Postgres 16 local) + CI con Supabase real en Docker.
+> Columna "Prueba": archivo en `supabase/tests/database/` y nombre del test. Última corrida: **167/167 OK** (13 archivos, Postgres 16 local) + CI con Supabase real en Docker.
 
 Roles: **Dueño** (owner) · **Admin** · **Empleado** (staff) · **Otro negocio** (usuario de otro negocio, cualquier rol) · **Sin sesión** (anon).
 
@@ -17,6 +17,7 @@ Roles: **Dueño** (owner) · **Admin** · **Empleado** (staff) · **Otro negocio
 | Anular visita (con motivo) | ✅ | ✅ | ❌ | ❌ | ❌ | 003 "staff cannot void visits", "owner can void a visit" |
 | Importar clientes (CSV) | ✅ | ✅ | ❌ | ❌ | ❌ | 007 "staff cannot import", "cannot import into another business" |
 | Archivar / reactivar cliente | ✅ | ✅ | ❌ | ❌ | ❌ | 008 "staff cannot archive with a direct UPDATE", "…through the function", "admin can archive", "owner can reactivate" |
+| Ver archivados y reactivarlos | ✅ | ✅ | ver ✅ / reactivar ❌ | ❌ | ❌ | 008-archived-customers "the owner can list archived customers", "another business cannot reactivate them" |
 | Cambiar el estado con un UPDATE directo | ❌ | ❌ | ❌ | ❌ | ❌ | 008 "not even the owner can change status with a direct UPDATE" |
 | Borrar datos personales (Ley 25.326) | ✅ | ✅ | ❌ | ❌ | ❌ | 010 "staff cannot erase customer data", "the owner can erase customer data" |
 | Modificar estadísticas a mano | ❌ | ❌ | ❌ | ❌ | ❌ | 003 "stats cannot be modified directly" |
