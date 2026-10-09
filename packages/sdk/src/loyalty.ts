@@ -50,22 +50,32 @@ export async function getProgram(businessId: string): Promise<Program | null> {
   return data ? toProgram(data) : null
 }
 
-/** Crea o actualiza el programa. Solo dueño/admin (lo exige la base). */
+/**
+ * Crea o actualiza el programa. Solo dueño/admin (lo exige la base).
+ * No usa upsert: el upsert de PostgREST también "actualiza" business_id, y esa
+ * columna no se puede modificar (permiso por columna).
+ */
 export async function saveProgram(businessId: string, input: ProgramInput): Promise<Program> {
+  const values = {
+    enabled: input.enabled,
+    kind: input.kind,
+    points_per_visit: input.pointsPerVisit,
+    points_per_amount: input.pointsPerAmount,
+    amount_step_minor: input.pointsPerAmount > 0 ? input.amountStepMinor : null,
+    min_amount_minor: input.minAmountMinor,
+  }
+  const updated = await db()
+    .from('programs')
+    .update(values)
+    .eq('business_id', businessId)
+    .select('*')
+    .maybeSingle()
+  if (updated.error) throw fromPostgrestError(updated.error)
+  if (updated.data) return toProgram(updated.data)
+
   const { data, error } = await db()
     .from('programs')
-    .upsert(
-      {
-        business_id: businessId,
-        enabled: input.enabled,
-        kind: input.kind,
-        points_per_visit: input.pointsPerVisit,
-        points_per_amount: input.pointsPerAmount,
-        amount_step_minor: input.pointsPerAmount > 0 ? input.amountStepMinor : null,
-        min_amount_minor: input.minAmountMinor,
-      },
-      { onConflict: 'business_id' },
-    )
+    .insert({ business_id: businessId, ...values })
     .select('*')
     .single()
   if (error) throw fromPostgrestError(error)
