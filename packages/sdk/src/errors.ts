@@ -23,6 +23,7 @@ export type AppErrorCode =
   | 'auth_weak_password'
   | 'auth_invalid_email'
   | 'rate_limited'
+  | 'upload_failed'
   | 'network'
   | 'unknown'
 
@@ -140,6 +141,7 @@ export function errorMessage(error: unknown): string {
     auth_weak_password: 'La contraseña es muy débil. Usá al menos 8 caracteres.',
     auth_invalid_email: 'Revisá el email: no parece válido.',
     rate_limited: 'Demasiados intentos seguidos. Esperá unos minutos y probá de nuevo.',
+    upload_failed: 'No se pudo subir el archivo. Revisá tu conexión y probá de nuevo.',
     network: 'No hay conexión. Revisá tu internet.',
     unknown: 'Ocurrió un error inesperado. Probá de nuevo.',
   }

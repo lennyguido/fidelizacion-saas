@@ -1,6 +1,6 @@
 import { card as cardApi, type Card } from '@plataforma/sdk'
 
-export function Rewards({ card, unit }: { card: Card; unit: string }) {
+export function Rewards({ card, unit, brand }: { card: Card; unit: string; brand: string }) {
   if (card.rewards.length === 0) return null
   const next = cardApi.nextReward(card)
 
@@ -15,8 +15,11 @@ export function Rewards({ card, unit }: { card: Card; unit: string }) {
           </p>
           <div className="mt-2 h-2 rounded-full bg-slate-100">
             <div
-              className="h-2 rounded-full bg-slate-900"
-              style={{ width: `${Math.min(100, (card.pointsBalance / next.costPoints) * 100)}%` }}
+              className="h-2 rounded-full"
+              style={{
+                backgroundColor: brand,
+                width: `${Math.min(100, (card.pointsBalance / next.costPoints) * 100)}%`,
+              }}
             />
           </div>
         </div>
