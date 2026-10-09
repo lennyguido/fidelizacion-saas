@@ -7,6 +7,102 @@
 
 ---
 
+# PLAN POR FASES (manda sobre el orden de la sección 80)
+
+> Desde 2026-10-08 el proyecto es una plataforma núcleo + módulos (`DECISIONS.md` D-005 a D-013, `docs/ARCHITECTURE.md`).
+> Las secciones 1–78 siguen siendo los checklists de detalle; esta lista define **en qué orden** se ejecutan.
+> No se empieza una fase sin terminar la anterior (salvo tareas marcadas como paralelas).
+
+## Fase 0 — Base del repositorio
+
+* [ ] Convertir a monorepo con npm workspaces: `app/` → `apps/admin/`
+* [ ] Crear `packages/config` (tsconfig, eslint, tailwind compartidos)
+* [ ] Crear `packages/ui` (vacío, listo para componentes)
+* [ ] Crear `packages/sdk` (cliente Supabase tipado + lectura de variables de entorno)
+* [ ] Configurar Prettier y aliases de imports
+* [ ] `supabase init` en la raíz y `supabase link` al proyecto de desarrollo (HUMAN ACTION: login y contraseña)
+* [ ] Exponer esquemas `core`, `loyalty`, `recovery` en `supabase/config.toml`
+* [ ] GitHub Actions: install, typecheck, lint, build (los tests de base se suman en la Fase 1)
+
+## Fase 1 — Núcleo de base de datos (`core`)
+
+Ver secciones 8–13 y 46 para detalle.
+
+* [ ] Migración: `core.businesses`, `core.locations`
+* [ ] Migración: `core.memberships`, `core.platform_admins`
+* [ ] Migración: helpers RLS `core.is_member`, `core.has_role`, `core.has_module`
+* [ ] Migración: `core.modules`, `core.plans`, `core.subscriptions`, `core.business_modules`
+* [ ] Migración: `core.customers`, `core.customer_consents`, `core.customer_accounts`
+* [ ] Migración: `core.visits` + función `core.record_visit()` (idempotente)
+* [ ] Migración: `core.customer_stats`, `core.customer_status_history` + cálculo de estado y riesgo
+* [ ] Job nocturno con `pg_cron` para recalcular estadísticas
+* [ ] Migración: `core.events` (outbox) y `core.audit_log` con trigger genérico
+* [ ] Storage: bucket de logos con policies por `business_id`
+* [ ] Tests pgTAP: meta-test (toda tabla de negocio con RLS + `business_id` + índice)
+* [ ] Tests pgTAP: acceso cross-tenant rechazado en todas las tablas del núcleo
+* [ ] Tests pgTAP: `record_visit` (idempotencia, anónimas, permisos) y cálculo de estados
+* [ ] Seed DEMO "Café Central" (+ un segundo negocio para probar aislamiento)
+* [ ] Generar tipos TypeScript para todos los esquemas
+* [ ] Sumar `supabase test db` al CI
+
+## Fase 2 — Auth, onboarding y shell del panel
+
+Ver secciones 3, 14, 16, 17.
+
+* [ ] Router, layout, error boundary, notificaciones, componentes base en `packages/ui`
+* [ ] Signup / login / logout / reset de contraseña del negocio
+* [ ] Onboarding: crea negocio + sucursal + membership owner + módulos de prueba (función en la base)
+* [ ] "Negocio activo" en el frontend
+* [ ] Sistema de `manifest` de módulos: el menú muestra solo los módulos habilitados
+
+## Fase 3 — Clientes y registro de visitas en mostrador
+
+Ver secciones 18–20.
+
+* [ ] CRUD de clientes (incluye clientes sin teléfono / sin app)
+* [ ] Pantalla de mostrador: buscar cliente o "+1 visita anónima", monto opcional, < 5 segundos
+* [ ] Importación CSV
+* [ ] Ficha del cliente con estadísticas y estado
+* [ ] **CHECKPOINT DE PRODUCTO:** probar con un negocio real que el personal registre visitas durante 2 semanas. Si no lo hace, rediseñar la carga antes de seguir.
+
+## Fase 4 — Módulo Fidelización (`loyalty`)
+
+Ver secciones 21–26.
+
+* [ ] Programa por negocio (puntos por visita y/o por monto, sellos)
+* [ ] `loyalty.members` (alta opcional al programa) + QR personal
+* [ ] Ledger de puntos append-only, acreditación al recibir `visit.recorded`
+* [ ] Recompensas, desbloqueos, canjes con código único (función transaccional, anti doble canje)
+* [ ] Tests de reglas y de abuso
+* [ ] App del cliente (`apps/client`): login, puntos, progreso, recompensas, QR, historial
+
+## Fase 5 — Dashboard y módulo Recuperación (`recovery`)
+
+Ver secciones 30–38.
+
+* [ ] Dashboard del negocio
+* [ ] Listas de clientes en riesgo / inactivos con valor histórico
+* [ ] Segmentos, campañas, destinatarios con grupo de control
+* [ ] Envío MVP sin API de WhatsApp: el dueño envía desde su WhatsApp con links `wa.me` armados por el sistema (sin costo ni aprobación de Meta)
+* [ ] Atribución (cupón y ventana) y "dinero recuperado" (total + incremental)
+* [ ] Tests de atribución y de las fórmulas
+
+## Fase 6 — Mensajería real
+
+Ver secciones 39–41. **CHECKPOINT HUMANO** antes de conectar WhatsApp real.
+
+* [ ] Edge Function `send-message` con adaptadores, cola, reintentos, webhooks de estado
+
+## Fase 7 — PWA, white-label, deploy y primer cliente
+
+Ver secciones 27–29, 56, 63–67.
+
+## Fase 8+ — Siguientes módulos y cobro
+
+Turnos (`booking`), reputación (`reputation`), WhatsApp vendedor (`seller`), billing. Solo después de validar Fidelización + Recuperación con negocios reales (secciones 68–71).
+
+---
+
 # 0. REGLAS DE EJECUCIÓN PARA EL AGENTE
 
 ## 0.1 Objetivo principal
@@ -1944,44 +2040,7 @@ STOP
 
 # 80. ORDEN OFICIAL DE CONSTRUCCIÓN
 
-No ejecutar por orden arbitrario.
-
-Orden recomendado:
-
-```text
-1. Documentación
-2. GitHub
-3. Frontend base
-4. Supabase local
-5. Database
-6. Migrations
-7. RLS
-8. Auth
-9. Business onboarding
-10. Customers
-11. Purchases
-12. Points
-13. Rewards
-14. Redemption
-15. QR
-16. Customer app
-17. Dashboard
-18. White-label
-19. Inactivity detection
-20. Recovery
-21. Campaigns
-22. Metrics
-23. Attribution
-24. PWA
-25. Testing
-26. CI/CD
-27. Deploy
-28. First real customer
-29. Validation
-30. Scaling
-31. Native mobile
-32. Billing
-```
+Reemplazado por **PLAN POR FASES** al inicio de este archivo (2026-10-08).
 
 ---
 

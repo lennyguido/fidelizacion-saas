@@ -2,7 +2,7 @@
 
 ## Current phase
 
-3 — Frontend base
+Fase 0 — Base del repositorio (ver PLAN POR FASES en `TASKS.md`)
 
 ## Current task
 
@@ -17,12 +17,13 @@ Preparación del repositorio:
 * Creado `app/.env.example`.
 * README con estructura y comandos oficiales.
 * Marcadas en `TASKS.md` las tareas ya hechas de las secciones 1, 2 y 3.
+* Arquitectura de plataforma documentada (`docs/ARCHITECTURE.md`, D-005 a D-013) y plan por fases en `TASKS.md`.
 
 ## Next task
 
-Sección 3 pendiente: Prettier, aliases de imports, estructura de carpetas (sección 4), router, layout base y componentes reutilizables.
+Fase 0: convertir a monorepo (`app/` → `apps/admin/`, `packages/*`), Prettier, aliases; luego `supabase init` y `supabase link`.
 
-En paralelo, en cuanto se resuelva el bloqueo: sección 5 (Supabase local).
+Antes: arquitectura de plataforma núcleo + módulos definida en `docs/ARCHITECTURE.md` y `DECISIONS.md` (D-005 a D-013).
 
 ## Current blockers
 
@@ -31,7 +32,7 @@ HUMAN ACTION REQUIRED:
 1. Correr `npm install` dentro de `app/` para actualizar `package-lock.json` con `@supabase/supabase-js`.
 2. Instalar Docker Desktop (Supabase local lo necesita).
 3. Autenticarse en Supabase CLI: `npx supabase login` (abre el navegador).
-4. Crear el proyecto Supabase de desarrollo y completar `app/.env.local` a partir de `app/.env.example`.
+4. Proyecto Supabase de desarrollo: ya creado. Falta pasar el Project ref al agente y completar `app/.env.local` a partir de `app/.env.example`.
 
 ## Last test result
 
@@ -39,12 +40,14 @@ No verificado en este cambio: npm no tuvo acceso al registro en el entorno del a
 
 ## Last commit
 
-`chore: prepare repo for development`
+`docs: define platform architecture (core + modules)`
 
 ## Important decisions
 
 * Stack inicial: React + TypeScript + Vite + Tailwind.
 * Backend: Supabase + PostgreSQL.
 * Arquitectura: multi-tenant (`business_id` + RLS).
-* El frontend vive en `app/`; Supabase vivirá en `supabase/` en la raíz.
+* Plataforma núcleo (`core`) + módulos por esquema; los módulos nunca dependen entre sí.
+* La visita (`core.visits`) es el dato central; identidad del cliente separada del programa de puntos.
+* Monorepo: `apps/admin`, `apps/client`, `packages/*`, `supabase/`.
 * El backlog operativo principal se encuentra en `TASKS.md`.

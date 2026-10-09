@@ -2,9 +2,11 @@
 
 ## Objetivo
 
-Construir una plataforma SaaS multi-tenant de fidelización y recuperación de clientes para negocios locales.
+Construir una plataforma SaaS multi-tenant para negocios locales, formada por un núcleo compartido (`core`) y módulos. El primer producto es Fidelización + Recuperación de clientes (módulos `loyalty` y `recovery`).
 
 El backlog completo se encuentra en `TASKS.md`.
+
+La arquitectura obligatoria está en `docs/ARCHITECTURE.md`. Leerla antes de crear tablas, funciones, módulos o carpetas nuevas.
 
 ## Regla principal
 
@@ -103,6 +105,19 @@ La plataforma utiliza una única aplicación y una única base de datos.
 Los datos deben aislarse mediante `business_id` y RLS.
 
 Nunca permitir que un negocio pueda acceder a datos de otro negocio.
+
+Toda tabla de negocio debe tener: `business_id not null`, RLS habilitado, índice por `business_id` y foreign keys compuestas `(business_id, id)` hacia otras tablas del mismo negocio. Las policies usan los helpers `core.is_member`, `core.has_role` y `core.has_module`.
+
+## Núcleo y módulos
+
+* Los módulos dependen del núcleo y **nunca** entre sí. Un módulo no lee ni escribe tablas de otro módulo.
+* Cada módulo vive en su propio esquema de Postgres y en `src/modules/<modulo>/` en el frontend, con su `manifest.ts`.
+* Las visitas se registran solo con `core.record_visit()`.
+* Lógica crítica (puntos, canjes, estados, atribución, dinero) en funciones de Postgres. Las tablas sensibles no tienen policies de escritura para el cliente.
+* El frontend no calcula nada que importe: muestra datos y llama funciones.
+* Dinero en `bigint` (unidades menores). Fechas de estadísticas en la zona horaria del negocio.
+* Mensajes solo a través de la mensajería del núcleo, que controla consentimiento y opt-out.
+* Si algo nuevo parece necesitar romper estas reglas: STOP y preguntar.
 
 ## Estilo de código
 

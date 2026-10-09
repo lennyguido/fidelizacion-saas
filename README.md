@@ -1,6 +1,6 @@
 # Plataforma SaaS de Fidelización
 
-Plataforma SaaS multi-tenant para negocios locales.
+Plataforma SaaS multi-tenant para negocios locales, construida como un núcleo compartido + módulos. El primer producto es Fidelización + Recuperación de clientes; la misma base sirve para turnos, reputación, WhatsApp vendedor y otros (ver `docs/ARCHITECTURE.md`).
 
 El producto permite a los negocios:
 
@@ -28,6 +28,7 @@ El producto permite a los negocios:
 * `CLAUDE.md` — reglas para el agente de desarrollo.
 * `PROGRESS.md` — progreso actual.
 * `DECISIONS.md` — decisiones importantes de arquitectura y producto.
+* `docs/ARCHITECTURE.md` — arquitectura de la plataforma (núcleo + módulos).
 
 ## Estructura
 
