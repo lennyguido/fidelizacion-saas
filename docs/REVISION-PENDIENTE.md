@@ -1,11 +1,13 @@
 # Cambios esperando revisión
 
+> Actualizado 2026-10-09 15:20: migraciones 10 (archivado) y 15 (puntos, rama `feat/loyalty-db`) aplicadas en desarrollo e integradas a `main`. Esperan al mentor: 11–14 (equipo, privacidad, dueños).
+
 ## Estado de las ramas (2026-10-09 tarde)
 
 | Rama | Qué tiene | Toca la base | CI | Estado |
 |---|---|---|---|---|
 | `fix/reactivar-cliente` | Filtro "Archivados" y botón "Reactivar" (el error que encontró el dueño) + prueba de regresión `008-archived-customers`. | No | ✅ | **Integrada en `main`** (merge `8e8f3c6`, se deshace con `git revert -m 1 8e8f3c6`) |
-| `fix/archive-owner-admin-only` | Archivar/reactivar solo dueño/admin, en la base. Ya trae `main` adentro: archivar **y reactivar** usan `set_customer_status`. | Migración 10 | ✅ | **Aprobada por el mentor**, integración preparada, migración sin aplicar (punto 6: primero validar el panel) |
+| `fix/archive-owner-admin-only` | Archivar/reactivar solo dueño/admin, en la base. Ya trae `main` adentro: archivar **y reactivar** usan `set_customer_status`. | Migración 10 | ✅ | **Integrada en `main` y aplicada en desarrollo** (2026-10-09, después de que el dueño validó el panel) |
 | `feat/equipo-y-privacidad` | Equipo, invitaciones, borrar datos, limpieza. | Migraciones 11–13 | ✅ | Pendiente: confirmar pruebas y permisos → ver `docs/PERMISOS.md` en `feat/proteger-duenos` |
 | `feat/proteger-duenos` (encima de la anterior) | Ningún dueño puede quitarle el rol ni desactivar a otro dueño. Tabla de permisos con la prueba de cada regla. | Migración 14 (`20261009130300`) | ✅ | Pedido del mentor (punto 3), sin aplicar |
 | `chore/dev-smoke` | Revisión de solo lectura del proyecto de desarrollo desde GitHub. | No (solo lee) | ✅ | Herramienta |
@@ -35,7 +37,7 @@ Detalle completo (definición, permisos actuales, verificación y propuesta): `d
 
 | Migración | Qué cambia (en simple) |
 |---|---|
-| `20261009120000_core_archive_owner_admin_only` | Archivar o reactivar un cliente pasa a ser solo del dueño o un administrador. Antes un empleado podía hacerlo con una consulta directa. Se agrega la función `set_customer_status` y se quita el permiso de modificar la columna `status`. |
+| `20261009182015_core_archive_owner_admin_only` (**aplicada** 2026-10-09) | Archivar o reactivar un cliente pasa a ser solo del dueño o un administrador. Antes un empleado podía hacerlo con una consulta directa. Se agrega la función `set_customer_status` y se quita el permiso de modificar la columna `status`. |
 
 Pruebas: `008-customer-archive.test.sql` (10).
 

@@ -14,7 +14,7 @@
 
 | # | Migración | Rama |
 |---|---|---|
-| 10 | `20261009120000_core_archive_owner_admin_only` | `fix/archive-owner-admin-only` |
+| 10 | `20261009182015_core_archive_owner_admin_only` (**aplicada** 2026-10-09) | `fix/archive-owner-admin-only` |
 | 11 | `20261009130000_core_team` | `feat/equipo-y-privacidad` |
 | 12 | `20261009130100_core_customer_anonymize` | `feat/equipo-y-privacidad` |
 | 13 | `20261009130200_core_housekeeping` | `feat/equipo-y-privacidad` |

@@ -27,12 +27,12 @@ Proyecto de **desarrollo**: `fidelizacion-saas`, ref `dqpnqcumlyfifewgzyvh` (ún
 | 7 | 20261009110522 | core_onboarding | aplicada 2026-10-09 08:05 (con OK del dueño) |
 | 8 | 20261009110534 | core_customer_search | aplicada 2026-10-09 08:05 (con OK del dueño) |
 | 9 | 20261009110548 | core_customer_import | aplicada 2026-10-09 08:05 (con OK del dueño) |
-| 10 | 20261009120000 | core_archive_owner_admin_only | **pendiente de revisión — NO aplicada** |
+| 10 | 20261009182015 | core_archive_owner_admin_only | aplicada 2026-10-09 15:20 (aprobada por el mentor; merge a `main`) |
 | 11 | 20261009130000 | core_team | **pendiente de revisión — NO aplicada** |
 | 12 | 20261009130100 | core_customer_anonymize | **pendiente de revisión — NO aplicada** |
 | 13 | 20261009130200 | core_housekeeping | **pendiente de revisión — NO aplicada** |
 | 14 | 20261009130300 | core_team_owner_protection | **pendiente de revisión — NO aplicada** (rama `feat/proteger-duenos`) |
-| 15 | 20261009150000 | loyalty_core | **pendiente de revisión — NO aplicada** (rama `feat/loyalty-db`) |
+| 15 | 20261009182137 | loyalty_core | aplicada 2026-10-09 15:21 (OK del dueño, D-019; merge a `main`) |
 
 Regla vigente desde 2026-10-09: ninguna migración se aplica sin aprobación explícita del dueño después de revisarla.
 
@@ -101,7 +101,7 @@ Rama **`feat/loyalty-db`** (CI verde; nada aplicado en Supabase):
 * Tests: `020-loyalty-points` (25), `021-loyalty-redemptions` (22), unitarios de `loyalty.ts`, e2e `loyalty.spec.ts`.
 * Falta de la Fase 4: QR personal y app del cliente (`apps/client`).
 
-Para usarlo en desarrollo hace falta (con aprobación): aplicar la migración 15 y agregar `loyalty` en **Data API → Exposed schemas**.
+Migraciones 10 y 15 **aplicadas en desarrollo** e integradas a `main` (15:20). Falta que el dueño agregue `loyalty` en **Data API → Exposed schemas** (no se puede hacer desde la base). Alertas de seguridad de Supabase después de aplicar: sin alertas nuevas.
 
 ## Viernes 9, 15 h — plan del mentor en 6 pasos
 
