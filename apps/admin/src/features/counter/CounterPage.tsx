@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+import { useCallback, useState, type FormEvent } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import {
   customers,
@@ -11,7 +11,10 @@ import {
   type CustomerListItem,
 } from '@plataforma/sdk'
 import { Alert, Button, Card, Spinner, TextField, useToast } from '@plataforma/ui'
+import { useCustomerCodeMatch } from '../../modules/useCustomerCodeMatch'
 import { useActiveBusiness } from '../business/ActiveBusinessContext'
+import { QrScanner } from './QrScanner'
+import { canScanQr } from './qrSupport'
 import { StatusBadge } from '../customers/StatusBadge'
 import { useCustomerSearch, useInvalidateCustomers } from '../customers/queries'
 import { useDebouncedValue } from '../../hooks/useDebouncedValue'
@@ -28,8 +31,15 @@ export function CounterPage() {
   const [query, setQuery] = useState('')
   const [amountText, setAmountText] = useState('')
   const [creating, setCreating] = useState(false)
+  const [scanning, setScanning] = useState(false)
+  const onScanned = useCallback((text: string) => {
+    setScanning(false)
+    setCreating(false)
+    setQuery(text)
+  }, [])
   const debouncedQuery = useDebouncedValue(query)
   const results = useCustomerSearch(business.id, debouncedQuery, null, 8)
+  const codeMatch = useCustomerCodeMatch(debouncedQuery)
 
   const amountMinor = parseAmountToMinor(amountText)
   const amountInvalid = amountText.trim() !== '' && amountMinor === null
@@ -66,13 +76,22 @@ export function CounterPage() {
           label="Buscar cliente"
           type="search"
           autoFocus
-          placeholder="Nombre o teléfono"
+          placeholder="Nombre, teléfono o código de socio"
           value={query}
           onChange={(e) => {
             setQuery(e.target.value)
             setCreating(false)
           }}
         />
+        {scanning ? (
+          <QrScanner onResult={onScanned} onClose={() => setScanning(false)} />
+        ) : (
+          canScanQr() && (
+            <Button variant="secondary" onClick={() => setScanning(true)}>
+              Escanear QR de la tarjeta
+            </Button>
+          )
+        )}
         <TextField
           label="Monto (opcional)"
           inputMode="decimal"
@@ -83,6 +102,22 @@ export function CounterPage() {
           hint={amountMinor !== null ? formatMoney(amountMinor, business.currency) : undefined}
         />
       </Card>
+
+      {codeMatch.data && !creating && (
+        <Card className="flex items-center justify-between gap-3">
+          <div className="min-w-0">
+            <p className="text-xs font-medium text-slate-500">Socio encontrado por código</p>
+            <p className="truncate font-medium">{codeMatch.data.name}</p>
+          </div>
+          <Button
+            size="lg"
+            disabled={busy || amountInvalid}
+            onClick={() => codeMatch.data && record.mutate(codeMatch.data)}
+          >
+            +1
+          </Button>
+        </Card>
+      )}
 
       {creating ? (
         <QuickCreate

@@ -1,0 +1,12 @@
+@import 'tailwindcss';
+
+@source "../../../packages/ui/src";
+
+:root {
+  color-scheme: light;
+  --brand: #0f172a;
+}
+
+body {
+  @apply bg-slate-50 text-slate-900 antialiased;
+}

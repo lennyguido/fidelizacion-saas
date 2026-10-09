@@ -1,5 +1,5 @@
 -- Regresión: un cliente archivado se puede encontrar y reactivar.
--- Desde 20261009120000 el estado solo se cambia con core.set_customer_status.
+-- Desde 20261009182015 el estado solo se cambia con core.set_customer_status.
 -- Es lo que usan customers.listArchived() y customers.reactivate() del SDK.
 begin;
 create extension if not exists pgtap with schema extensions;

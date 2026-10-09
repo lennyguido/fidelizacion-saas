@@ -1,10 +1,10 @@
 # Progreso del proyecto
 
-> Estado verificado el 2026-10-09 ~08:30 (hora Argentina).
+> Estado verificado el 2026-10-09 ~16:30 (hora Argentina).
 
 ## Current phase
 
-Fase 3 — Clientes y registro de visitas: construida. **No se avanza a la Fase 4** hasta dejar el entorno de desarrollo funcionando y validar el mostrador con datos de prueba.
+Fases 0–5 construidas (2026-10-09). Fase 4 y 5 integradas en `main` y aplicadas en desarrollo. **Siguiente:** Fase 6 (mensajería real) requiere checkpoint humano (WhatsApp real); mientras tanto, pendientes chicos de las fases 4–5 y Fase 7 (PWA/deploy).
 
 ## Current task
 
@@ -27,11 +27,16 @@ Proyecto de **desarrollo**: `fidelizacion-saas`, ref `dqpnqcumlyfifewgzyvh` (ún
 | 7 | 20261009110522 | core_onboarding | aplicada 2026-10-09 08:05 (con OK del dueño) |
 | 8 | 20261009110534 | core_customer_search | aplicada 2026-10-09 08:05 (con OK del dueño) |
 | 9 | 20261009110548 | core_customer_import | aplicada 2026-10-09 08:05 (con OK del dueño) |
-| 10 | 20261009120000 | core_archive_owner_admin_only | **pendiente de revisión — NO aplicada** |
-| 11 | 20261009130000 | core_team | **pendiente de revisión — NO aplicada** |
-| 12 | 20261009130100 | core_customer_anonymize | **pendiente de revisión — NO aplicada** |
-| 13 | 20261009130200 | core_housekeeping | **pendiente de revisión — NO aplicada** |
-| 14 | 20261009130300 | core_team_owner_protection | **pendiente de revisión — NO aplicada** (rama `feat/proteger-duenos`) |
+| 10 | 20261009182015 | core_archive_owner_admin_only | aplicada 2026-10-09 15:20 (aprobada por el mentor; merge a `main`) |
+| 15 | 20261009182137 | loyalty_core | aplicada 2026-10-09 15:21 (OK del dueño, D-019; merge a `main`) |
+| 16 | 20261009183337 | loyalty_cards | aplicada 2026-10-09 15:33 (D-019; merge a `main`) |
+| 17 | 20261009184605 | core_campaigns | aplicada 2026-10-09 15:46 (D-019; merge a `main`) |
+| 11 | 20261009190100 | core_team | **pendiente de revisión — NO aplicada** |
+| 12 | 20261009190200 | core_customer_anonymize | **pendiente de revisión — NO aplicada** |
+| 13 | 20261009190300 | core_housekeeping | **pendiente de revisión — NO aplicada** |
+| 14 | 20261009190400 | core_team_owner_protection | **pendiente de revisión — NO aplicada** (rama `feat/proteger-duenos`) |
+
+Las migraciones 11–14 (equipo, privacidad, dueños) conservan su número de revisión, pero sus archivos se renombraron a versiones posteriores a la 17 (`2026100919xxxx`) porque desarrollo ya tiene aplicadas la 15–17: así `supabase db push` las aplica después, en orden.
 
 Regla vigente desde 2026-10-09: ninguna migración se aplica sin aprobación explícita del dueño después de revisarla.
 
@@ -42,7 +47,7 @@ Las migraciones 7–9 son solo aditivas (funciones e índices nuevos, sin cambio
 Resumen en simple para revisar: `docs/REVISION-PENDIENTE.md`.
 
 * `fix/archive-owner-admin-only` — archivar solo owner/admin.
-* `feat/equipo-y-privacidad` (encima de la anterior) — invitar empleados, administrar el equipo, borrar datos personales de un cliente, limpieza semanal. Migraciones `20261009130000`, `20261009130100`, `20261009130200`, **no aplicadas**.
+* `feat/equipo-y-privacidad` (encima de la anterior) — invitar empleados, administrar el equipo, borrar datos personales de un cliente, limpieza semanal. Migraciones `20261009190100`, `20261009190200`, `20261009190300`, **no aplicadas**.
 
 Detalle de la primera rama:
 
@@ -57,7 +62,7 @@ Rama `fix/archive-owner-admin-only` (commit `62a7b19`):
 
 | Nivel | Dónde / comando | Último resultado |
 |---|---|---|
-| Base de datos (pgTAP) | Postgres 16 local del agente: `scripts/db-test-local.sh` | main: 132/132 OK (9 archivos) · rama `feat/equipo-y-privacidad`: 154/154 OK (11 archivos) |
+| Base de datos (pgTAP) | Postgres 16 local del agente: `scripts/db-test-local.sh` | main: 112/112 OK (9 archivos) · `fix/archive-owner-admin-only`: 122/122 · `feat/equipo-y-privacidad` (con `main` adentro): 246/246 · `feat/proteger-duenos`: 167/167 |
 | Base de datos (pgTAP) | CI: `supabase db start` + `supabase test db` (Supabase real en Docker) | OK en `main` |
 | Unitarios (Vitest) | CI: `npm test` · local del agente: runner mínimo con Node (npm no disponible) | OK |
 | Frontend | CI: `npm run typecheck`, `npm run lint`, `npm run format:check`, `npm run build` | OK |
@@ -89,6 +94,50 @@ Rama `chore/calidad-pre-piloto` (llevada a `main` con CI en verde; no toca la ba
 * **Alertas de Supabase** del proyecto de desarrollo leídas (solo lectura). Una función agregada por Supabase (`public.rls_auto_enable`) queda abierta: quitarle el permiso **necesita aprobación**.
 * `SECURITY.md`, `CONTRIBUTING.md`, `CHANGELOG.md` y `docs/APLICAR-MIGRACIONES.md` (paso a paso para cuando se aprueben).
 
+## Viernes 9, 15:50 — Fase 5 (Tablero + Recuperación) hecha
+
+* Integrado en `main` y aplicado en desarrollo (migración 17, D-021).
+* **Inicio** (dueño/admin): resumen del mes — visitas, ventas, ticket promedio, nuevos, recuperados y "en juego" — comparado con los mismos días del mes pasado.
+* **Ficha del cliente:** "Mensajes por WhatsApp" para anotar si acepta o no (consentimiento, Ley 25.326).
+* **Recuperación:** listas de en riesgo e inactivos ordenadas por lo que gastaron; campañas con vista previa en vivo, grupo de control al azar, mensaje personalizado, envío por `wa.me` y resultados (volvieron, gastaron, incremental vs. control).
+* Tests: `030-campaigns` (21) + unitarios + e2e. CI verde.
+* Pendiente de Fase 5: atribución por cupón.
+
+## Viernes 9, 15:40 — Fase 4 (Fidelización) terminada
+
+* Integrado en `main` y aplicado en desarrollo: puntos, recompensas, canjes (migración 15) y **tarjeta digital** (migración 16, D-020).
+* `apps/client`: el cliente abre su tarjeta con un link secreto (sin cuenta): saldo, QR con su código de socio, progreso a la próxima recompensa, movimientos. Se instala como app (PWA).
+* Panel: botón "Crear tarjeta digital" en la ficha (mandar por WhatsApp o copiar); el mostrador encuentra al socio escribiendo su código.
+* Tests de base: **185** aserciones en `main` (13 archivos) · e2e de punta a punta con las dos apps.
+* Mostrador: botón "Escanear QR de la tarjeta" con la cámara (Chrome Android); en otros navegadores se escribe el código de 8 letras.
+* **Acción del dueño (dashboard):** Data API → Exposed schemas → agregar `loyalty`.
+
+## Viernes 9, 16 h — Fase 4 (Fidelización) empezada
+
+El dueño validó el panel contra desarrollo (registro, login, negocio, clientes, visitas, archivado, reactivación: "anda todo") y pidió avanzar. Fase 4 en paralelo con el piloto (D-017).
+
+Rama **`feat/loyalty-db`** (CI verde; nada aplicado en Supabase):
+
+* Migración **15** `20261009150000_loyalty_core`: esquema `loyalty` con programa, socios, libro de puntos (solo se agrega), recompensas y canjes. Los puntos se acreditan y revierten solos con cada visita (D-018).
+* Panel: página **Fidelización** (regla del programa y recompensas) y tarjeta **Puntos** en la ficha del cliente (sumarse, saldo, canjear, movimientos, cancelar canje, ajuste manual).
+* Tests: `020-loyalty-points` (25), `021-loyalty-redemptions` (22), unitarios de `loyalty.ts`, e2e `loyalty.spec.ts`.
+* Falta de la Fase 4: QR personal y app del cliente (`apps/client`).
+
+Migraciones 10 y 15 **aplicadas en desarrollo** e integradas a `main` (15:20). Falta que el dueño agregue `loyalty` en **Data API → Exposed schemas** (no se puede hacer desde la base). Alertas de seguridad de Supabase después de aplicar: sin alertas nuevas.
+
+## Viernes 9, 15 h — plan del mentor en 6 pasos
+
+| # | Paso | Estado |
+|---|---|---|
+| 1 | Integrar `fix/reactivar-cliente` en `main` con prueba de regresión | ✅ merge `8e8f3c6` (CI verde). Regresión: `008-archived-customers.test.sql` (6) + `e2e/archive.spec.ts` |
+| 2 | Preparar `fix/archive-owner-admin-only` con `set_customer_status` para archivar y reactivar | ✅ preparado (CI verde). Migración 10 **sin aplicar** |
+| 3 | Equipo y dueños sin aplicar hasta revisar pruebas y permisos | ✅ ramas actualizadas con lo anterior (CI verde); `docs/PERMISOS.md`. Migraciones 11–14 **sin aplicar** |
+| 4 | Documentar `rls_auto_enable` antes de tocarla | ✅ `docs/supabase/RLS_AUTO_ENABLE.md` + `scripts/verify-rls-auto-enable-local.sql`. **Ningún REVOKE ejecutado** |
+| 5 | Probar el panel contra desarrollo, paso a paso | ⏳ guía actualizada: `docs/GUIA-PRUEBA-MOSTRADOR.md` (19 pasos). Falta que el dueño la haga |
+| 6 | No avanzar a puntos hasta confirmar registro, login, negocio, clientes, visitas, archivado y reactivación | ⏳ bloqueado por el paso 5 |
+
+Cómo volver atrás: cada cosa está en su rama; lo único integrado en `main` es el merge `8e8f3c6` (`git revert -m 1 8e8f3c6`).
+
 ## Viernes 9, tarde — respuesta al mentor (sin aplicar nada)
 
 * Mentor: aprueba la migración de archivado; pide confirmar permisos antes de la de equipo; dos dueños protegidos entre sí; email confirmado antes de invitaciones en producción; no ejecutar el REVOKE de `rls_auto_enable` sin explicación; **no aplicar migraciones ni avanzar a puntos** hasta validar el panel contra desarrollo.
@@ -100,6 +149,11 @@ Rama `chore/calidad-pre-piloto` (llevada a `main` con CI en verde; no toca la ba
 `docs/marketing/`: nombre recomendado **Vueltita** (falta verificar INPI y nic.ar), marca y colores, análisis de mercado con fuentes, precios propuestos, guion de ventas y textos de la web. No cambia el backlog ni el código.
 
 ## Current blockers
+
+**Para probar lo nuevo:** Data API → Exposed schemas → agregar `loyalty` (dueño, en el dashboard). Guía: `docs/GUIA-PRUEBA-COMPLETA.md`.
+
+**Fase 6 (mensajería real con WhatsApp API) es checkpoint humano:** cuenta de Meta Business, número verificado, plantillas aprobadas y costos por mensaje. No se avanza sin decisión del dueño.
+
 
 HUMAN ACTION REQUIRED:
 

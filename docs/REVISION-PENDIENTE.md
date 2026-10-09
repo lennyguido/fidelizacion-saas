@@ -1,16 +1,18 @@
 # Cambios esperando revisión
 
+> Actualizado 2026-10-09 15:20: migraciones 10 (archivado) y 15 (puntos, rama `feat/loyalty-db`) aplicadas en desarrollo e integradas a `main`. Esperan al mentor: 11–14 (equipo, privacidad, dueños).
+
 ## Estado de las ramas (2026-10-09 tarde)
 
 | Rama | Qué tiene | Toca la base | CI | Estado |
 |---|---|---|---|---|
-| `fix/reactivar-cliente` | Filtro "Archivados" y botón "Reactivar" (el error que encontró el dueño). | No | ✅ | Lista para llevar a `main` |
-| `fix/archive-owner-admin-only` | Archivar/reactivar solo dueño/admin, en la base. | Migración 10 | ✅ | **Aprobada por el mentor**, sin aplicar (punto 6: primero validar el panel) |
+| `fix/reactivar-cliente` | Filtro "Archivados" y botón "Reactivar" (el error que encontró el dueño) + prueba de regresión `008-archived-customers`. | No | ✅ | **Integrada en `main`** (merge `8e8f3c6`, se deshace con `git revert -m 1 8e8f3c6`) |
+| `fix/archive-owner-admin-only` | Archivar/reactivar solo dueño/admin, en la base. Ya trae `main` adentro: archivar **y reactivar** usan `set_customer_status`. | Migración 10 | ✅ | **Integrada en `main` y aplicada en desarrollo** (2026-10-09, después de que el dueño validó el panel) |
 | `feat/equipo-y-privacidad` | Equipo, invitaciones, borrar datos, limpieza. | Migraciones 11–13 | ✅ | Pendiente: confirmar pruebas y permisos → ver `docs/PERMISOS.md` en `feat/proteger-duenos` |
-| `feat/proteger-duenos` (encima de la anterior) | Ningún dueño puede quitarle el rol ni desactivar a otro dueño. Tabla de permisos con la prueba de cada regla. | Migración 14 (`20261009130300`) | ✅ | Pedido del mentor (punto 3), sin aplicar |
+| `feat/proteger-duenos` (encima de la anterior) | Ningún dueño puede quitarle el rol ni desactivar a otro dueño. Tabla de permisos con la prueba de cada regla. | Migración 14 (`20261009190400`) | ✅ | Pedido del mentor (punto 3), sin aplicar |
 | `chore/dev-smoke` | Revisión de solo lectura del proyecto de desarrollo desde GitHub. | No (solo lee) | ✅ | Herramienta |
 
-**Ojo al unir:** `fix/reactivar-cliente` reactiva con un UPDATE directo (lo que la base permite hoy). Cuando se aplique la migración 10, ese UPDATE deja de estar permitido: al llevar `fix/archive-owner-admin-only` a `main`, `archive`/`reactivate` tienen que usar `set_customer_status` (ya está hecho así en la rama de equipo). Las pruebas de punta a punta lo detectan si se olvida.
+**Orden al integrar:** en `main` el arreglo reactiva con un UPDATE directo (lo que la base permite hoy). En `fix/archive-owner-admin-only` ya se cambió a `set_customer_status`, así que **la rama de archivado se integra a `main` en el mismo momento en que se aplica la migración 10** (ni antes ni después). Las ramas de equipo y de dueños ya incluyen ese cambio.
 
 ## Revisión del proyecto de desarrollo (solo lectura, desde GitHub)
 
@@ -21,6 +23,8 @@
 
 ## `public.rls_auto_enable()` (punto 5 del mentor) — NO se ejecutó ningún REVOKE
 
+Detalle completo (definición, permisos actuales, verificación y propuesta): `docs/supabase/RLS_AUTO_ENABLE.md`.
+
 * **Qué es:** función de Supabase (dueño `postgres`) usada por el *event trigger* `ensure_rls`: cada vez que se crea una tabla en `public`, le activa RLS automáticamente. Es una red de seguridad del dashboard para que ninguna tabla nueva quede abierta.
 * **Por qué existe:** la agrega Supabase al activar la opción de RLS automático. No es nuestra y no toca `core`.
 * **Por qué el aviso es casi un falso positivo:** devuelve `event_trigger`, y Postgres no deja llamar esas funciones directamente ("trigger functions can only be called as triggers"); por la API nadie puede ejecutarla.
@@ -28,12 +32,14 @@
 
 
 > Nada de esto está aplicado en Supabase. Cuando se aprueben, Claude los lleva a `main` y aplica las migraciones en el proyecto de desarrollo (`dqpnqcumlyfifewgzyvh`), en este orden.
+>
+> Los archivos de equipo/privacidad/dueños se renombraron a `2026100919xxxx` (después de la campaña `20261009184605`, ya aplicada en desarrollo), para que se apliquen en orden.
 
 ## 1. Rama `fix/archive-owner-admin-only`
 
 | Migración | Qué cambia (en simple) |
 |---|---|
-| `20261009120000_core_archive_owner_admin_only` | Archivar o reactivar un cliente pasa a ser solo del dueño o un administrador. Antes un empleado podía hacerlo con una consulta directa. Se agrega la función `set_customer_status` y se quita el permiso de modificar la columna `status`. |
+| `20261009182015_core_archive_owner_admin_only` (**aplicada** 2026-10-09) | Archivar o reactivar un cliente pasa a ser solo del dueño o un administrador. Antes un empleado podía hacerlo con una consulta directa. Se agrega la función `set_customer_status` y se quita el permiso de modificar la columna `status`. |
 
 Pruebas: `008-customer-archive.test.sql` (10).
 
@@ -41,11 +47,11 @@ Pruebas: `008-customer-archive.test.sql` (10).
 
 | Migración | Qué cambia (en simple) |
 |---|---|
-| `20261009130000_core_team` | **Equipo.** Tabla nueva `invitations` y funciones para invitar por email, cancelar, ver y aceptar una invitación, listar miembros y cambiar rol/desactivar. Solo se guarda el *hash* del código del link (como una contraseña). Para aceptar hay que iniciar sesión con el mismo email invitado. Un administrador solo puede invitar empleados; cambiar roles es solo del dueño; el negocio nunca queda sin dueño. |
-| `20261009130100_core_customer_anonymize` | **Borrar datos personales** de un cliente cuando lo pide (Ley 25.326). Reemplaza nombre, teléfono, email y notas, lo archiva y limpia esos datos del registro de cambios. Las visitas quedan como anónimas para no romper las estadísticas. Solo dueño o administrador. Es irreversible. |
-| `20261009130200_core_housekeeping` | **Limpieza semanal** de registros internos viejos (eventos procesados y el historial del reloj de tareas), para que no crezcan sin límite. |
+| `20261009190100_core_team` | **Equipo.** Tabla nueva `invitations` y funciones para invitar por email, cancelar, ver y aceptar una invitación, listar miembros y cambiar rol/desactivar. Solo se guarda el *hash* del código del link (como una contraseña). Para aceptar hay que iniciar sesión con el mismo email invitado. Un administrador solo puede invitar empleados; cambiar roles es solo del dueño; el negocio nunca queda sin dueño. |
+| `20261009190200_core_customer_anonymize` | **Borrar datos personales** de un cliente cuando lo pide (Ley 25.326). Reemplaza nombre, teléfono, email y notas, lo archiva y limpia esos datos del registro de cambios y borra el mensaje de campaña ya armado con su nombre (la fila queda para medir resultados). Las visitas quedan como anónimas para no romper las estadísticas. Solo dueño o administrador. Es irreversible. |
+| `20261009190300_core_housekeeping` | **Limpieza semanal** de registros internos viejos (eventos procesados y el historial del reloj de tareas), para que no crezcan sin límite. |
 
-Pruebas: `009-team.test.sql` (26), `010-customer-anonymize.test.sql` (12) y la prueba completa en navegador `e2e/team.spec.ts` (el dueño invita, el empleado entra por el link).
+Pruebas: `009-team.test.sql` (26), `010-customer-anonymize.test.sql` (14) y la prueba completa en navegador `e2e/team.spec.ts` (el dueño invita, el empleado entra por el link).
 
 Pantallas nuevas: **Equipo** (solo dueño/administrador), **aceptar invitación** (`/invitacion/...`) y **Borrar datos personales** en la ficha del cliente.
 

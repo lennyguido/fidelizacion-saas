@@ -23,6 +23,31 @@ export {
 export * as team from './team.ts'
 export type { CreatedInvitation, InvitationPreview, PendingInvitation, TeamMember } from './team.ts'
 export * as visits from './visits.ts'
+export * as campaigns from './campaigns.ts'
+export type {
+  Campaign,
+  CampaignInput,
+  CampaignResults,
+  CampaignStatus,
+  Recipient as CampaignRecipient,
+  Segment,
+  SegmentPreview,
+} from './campaigns.ts'
+export * as dashboard from './dashboard.ts'
+export type { DashboardSummary } from './dashboard.ts'
+export * as loyalty from './loyalty.ts'
+export * as card from './card.ts'
+export type { Card, CardMovement, CardReward } from './card.ts'
+export type {
+  Member as LoyaltyMember,
+  Movement as LoyaltyMovement,
+  MovementReason as LoyaltyMovementReason,
+  Program as LoyaltyProgram,
+  ProgramInput as LoyaltyProgramInput,
+  ProgramKind as LoyaltyProgramKind,
+  Redemption as LoyaltyRedemption,
+  Reward as LoyaltyReward,
+} from './loyalty.ts'
 export type { Visit, VisitCounts } from './visits.ts'
 export { startOfDayInTimeZone } from './dates.ts'
 export { formatMoney, parseAmountToMinor } from './money.ts'

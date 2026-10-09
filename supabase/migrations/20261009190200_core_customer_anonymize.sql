@@ -49,6 +49,15 @@ begin
      and customer_id = p_customer_id
      and (notes is not null or void_reason is not null);
 
+  -- El mensaje de campaña ya personalizado lleva el nombre del cliente. Se
+  -- borra; el resto (grupo, estado al enviar, contactado) queda para medir.
+  -- Las filas de control ya tienen message = null.
+  update core.campaign_recipients
+     set message = null
+   where business_id = v_customer.business_id
+     and customer_id = p_customer_id
+     and message is not null;
+
   -- La auditoría guarda valores anteriores: se quitan los datos personales
   -- (incluye las filas que acaba de generar el update de visitas).
   update core.audit_log
