@@ -23,3 +23,11 @@ curl -s -w '\nHTTP %{http_code}\n' "${H[@]}" -H "Accept-Profile: core" "$URL/res
 echo; echo "== 4. Sin iniciar sesión NO se pueden llamar funciones (esperado: permiso denegado) =="
 curl -s -w '\nHTTP %{http_code}\n' "${H[@]}" -H "Content-Profile: core" -H "Content-Type: application/json" \
   -d '{"p_slug":"prueba"}' "$URL/rest/v1/rpc/is_slug_available"
+
+echo; echo "== 5. ¿El esquema loyalty está expuesto? (tarjeta con código inválido: esperado null / HTTP 200) =="
+curl -s -w '\nHTTP %{http_code}\n' "${H[@]}" -H "Content-Profile: loyalty" -H "Content-Type: application/json" \
+  -d '{"p_token":"0000000000000000000000000000000000000000000000000000000000000000"}' "$URL/rest/v1/rpc/get_card"
+
+echo; echo "== 6. Sin sesión NO se pueden leer socios ni el libro de puntos =="
+curl -s -w '\nHTTP %{http_code}\n' "${H[@]}" -H "Accept-Profile: loyalty" "$URL/rest/v1/members?select=id&limit=1"
+curl -s -w '\nHTTP %{http_code}\n' "${H[@]}" -H "Accept-Profile: loyalty" "$URL/rest/v1/cards?select=token_hash&limit=1"
