@@ -148,6 +148,11 @@ Cómo volver atrás: cada cosa está en su rama; lo único integrado en `main` e
 
 ## Current blockers
 
+**Para probar lo nuevo:** Data API → Exposed schemas → agregar `loyalty` (dueño, en el dashboard). Guía: `docs/GUIA-PRUEBA-COMPLETA.md`.
+
+**Fase 6 (mensajería real con WhatsApp API) es checkpoint humano:** cuenta de Meta Business, número verificado, plantillas aprobadas y costos por mensaje. No se avanza sin decisión del dueño.
+
+
 HUMAN ACTION REQUIRED:
 
 1. Revisar y aprobar (o pedir cambios) la migración 10 y las migraciones 7–9 ya aplicadas.
