@@ -1,0 +1,18 @@
+name: Dev smoke (solo lectura)
+# Revisa desde afuera el proyecto de DESARROLLO de Supabase sin cambiar nada.
+on:
+  push:
+    branches: [chore/dev-smoke]
+  workflow_dispatch:
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    env:
+      DEV_SUPABASE_URL: https://dqpnqcumlyfifewgzyvh.supabase.co
+      # Publishable key: es pública por diseño (termina en el navegador). Nunca poner acá la service_role.
+      DEV_SUPABASE_PUBLISHABLE_KEY: sb_publishable_g9zikHA-QSDTv3pApYhHjA_UJkk6432
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash scripts/dev-smoke.sh | tee smoke.txt
+      - run: |
+          { echo '```'; cat smoke.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
