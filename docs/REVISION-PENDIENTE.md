@@ -1,5 +1,32 @@
 # Cambios esperando revisión
 
+## Estado de las ramas (2026-10-09 tarde)
+
+| Rama | Qué tiene | Toca la base | CI | Estado |
+|---|---|---|---|---|
+| `fix/reactivar-cliente` | Filtro "Archivados" y botón "Reactivar" (el error que encontró el dueño). | No | ✅ | Lista para llevar a `main` |
+| `fix/archive-owner-admin-only` | Archivar/reactivar solo dueño/admin, en la base. | Migración 10 | ✅ | **Aprobada por el mentor**, sin aplicar (punto 6: primero validar el panel) |
+| `feat/equipo-y-privacidad` | Equipo, invitaciones, borrar datos, limpieza. | Migraciones 11–13 | ✅ | Pendiente: confirmar pruebas y permisos → ver `docs/PERMISOS.md` en `feat/proteger-duenos` |
+| `feat/proteger-duenos` (encima de la anterior) | Ningún dueño puede quitarle el rol ni desactivar a otro dueño. Tabla de permisos con la prueba de cada regla. | Migración 14 (`20261009130300`) | ✅ | Pedido del mentor (punto 3), sin aplicar |
+| `chore/dev-smoke` | Revisión de solo lectura del proyecto de desarrollo desde GitHub. | No (solo lee) | ✅ | Herramienta |
+
+**Ojo al unir:** `fix/reactivar-cliente` reactiva con un UPDATE directo (lo que la base permite hoy). Cuando se aplique la migración 10, ese UPDATE deja de estar permitido: al llevar `fix/archive-owner-admin-only` a `main`, `archive`/`reactivate` tienen que usar `set_customer_status` (ya está hecho así en la rama de equipo). Las pruebas de punta a punta lo detectan si se olvida.
+
+## Revisión del proyecto de desarrollo (solo lectura, desde GitHub)
+
+* Esquema `core` **expuesto** ✅ (sin sesión responde "permission denied", no "schema not found").
+* Sin sesión no se leen clientes ni se llaman funciones ✅.
+* **Confirmación de email activada** ✅ (punto 4 del mentor, en desarrollo).
+* Redirect URLs: no se pueden ver desde afuera; se validan al confirmar el email en la prueba del panel.
+
+## `public.rls_auto_enable()` (punto 5 del mentor) — NO se ejecutó ningún REVOKE
+
+* **Qué es:** función de Supabase (dueño `postgres`) usada por el *event trigger* `ensure_rls`: cada vez que se crea una tabla en `public`, le activa RLS automáticamente. Es una red de seguridad del dashboard para que ninguna tabla nueva quede abierta.
+* **Por qué existe:** la agrega Supabase al activar la opción de RLS automático. No es nuestra y no toca `core`.
+* **Por qué el aviso es casi un falso positivo:** devuelve `event_trigger`, y Postgres no deja llamar esas funciones directamente ("trigger functions can only be called as triggers"); por la API nadie puede ejecutarla.
+* **Cómo verificar que quitar el permiso no rompe nada:** Postgres no revisa el permiso EXECUTE cuando dispara un trigger. Probado en una base local: con el permiso revocado, un usuario común creó una tabla en `public` y quedó con RLS activado. Para confirmarlo en Supabase (cuando se apruebe): revocar, crear una tabla de prueba en `public`, mirar que `relrowsecurity = true`, borrarla.
+
+
 > Nada de esto está aplicado en Supabase. Cuando se aprueben, Claude los lleva a `main` y aplica las migraciones en el proyecto de desarrollo (`dqpnqcumlyfifewgzyvh`), en este orden.
 
 ## 1. Rama `fix/archive-owner-admin-only`

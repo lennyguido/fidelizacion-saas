@@ -31,6 +31,7 @@ Proyecto de **desarrollo**: `fidelizacion-saas`, ref `dqpnqcumlyfifewgzyvh` (ún
 | 11 | 20261009130000 | core_team | **pendiente de revisión — NO aplicada** |
 | 12 | 20261009130100 | core_customer_anonymize | **pendiente de revisión — NO aplicada** |
 | 13 | 20261009130200 | core_housekeeping | **pendiente de revisión — NO aplicada** |
+| 14 | 20261009130300 | core_team_owner_protection | **pendiente de revisión — NO aplicada** (rama `feat/proteger-duenos`) |
 
 Regla vigente desde 2026-10-09: ninguna migración se aplica sin aprobación explícita del dueño después de revisarla.
 
@@ -87,6 +88,12 @@ Rama `chore/calidad-pre-piloto` (llevada a `main` con CI en verde; no toca la ba
 * **Revisión de seguridad independiente** de `feat/equipo-y-privacidad`: sin fugas entre negocios; 5 problemas corregidos en `10f360a` (detalle en `docs/REVISION-PENDIENTE.md`). Tests de base locales: **154/154 OK** (11 archivos).
 * **Alertas de Supabase** del proyecto de desarrollo leídas (solo lectura). Una función agregada por Supabase (`public.rls_auto_enable`) queda abierta: quitarle el permiso **necesita aprobación**.
 * `SECURITY.md`, `CONTRIBUTING.md`, `CHANGELOG.md` y `docs/APLICAR-MIGRACIONES.md` (paso a paso para cuando se aprueben).
+
+## Viernes 9, tarde — respuesta al mentor (sin aplicar nada)
+
+* Mentor: aprueba la migración de archivado; pide confirmar permisos antes de la de equipo; dos dueños protegidos entre sí; email confirmado antes de invitaciones en producción; no ejecutar el REVOKE de `rls_auto_enable` sin explicación; **no aplicar migraciones ni avanzar a puntos** hasta validar el panel contra desarrollo.
+* Hecho: `fix/reactivar-cliente` (error del dueño: no se podía recuperar un archivado), `feat/proteger-duenos` (migración 14 + `docs/PERMISOS.md`), revisión de solo lectura del proyecto de desarrollo (`chore/dev-smoke`), explicación de `rls_auto_enable`, arreglo de un test e2e inestable. Tests de base: **161/161 OK**. Ver `docs/REVISION-PENDIENTE.md`.
+* Panel: el dueño lo levantó en Codespaces y "anda"; falta la validación completa del mostrador.
 
 ## Marketing (solo documentos)
 

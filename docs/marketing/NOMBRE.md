@@ -32,6 +32,10 @@
 
 Riesgo: fuera del Río de la Plata suena muy local. Para Argentina/Uruguay es una ventaja; si algún día se va a México, se evalúa.
 
+## Actualización 2026-10-09
+
+El dueño verificó: **`@vueltita` está ocupado en Instagram** y hay una persona conocida como "Vueltita". Lo de la persona no impide registrar la marca (eso lo decide el INPI), pero sin el usuario de Instagram cuesta vender. Opciones: usar `@vueltita.app` / `@usavueltita`, o pasar a **Caraconocida** (verificar `@caraconocida`).
+
 ## Los 4 controles que tenés que hacer vos (en este orden)
 
 1. **INPI (marcas):** entrá a `portaltramites.inpi.gob.ar` → "Búsqueda de marcas" → buscá *Vueltita* (y *Vueltita* con variantes: *Vuelta*, *Vueltitas*). Fijate en las **clases 9** (software), **35** (publicidad, fidelización de clientes) y **42** (software como servicio). Si hay una marca igual o muy parecida en esas clases, se descarta.
