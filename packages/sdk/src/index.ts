@@ -20,6 +20,8 @@ export {
   type CustomerStats,
   type CustomerStatus,
 } from './customers.ts'
+export * as team from './team.ts'
+export type { CreatedInvitation, InvitationPreview, PendingInvitation, TeamMember } from './team.ts'
 export * as visits from './visits.ts'
 export type { Visit, VisitCounts } from './visits.ts'
 export { startOfDayInTimeZone } from './dates.ts'

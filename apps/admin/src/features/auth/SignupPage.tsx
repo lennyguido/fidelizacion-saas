@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react'
-import { Link, useNavigate } from 'react-router'
+import { Link, useLocation, useNavigate } from 'react-router'
 import { auth, errorMessage } from '@plataforma/sdk'
 import { Alert, Button, TextField } from '@plataforma/ui'
 import { AuthLayout } from './AuthLayout'
@@ -8,6 +8,10 @@ const MIN_PASSWORD = 8
 
 export function SignupPage() {
   const navigate = useNavigate()
+  const location = useLocation()
+  // Si venía de un link (por ejemplo una invitación), vuelve ahí; si no, a crear su negocio.
+  const from = (location.state as { from?: string } | null)?.from
+  const next = from && from !== '/' ? from : '/onboarding'
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)

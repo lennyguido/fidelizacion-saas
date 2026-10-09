@@ -233,6 +233,12 @@ export async function setStatus(customerId: string, status: 'active' | 'archived
   if (error) throw fromPostgrestError(error)
 }
 
+/** Borra los datos personales del cliente (irreversible). Solo owner/admin. */
+export async function anonymize(customerId: string): Promise<void> {
+  const { error } = await getSupabase().rpc('anonymize_customer', { p_customer_id: customerId })
+  if (error) throw fromPostgrestError(error)
+}
+
 export function archive(customerId: string): Promise<void> {
   return setStatus(customerId, 'archived')
 }

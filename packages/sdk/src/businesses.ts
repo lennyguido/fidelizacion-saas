@@ -15,7 +15,7 @@ type BusinessRow = Pick<
   | 'secondary_color'
 >
 
-function toBusiness(row: BusinessRow): Business {
+export function toBusiness(row: BusinessRow): Business {
   return {
     id: row.id,
     name: row.name,

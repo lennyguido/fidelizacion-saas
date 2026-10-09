@@ -11,7 +11,7 @@ import {
   type CustomerInput,
   type Visit,
 } from '@plataforma/sdk'
-import { Alert, Button, Card, FullPageSpinner, useToast } from '@plataforma/ui'
+import { Alert, Button, Card, FullPageSpinner, TextField, useToast } from '@plataforma/ui'
 import { useActiveBusiness } from '../business/ActiveBusinessContext'
 import { formatDateTime, formatDaysAgo } from '../../lib/format'
 import { CustomerForm } from './CustomerForm'
@@ -85,6 +85,18 @@ function CustomerHeader({ customer }: { customer: Customer }) {
       toast.show('Cambios guardados', 'success')
     },
     onError: (err) => setError(errorMessage(err)),
+  })
+
+  const [confirmErase, setConfirmErase] = useState('')
+  const [erasing, setErasing] = useState(false)
+  const erase = useMutation({
+    mutationFn: () => customers.anonymize(customer.id),
+    onSuccess: async () => {
+      await invalidate()
+      toast.show('Se borraron los datos personales del cliente', 'success')
+      navigate(`/b/${business.slug}/clientes`, { replace: true })
+    },
+    onError: (err) => toast.show(errorMessage(err), 'error'),
   })
 
   const archive = useMutation({
