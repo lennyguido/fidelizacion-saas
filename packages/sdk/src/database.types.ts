@@ -151,14 +151,14 @@ isOneToOne: false
                   ]
                 },"customer_consents": {
                   Row: {
-                    "business_id": string,"channel": string,"customer_id": string,"granted": boolean,"id": string,"purpose": string,"recorded_at": string,"recorded_by": string | null,"source": string
+                    "business_id": string,"channel": string,"customer_id": string,"granted": boolean,"id": string,"purpose": string,"recorded_at": string,"recorded_by": string | null,"seq": number,"source": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "business_id": string,"channel": string,"customer_id": string,"granted": boolean,"id"?: string,"purpose": string,"recorded_at"?: string,"recorded_by"?: string | null,"source": string
+                    "business_id": string,"channel": string,"customer_id": string,"granted": boolean,"id"?: string,"purpose": string,"recorded_at"?: string,"recorded_by"?: string | null,"seq"?: never,"source": string
                   }
                   Update: {
-                    "business_id"?: string,"channel"?: string,"customer_id"?: string,"granted"?: boolean,"id"?: string,"purpose"?: string,"recorded_at"?: string,"recorded_by"?: string | null,"source"?: string
+                    "business_id"?: string,"channel"?: string,"customer_id"?: string,"granted"?: boolean,"id"?: string,"purpose"?: string,"recorded_at"?: string,"recorded_by"?: string | null,"seq"?: never,"source"?: string
                   }
                   Relationships: [
                     {
@@ -558,6 +558,9 @@ isOneToOne: false
 "import_customers":
 { Args: { "p_business_id": string,"p_rows": Json }; Returns: Json
                            },
+"in_open_campaign":
+{ Args: { "p_business_id": string,"p_customer_id": string }; Returns: boolean
+                           },
 "is_member":
 { Args: { "p_business_id": string }; Returns: boolean
                            },
@@ -726,7 +729,7 @@ isOneToOne: false
                            },
 "segment_members":
 { Args: { "p_business_id": string,"p_segment": Json }; Returns: {
-              "customer_id": string,"first_name": string,"reachable": boolean,"risk_score": number,"status": string
+              "busy": boolean,"customer_id": string,"first_name": string,"reachable": boolean,"risk_score": number,"status": string
             }[]
                            },
 "set_customer_status":
@@ -781,7 +784,10 @@ isOneToOne: false
         to: "visits"
         isOneToOne: true
         isSetofReturn: false
-      } }
+      } },
+"whatsapp_marketing_granted":
+{ Args: { "p_business_id": string,"p_customer_id": string }; Returns: boolean
+                           }
           }
           Enums: {
             [_ in never]: never
