@@ -1,26 +1,57 @@
 # Progreso del proyecto
 
+> Estado verificado el 2026-10-09 ~08:30 (hora Argentina).
+
 ## Current phase
 
-Fase 3 — Clientes y registro de visitas: **construida**. Falta el **checkpoint de producto** (probar con un negocio real) antes de la Fase 4.
+Fase 3 — Clientes y registro de visitas: construida. **No se avanza a la Fase 4** hasta dejar el entorno de desarrollo funcionando y validar el mostrador con datos de prueba.
 
 ## Current task
 
-Aplicar al proyecto Supabase de desarrollo las migraciones nuevas y probar el panel con datos reales de prueba.
+1. Revisión humana de las migraciones nuevas y del cambio de archivado (rama `fix/archive-owner-admin-only`).
+2. Configurar el proyecto de desarrollo (esquema `core` expuesto, Redirect URLs).
+3. Levantar el panel en Codespaces y validar el mostrador con datos de prueba.
 
-## Last completed task
+## Migraciones
 
-Noche del 8 al 9 de octubre (sin intervención humana):
+Proyecto de **desarrollo**: `fidelizacion-saas`, ref `dqpnqcumlyfifewgzyvh` (único proyecto activo de la cuenta; los demás figuran como inactivos).
 
-* **Fase 2:** onboarding en la base (`core.create_business`, `core.is_slug_available`), login/registro/recuperar contraseña, negocio activo (`/b/:slug`), menú armado con los manifests de módulos, componentes en `packages/ui`, acceso a datos en `packages/sdk`.
-* **Fase 3:** búsqueda de clientes (`core.search_customers`), mostrador (+1 visita con monto opcional, alta rápida, visita anónima, aviso de doble carga), listado con filtros por estado, ficha con estadísticas, edición, archivo e historial con anulación, importación CSV (`core.import_customers`).
-* **Calidad:** 122 tests de base (pgTAP), tests unitarios (Vitest) de teléfonos/montos/CSV, tests de punta a punta (Playwright) en celular y escritorio contra Supabase local: registro → onboarding → panel → login, mostrador, importación.
+| # | Versión | Nombre | Estado en desarrollo |
+|---|---|---|---|
+| 1 | 20261009013750 | core_tenancy | aplicada 2026-10-08 |
+| 2 | 20261009013947 | core_modules | aplicada 2026-10-08 |
+| 3 | 20261009014229 | core_customers | aplicada 2026-10-08 |
+| 4 | 20261009014457 | core_visits | aplicada 2026-10-08 |
+| 5 | 20261009014518 | core_audit_storage_jobs | aplicada 2026-10-08 |
+| 6 | 20261009014725 | core_fk_indexes | aplicada 2026-10-08 |
+| 7 | 20261009110522 | core_onboarding | aplicada 2026-10-09 08:05 (con OK del dueño) |
+| 8 | 20261009110534 | core_customer_search | aplicada 2026-10-09 08:05 (con OK del dueño) |
+| 9 | 20261009110548 | core_customer_import | aplicada 2026-10-09 08:05 (con OK del dueño) |
+| 10 | 20261009120000 | core_archive_owner_admin_only | **pendiente de revisión — NO aplicada** |
 
-## Next task
+Regla vigente desde 2026-10-09: ninguna migración se aplica sin aprobación explícita del dueño después de revisarla.
 
-1. (Humano) Pasos de "Current blockers".
-3. Checkpoint de producto (TASKS.md Fase 3): probar el mostrador con un negocio real.
-4. Fase 4 — módulo Fidelización.
+Las migraciones 7–9 son solo aditivas (funciones e índices nuevos, sin cambios de datos ni de tablas existentes). Si se quisieran revertir: `drop function core.import_customers(uuid, jsonb)`, `drop function core.search_customers(uuid, text, text, integer, integer)`, `drop index core.customers_name_trgm_idx, core.customers_phone_trgm_idx`, `drop function core.create_business(text, text, text)`, `drop function core.is_slug_available(text)`, `drop function core.is_reserved_slug(text)`.
+
+## Cambios pendientes de revisión
+
+Rama `fix/archive-owner-admin-only` (commit `2b037f9`):
+
+* Archivar/reactivar clientes pasa a ser **exclusivo de owner/admin**, también desde la base: se quita a los usuarios el permiso de modificar `customers.status` y se agrega `core.set_customer_status()` (exige owner/admin, queda auditado).
+* Los empleados siguen pudiendo editar nombre, teléfono, email y notas.
+* 10 tests nuevos (`008-customer-archive.test.sql`).
+
+## Tests
+
+| Nivel | Dónde / comando | Último resultado |
+|---|---|---|
+| Base de datos (pgTAP) | Postgres 16 local del agente: `scripts/db-test-local.sh` | 132/132 OK (9 archivos) |
+| Base de datos (pgTAP) | CI: `supabase db start` + `supabase test db` (Supabase real en Docker) | OK en `main` |
+| Unitarios (Vitest) | CI: `npm test` · local del agente: runner mínimo con Node (npm no disponible) | OK |
+| Frontend | CI: `npm run typecheck`, `npm run lint`, `npm run format:check`, `npm run build` | OK |
+| Punta a punta (Playwright) | CI: `supabase start` + build + `vite preview` + `npx playwright test` (celular y escritorio) | OK: registro → onboarding → panel → login; credenciales incorrectas; mostrador; importación CSV |
+
+Limitación: los tests de punta a punta corren contra un Supabase **local** en CI. El panel todavía **no se probó contra el proyecto de desarrollo remoto**. Eso es lo que falta validar ahora.
 
 ## Trabajo del viernes 9 a la mañana (sin Supabase, sin Fase 4)
 
@@ -44,23 +75,11 @@ Rama `chore/calidad-pre-piloto` (llevada a `main` con CI en verde; no toca la ba
 
 HUMAN ACTION REQUIRED:
 
-1. **Exponer el esquema `core`**: Supabase → Project Settings → Data API → Exposed schemas → agregar `core`. Sin esto el panel no puede leer datos.
-2. **URLs de Auth**: Supabase → Authentication → URL Configuration → agregar `http://localhost:5173/**` en Redirect URLs (para los links de confirmación y de recuperar contraseña mientras se desarrolla).
-4. **`package-lock.json`**: `npm install` en la raíz (Codespaces o una compu con Node) y commitearlo.
-5. **Probar el panel**: copiar `apps/admin/.env.example` a `apps/admin/.env.local` con la URL y la publishable key del proyecto, y `npm run dev`.
-
-## Pending migrations (dev project)
-
-Ninguna: las 9 migraciones están aplicadas en `dqpnqcumlyfifewgzyvh` (2026-10-09).
-
-## Last test result
-
-* Local (Postgres 16 + pgTAP): 122/122 OK.
-* CI en `main`: Frontend OK · Database OK · End-to-end OK.
-
-## Last commit
-
-Ver `git log`.
+1. Revisar y aprobar (o pedir cambios) la migración 10 y las migraciones 7–9 ya aplicadas.
+2. Exponer el esquema `core` en el proyecto de desarrollo (no se puede verificar desde la base; confirmar en el dashboard).
+3. Redirect URLs de desarrollo: `http://localhost:5173/**` y `https://*.app.github.dev/**`.
+4. `apps/admin/.env.local` (no `.envlocal`) con la URL y la publishable key de desarrollo.
+5. Validar el mostrador en el navegador con datos de prueba.
 
 ## Important decisions
 
@@ -69,4 +88,4 @@ Ver `git log`.
 * Lógica crítica en Postgres; el frontend no calcula nada que importe (D-008).
 * Teléfonos en E.164 con normalización argentina en el SDK (D-014).
 * Tres niveles de tests en CI; nada llega a `main` en rojo (D-015).
-* Pendiente de decidir: los empleados (`staff`) hoy pueden editar y archivar clientes por RLS (la UI oculta "Archivar"). Evaluar si archivar debe ser solo de owner/admin.
+* Archivar clientes: solo owner/admin, aplicado en la base (pendiente de aprobar y aplicar).
