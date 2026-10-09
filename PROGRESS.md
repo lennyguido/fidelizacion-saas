@@ -82,6 +82,10 @@ Rama `chore/calidad-pre-piloto` (llevada a `main` con CI en verde; no toca la ba
 3. **Limpieza de registros:** resuelto en la rama `feat/equipo-y-privacidad` (pendiente de revisión).
 4. **Pedido de baja de datos** (Ley 25.326): resuelto en la rama `feat/equipo-y-privacidad` (pendiente de revisión).
 
+## Marketing (solo documentos)
+
+`docs/marketing/`: nombre recomendado **Vueltita** (falta verificar INPI y nic.ar), marca y colores, análisis de mercado con fuentes, precios propuestos, guion de ventas y textos de la web. No cambia el backlog ni el código.
+
 ## Current blockers
 
 HUMAN ACTION REQUIRED:
