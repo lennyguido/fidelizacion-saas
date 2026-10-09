@@ -33,6 +33,7 @@ Proyecto de **desarrollo**: `fidelizacion-saas`, ref `dqpnqcumlyfifewgzyvh` (ún
 | 13 | 20261009130200 | core_housekeeping | **pendiente de revisión — NO aplicada** |
 | 14 | 20261009130300 | core_team_owner_protection | **pendiente de revisión — NO aplicada** (rama `feat/proteger-duenos`) |
 | 15 | 20261009182137 | loyalty_core | aplicada 2026-10-09 15:21 (OK del dueño, D-019; merge a `main`) |
+| 16 | 20261009183337 | loyalty_cards | aplicada 2026-10-09 15:33 (D-019; merge a `main`) |
 
 Regla vigente desde 2026-10-09: ninguna migración se aplica sin aprobación explícita del dueño después de revisarla.
 
@@ -89,6 +90,15 @@ Rama `chore/calidad-pre-piloto` (llevada a `main` con CI en verde; no toca la ba
 * **Revisión de seguridad independiente** de `feat/equipo-y-privacidad`: sin fugas entre negocios; 5 problemas corregidos en `10f360a` (detalle en `docs/REVISION-PENDIENTE.md`). Tests de base locales: **154/154 OK** (11 archivos).
 * **Alertas de Supabase** del proyecto de desarrollo leídas (solo lectura). Una función agregada por Supabase (`public.rls_auto_enable`) queda abierta: quitarle el permiso **necesita aprobación**.
 * `SECURITY.md`, `CONTRIBUTING.md`, `CHANGELOG.md` y `docs/APLICAR-MIGRACIONES.md` (paso a paso para cuando se aprueben).
+
+## Viernes 9, 15:40 — Fase 4 (Fidelización) terminada
+
+* Integrado en `main` y aplicado en desarrollo: puntos, recompensas, canjes (migración 15) y **tarjeta digital** (migración 16, D-020).
+* `apps/client`: el cliente abre su tarjeta con un link secreto (sin cuenta): saldo, QR con su código de socio, progreso a la próxima recompensa, movimientos. Se instala como app (PWA).
+* Panel: botón "Crear tarjeta digital" en la ficha (mandar por WhatsApp o copiar); el mostrador encuentra al socio escribiendo su código.
+* Tests de base: **192** aserciones en `main` (13 archivos) · e2e de punta a punta con las dos apps.
+* Pendiente de Fase 4: escanear el QR con la cámara (hoy se escribe el código de 8 letras).
+* **Acción del dueño (dashboard):** Data API → Exposed schemas → agregar `loyalty`.
 
 ## Viernes 9, 16 h — Fase 4 (Fidelización) empezada
 

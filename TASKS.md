@@ -78,12 +78,12 @@ Ver secciones 18–20.
 
 Ver secciones 21–26.
 
-* [x] Programa por negocio (puntos por visita y/o por monto, sellos) — base (`feat/loyalty-db`)
-* [~] `loyalty.members` (alta opcional al programa) — base lista; QR personal pendiente
-* [x] Ledger de puntos append-only, acreditación al recibir `visit.recorded` — base
-* [~] Recompensas, canjes con código único (función transaccional, anti doble canje) — base lista; panel pendiente
+* [x] Programa por negocio (puntos por visita y/o por monto, sellos)
+* [x] `loyalty.members` (alta opcional al programa) + QR personal con código de socio (D-020)
+* [x] Ledger de puntos append-only, acreditación al recibir `visit.recorded`
+* [x] Recompensas, canjes con código único (función transaccional, anti doble canje) + panel
 * [x] Tests de reglas y de abuso (`020-loyalty-points`, `021-loyalty-redemptions`)
-* [ ] App del cliente (`apps/client`): login, puntos, progreso, recompensas, QR, historial
+* [x] App del cliente (`apps/client`): acceso por link secreto (D-020), puntos, progreso, recompensas, QR, historial. Pendiente: escanear el QR con la cámara en el mostrador (hoy se escribe el código)
 
 ## Fase 5 — Dashboard y módulo Recuperación (`recovery`)
 
