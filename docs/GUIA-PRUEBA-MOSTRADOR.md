@@ -12,9 +12,10 @@ Objetivo: comprobar con tus propios ojos que el panel funciona conectado a tu Su
 ## Levantar el panel
 
 1. En GitHub, abrí tu Codespace (botón verde **Code → Codespaces**).
-2. Revisá que exista el archivo `apps/admin/.env.local` (con el punto entre `env` y `local`).
-3. En la terminal: `npm run dev`
-4. Tocá **Open in Browser** cuando aparezca.
+2. En la terminal: `git checkout main` y `git pull` (si da error por "local changes", primero `git stash`). Después `npm install`.
+3. Revisá que exista el archivo `apps/admin/.env.local` (con el punto entre `env` y `local`).
+4. En la terminal: `npm run dev`
+5. Tocá **Open in Browser** cuando aparezca.
 
 ## Probar (anotá ✅ o ❌ en cada paso)
 
@@ -30,7 +31,15 @@ Objetivo: comprobar con tus propios ojos que el panel funciona conectado a tu Su
 | 8 | Tocar "+ Visita sin identificar" | Dice "Visita registrada" |
 | 9 | Ir a "Clientes" y abrir a Juan | 1 visita, $ 5.000 en total |
 | 10 | En la ficha de Juan, "Anular" una visita escribiendo un motivo | La visita aparece tachada y el total vuelve a $ 0 |
-| 11 | Probar todo desde el celular (abrí el mismo link) | Se ve y se usa bien |
+| 11 | Tocar "Salir" | Volvés a "Ingresá a tu negocio" |
+| 12 | Ingresar con el mismo email y contraseña → "Ingresar" | Entrás directo a "Café Prueba" (login ✅) |
+| 13 | Ingresar con una contraseña equivocada | Dice "Email o contraseña incorrectos" |
+| 14 | "Clientes" → "Nuevo cliente" → nombre "Ana Prueba" → "Guardar cliente" | Se abre la ficha de Ana |
+| 15 | En la ficha de Ana, tocar "Archivar" | Volvés a la lista y Ana **no** aparece |
+| 16 | En la lista, tocar el botón "Archivados" | Aparece Ana ("archivado hoy") |
+| 17 | Abrir a Ana y tocar "Reactivar" | Dice "Ana Prueba volvió a la lista de clientes" |
+| 18 | Tocar "Todos" en la lista | Ana aparece de nuevo |
+| 19 | Probar todo desde el celular (abrí el mismo link) | Se ve y se usa bien |
 
 Si algo da ❌, sacale una captura y mandásela a Claude junto con el número del paso.
 

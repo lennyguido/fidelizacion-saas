@@ -57,7 +57,7 @@ Rama `fix/archive-owner-admin-only` (commit `62a7b19`):
 
 | Nivel | Dónde / comando | Último resultado |
 |---|---|---|
-| Base de datos (pgTAP) | Postgres 16 local del agente: `scripts/db-test-local.sh` | main: 132/132 OK (9 archivos) · rama `feat/equipo-y-privacidad`: 154/154 OK (11 archivos) |
+| Base de datos (pgTAP) | Postgres 16 local del agente: `scripts/db-test-local.sh` | main: 112/112 OK (9 archivos) · `fix/archive-owner-admin-only`: 122/122 · `feat/equipo-y-privacidad`: 160/160 · `feat/proteger-duenos`: 167/167 |
 | Base de datos (pgTAP) | CI: `supabase db start` + `supabase test db` (Supabase real en Docker) | OK en `main` |
 | Unitarios (Vitest) | CI: `npm test` · local del agente: runner mínimo con Node (npm no disponible) | OK |
 | Frontend | CI: `npm run typecheck`, `npm run lint`, `npm run format:check`, `npm run build` | OK |
@@ -88,6 +88,19 @@ Rama `chore/calidad-pre-piloto` (llevada a `main` con CI en verde; no toca la ba
 * **Revisión de seguridad independiente** de `feat/equipo-y-privacidad`: sin fugas entre negocios; 5 problemas corregidos en `10f360a` (detalle en `docs/REVISION-PENDIENTE.md`). Tests de base locales: **154/154 OK** (11 archivos).
 * **Alertas de Supabase** del proyecto de desarrollo leídas (solo lectura). Una función agregada por Supabase (`public.rls_auto_enable`) queda abierta: quitarle el permiso **necesita aprobación**.
 * `SECURITY.md`, `CONTRIBUTING.md`, `CHANGELOG.md` y `docs/APLICAR-MIGRACIONES.md` (paso a paso para cuando se aprueben).
+
+## Viernes 9, 15 h — plan del mentor en 6 pasos
+
+| # | Paso | Estado |
+|---|---|---|
+| 1 | Integrar `fix/reactivar-cliente` en `main` con prueba de regresión | ✅ merge `8e8f3c6` (CI verde). Regresión: `008-archived-customers.test.sql` (6) + `e2e/archive.spec.ts` |
+| 2 | Preparar `fix/archive-owner-admin-only` con `set_customer_status` para archivar y reactivar | ✅ preparado (CI verde). Migración 10 **sin aplicar** |
+| 3 | Equipo y dueños sin aplicar hasta revisar pruebas y permisos | ✅ ramas actualizadas con lo anterior (CI verde); `docs/PERMISOS.md`. Migraciones 11–14 **sin aplicar** |
+| 4 | Documentar `rls_auto_enable` antes de tocarla | ✅ `docs/supabase/RLS_AUTO_ENABLE.md` + `scripts/verify-rls-auto-enable-local.sql`. **Ningún REVOKE ejecutado** |
+| 5 | Probar el panel contra desarrollo, paso a paso | ⏳ guía actualizada: `docs/GUIA-PRUEBA-MOSTRADOR.md` (19 pasos). Falta que el dueño la haga |
+| 6 | No avanzar a puntos hasta confirmar registro, login, negocio, clientes, visitas, archivado y reactivación | ⏳ bloqueado por el paso 5 |
+
+Cómo volver atrás: cada cosa está en su rama; lo único integrado en `main` es el merge `8e8f3c6` (`git revert -m 1 8e8f3c6`).
 
 ## Viernes 9, tarde — respuesta al mentor (sin aplicar nada)
 

@@ -4,13 +4,13 @@
 
 | Rama | Qué tiene | Toca la base | CI | Estado |
 |---|---|---|---|---|
-| `fix/reactivar-cliente` | Filtro "Archivados" y botón "Reactivar" (el error que encontró el dueño). | No | ✅ | Lista para llevar a `main` |
-| `fix/archive-owner-admin-only` | Archivar/reactivar solo dueño/admin, en la base. | Migración 10 | ✅ | **Aprobada por el mentor**, sin aplicar (punto 6: primero validar el panel) |
+| `fix/reactivar-cliente` | Filtro "Archivados" y botón "Reactivar" (el error que encontró el dueño) + prueba de regresión `008-archived-customers`. | No | ✅ | **Integrada en `main`** (merge `8e8f3c6`, se deshace con `git revert -m 1 8e8f3c6`) |
+| `fix/archive-owner-admin-only` | Archivar/reactivar solo dueño/admin, en la base. Ya trae `main` adentro: archivar **y reactivar** usan `set_customer_status`. | Migración 10 | ✅ | **Aprobada por el mentor**, integración preparada, migración sin aplicar (punto 6: primero validar el panel) |
 | `feat/equipo-y-privacidad` | Equipo, invitaciones, borrar datos, limpieza. | Migraciones 11–13 | ✅ | Pendiente: confirmar pruebas y permisos → ver `docs/PERMISOS.md` en `feat/proteger-duenos` |
 | `feat/proteger-duenos` (encima de la anterior) | Ningún dueño puede quitarle el rol ni desactivar a otro dueño. Tabla de permisos con la prueba de cada regla. | Migración 14 (`20261009130300`) | ✅ | Pedido del mentor (punto 3), sin aplicar |
 | `chore/dev-smoke` | Revisión de solo lectura del proyecto de desarrollo desde GitHub. | No (solo lee) | ✅ | Herramienta |
 
-**Ojo al unir:** `fix/reactivar-cliente` reactiva con un UPDATE directo (lo que la base permite hoy). Cuando se aplique la migración 10, ese UPDATE deja de estar permitido: al llevar `fix/archive-owner-admin-only` a `main`, `archive`/`reactivate` tienen que usar `set_customer_status` (ya está hecho así en la rama de equipo). Las pruebas de punta a punta lo detectan si se olvida.
+**Orden al integrar:** en `main` el arreglo reactiva con un UPDATE directo (lo que la base permite hoy). En `fix/archive-owner-admin-only` ya se cambió a `set_customer_status`, así que **la rama de archivado se integra a `main` en el mismo momento en que se aplica la migración 10** (ni antes ni después). Las ramas de equipo y de dueños ya incluyen ese cambio.
 
 ## Revisión del proyecto de desarrollo (solo lectura, desde GitHub)
 
@@ -20,6 +20,8 @@
 * Redirect URLs: no se pueden ver desde afuera; se validan al confirmar el email en la prueba del panel.
 
 ## `public.rls_auto_enable()` (punto 5 del mentor) — NO se ejecutó ningún REVOKE
+
+Detalle completo (definición, permisos actuales, verificación y propuesta): `docs/supabase/RLS_AUTO_ENABLE.md`.
 
 * **Qué es:** función de Supabase (dueño `postgres`) usada por el *event trigger* `ensure_rls`: cada vez que se crea una tabla en `public`, le activa RLS automáticamente. Es una red de seguridad del dashboard para que ninguna tabla nueva quede abierta.
 * **Por qué existe:** la agrega Supabase al activar la opción de RLS automático. No es nuestra y no toca `core`.
