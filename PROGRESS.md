@@ -22,6 +22,24 @@ Noche del 8 al 9 de octubre (sin intervención humana):
 3. Checkpoint de producto (TASKS.md Fase 3): probar el mostrador con un negocio real.
 4. Fase 4 — módulo Fidelización.
 
+## Trabajo del viernes 9 a la mañana (sin Supabase, sin Fase 4)
+
+Rama `chore/calidad-pre-piloto` (llevada a `main` con CI en verde; no toca la base de datos):
+
+* **Tipos generados automáticamente** desde las migraciones (workflow `DB types`) y usados en el SDK. Detectaron 6 lugares donde se mandaba "nulo" en vez de omitir un dato (corregido).
+* **Arreglo para Codespaces:** Vite bloqueaba la dirección `*.app.github.dev` ("Blocked request"); ahora está permitida.
+* **Mensajes de error de login más claros** (límite de mails del plan gratis, email inválido) + tests.
+* **Inicio:** visitas de hoy y de los últimos 7 días, con % de clientes identificados (para el piloto).
+* **Kit del piloto** en `docs/piloto/`: plan de 2 semanas, manual de 1 página para el cajero, cartel de privacidad (modelo).
+* Guía de prueba actualizada con problemas conocidos.
+
+### Hallazgos que necesitan decisión
+
+1. **`core` todavía NO está expuesto** en el proyecto de desarrollo: los tipos generados desde Supabase solo traían `public`. Sin esto el panel no puede leer datos.
+2. **Cuentas de empleados:** hoy no hay forma de invitar a un empleado desde el panel. Para el piloto, el cajero usaría la cuenta del dueño en el dispositivo del mostrador. Decidir si se agrega "Invitar empleado" antes del piloto.
+3. **Limpieza de registros:** `core.events` y el historial de `pg_cron` crecen sin límite. No urge; agendar un job de limpieza antes de producción.
+4. **Pedido de baja de datos** (`core.anonymize_customer`, Ley 25.326): documentado en la arquitectura pero no implementado. Necesario antes de clientes reales en forma comercial.
+
 ## Current blockers
 
 HUMAN ACTION REQUIRED:
