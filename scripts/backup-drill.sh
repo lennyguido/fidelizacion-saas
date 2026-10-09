@@ -35,7 +35,8 @@ fi
 echo "== Copia (igual que docs/DEPLOY.md §D7)"
 supabase db dump --local -f "$OUT/roles.sql" --role-only
 supabase db dump --local -f "$OUT/schema.sql"
-supabase db dump --local -f "$OUT/data.sql" --use-copy --data-only \n  -x "storage.buckets_vectors" -x "storage.vector_indexes"
+supabase db dump --local -f "$OUT/data.sql" --use-copy --data-only \
+  -x "storage.buckets_vectors" -x "storage.vector_indexes"
 
 echo "== Supabase vacío (como un proyecto nuevo)"
 supabase stop --no-backup
