@@ -96,7 +96,7 @@ Rama `chore/calidad-pre-piloto` (llevada a `main` con CI en verde; no toca la ba
 * Integrado en `main` y aplicado en desarrollo: puntos, recompensas, canjes (migración 15) y **tarjeta digital** (migración 16, D-020).
 * `apps/client`: el cliente abre su tarjeta con un link secreto (sin cuenta): saldo, QR con su código de socio, progreso a la próxima recompensa, movimientos. Se instala como app (PWA).
 * Panel: botón "Crear tarjeta digital" en la ficha (mandar por WhatsApp o copiar); el mostrador encuentra al socio escribiendo su código.
-* Tests de base: **192** aserciones en `main` (13 archivos) · e2e de punta a punta con las dos apps.
+* Tests de base: **185** aserciones en `main` (13 archivos) · e2e de punta a punta con las dos apps.
 * Pendiente de Fase 4: escanear el QR con la cámara (hoy se escribe el código de 8 letras).
 * **Acción del dueño (dashboard):** Data API → Exposed schemas → agregar `loyalty`.
 
