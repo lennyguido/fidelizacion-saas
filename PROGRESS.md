@@ -79,6 +79,7 @@ Limitación: los tests de punta a punta corren contra un Supabase **local** en C
 * Tests: `032-campaign-coupons` (17) + unitarios. CI verde. Migración 21 aplicada en desarrollo.
 * Tarjeta del cliente: el logo del negocio aparece como ícono de la pestaña.
 * Rama del mentor `feat/proteger-duenos` actualizada con `main` (sin aplicar nada).
+* **Simulacro de copia de seguridad** (`TASKS.md` §65): workflow `Backup drill` (semanal y al cambiar migraciones). En un Supabase local con datos de prueba hace la copia como `docs/DEPLOY.md` §D7, la restaura en una base vacía y compara las filas: **OK**. Pasos para una restauración real: `docs/RESTAURAR.md` (sin `roles.sql`: el proyecto no tiene roles propios).
 
 ## Viernes 9, ~19:30 — CI en verde y migraciones 18–20 aplicadas
 

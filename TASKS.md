@@ -1774,12 +1774,12 @@ PRODUCTION
 
 # 65. BACKUPS Y RECOVERY
 
-* [ ] Entender backups disponibles
-* [ ] Documentar estrategia
+* [x] Entender backups disponibles
+* [x] Documentar estrategia
 * [ ] Definir disaster recovery
-* [ ] Crear recovery checklist
-* [ ] Testear restoration en entorno seguro
-* [ ] Documentar restauración
+* [x] Crear recovery checklist
+* [x] Testear restoration en entorno seguro (workflow `Backup drill`, semanal)
+* [x] Documentar restauración (`docs/RESTAURAR.md`)
 
 ---
 

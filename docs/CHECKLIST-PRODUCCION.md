@@ -48,7 +48,7 @@
 - [ ] **Claude** — Confirmar que en producción no quedaron datos de demostración (Café Central, Panadería Sur).
 - [ ] **Dueño** — Primera copia de seguridad hecha y bajada a tu compu, guardada con contraseña (D7).
 - [ ] **Dueño** — Recordatorio semanal en el calendario para la copia (y una antes de cada migración en producción).
-- [ ] **Claude** + **Mentor** — Probar una vez que la copia se puede restaurar, en un lugar seguro (nunca sobre producción) (`TASKS.md` §65).
+- [x] **Claude** — Probar que la copia se puede restaurar, en un lugar seguro: workflow **Backup drill** (semanal, Supabase local con datos de prueba). Pasos para la restauración real: `docs/RESTAURAR.md`. Falta que el **Mentor** lo revise.
 - [ ] **Dueño** — Si se importan clientes del comercio por CSV: revisar la vista previa antes de confirmar y guardar el archivo original en un lugar privado (no en el repositorio).
 
 ## 6. Monitoreo (saber cuando algo anda mal)
