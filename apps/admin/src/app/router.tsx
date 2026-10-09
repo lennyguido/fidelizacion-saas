@@ -5,6 +5,7 @@ import { LoginPage } from '../features/auth/LoginPage'
 import { ResetPasswordPage } from '../features/auth/ResetPasswordPage'
 import { SignupPage } from '../features/auth/SignupPage'
 import { BusinessLayout } from '../features/business/BusinessLayout'
+import { BusinessSettingsPage } from '../features/business/BusinessSettingsPage'
 import { HomeRedirect } from '../features/business/HomeRedirect'
 import { OnboardingPage } from '../features/business/OnboardingPage'
 import { CounterPage } from '../features/counter/CounterPage'
@@ -91,6 +92,7 @@ export const router = createBrowserRouter([
       { path: 'clientes/importar', element: <ImportCustomersPage /> },
       { path: 'clientes/:customerId', element: <CustomerDetailPage /> },
       { path: 'equipo', element: <TeamPage /> },
+      { path: 'negocio', element: <BusinessSettingsPage /> },
       ...moduleRoutes,
     ],
   },

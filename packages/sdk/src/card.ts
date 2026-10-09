@@ -2,7 +2,7 @@
 // es solo lectura y la arma la base (loyalty.get_card).
 import { getSupabase } from './client.ts'
 import { fromPostgrestError } from './errors.ts'
-import type { MovementReason, Program, ProgramKind } from './loyalty.ts'
+import type { MovementReason, ProgramKind, ProgramRule } from './loyalty.ts'
 
 export interface CardReward {
   id: string
@@ -23,18 +23,26 @@ export interface Card {
     slug: string
     currency: string
     primaryColor: string | null
+    /** Ruta del logo en el bucket público; armar el link con businesses.logoUrl(). */
+    logoPath: string | null
   }
   firstName: string
   memberCode: string
   pointsBalance: number
   lifetimePoints: number
-  program: Program | null
+  program: ProgramRule | null
   rewards: CardReward[]
   movements: CardMovement[]
 }
 
 interface RawCard {
-  business: { name: string; slug: string; currency: string; primaryColor: string | null }
+  business: {
+    name: string
+    slug: string
+    currency: string
+    primaryColor: string | null
+    logoPath?: string | null
+  }
   firstName: string
   memberCode: string
   pointsBalance: number
@@ -68,14 +76,13 @@ export async function getCard(token: string): Promise<Card | null> {
   if (!data) return null
   const raw = data as unknown as RawCard
   return {
-    business: raw.business,
+    business: { ...raw.business, logoPath: raw.business.logoPath ?? null },
     firstName: raw.firstName,
     memberCode: raw.memberCode,
     pointsBalance: Number(raw.pointsBalance),
     lifetimePoints: Number(raw.lifetimePoints),
     program: raw.program
       ? {
-          businessId: '',
           ...raw.program,
           amountStepMinor:
             raw.program.amountStepMinor === null ? null : Number(raw.program.amountStepMinor),

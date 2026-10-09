@@ -1,5 +1,6 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { campaigns, type Segment } from '@plataforma/sdk'
+import { useActiveBusiness } from '../../features/business/ActiveBusinessContext'
 
 export const RECOVERY_MODULE = 'recovery'
 
@@ -56,4 +57,15 @@ export function useSegmentPreview(businessId: string, segment: Segment) {
 export function useInvalidateCampaigns(businessId: string) {
   const queryClient = useQueryClient()
   return () => queryClient.invalidateQueries({ queryKey: recoveryKeys.all(businessId) })
+}
+
+/** Busca un cupón escrito en el mostrador (solo si tiene forma de cupón). */
+export function useCouponLookup(code: string) {
+  const { business } = useActiveBusiness()
+  const normalized = code.replace(/[\s-]/g, '').toUpperCase()
+  return useQuery({
+    queryKey: [...recoveryKeys.all(business.id), 'coupon', normalized] as const,
+    queryFn: () => campaigns.findCoupon(business.id, normalized),
+    enabled: campaigns.looksLikeCouponCode(normalized),
+  })
 }

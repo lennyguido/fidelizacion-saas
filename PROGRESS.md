@@ -1,6 +1,6 @@
 # Progreso del proyecto
 
-> Estado verificado el 2026-10-09 ~16:30 (hora Argentina).
+> Estado verificado el 2026-10-09 ~19:30 (hora Argentina).
 
 ## Current phase
 
@@ -35,6 +35,10 @@ Proyecto de **desarrollo**: `fidelizacion-saas`, ref `dqpnqcumlyfifewgzyvh` (ún
 | 12 | 20261009190200 | core_customer_anonymize | **pendiente de revisión — NO aplicada** |
 | 13 | 20261009190300 | core_housekeeping | **pendiente de revisión — NO aplicada** |
 | 14 | 20261009190400 | core_team_owner_protection | **pendiente de revisión — NO aplicada** (rama `feat/proteger-duenos`) |
+| 18 | 20261009191000 | loyalty_hardening | aplicada 2026-10-09 ~19:30 (CI de `main` en verde, no destructiva) |
+| 19 | 20261009191100 | core_campaigns_hardening | aplicada 2026-10-09 ~19:30 (los `drop` solo reemplazan funciones internas y un índice; no borra datos) |
+| 20 | 20261009191200 | core_timezone_check_grant | aplicada 2026-10-09 19:03 (en Supabase figura con versión `20261009220309`) |
+
 
 Las migraciones 11–14 (equipo, privacidad, dueños) conservan su número de revisión, pero sus archivos se renombraron a versiones posteriores a la 17 (`2026100919xxxx`) porque desarrollo ya tiene aplicadas la 15–17: así `supabase db push` las aplica después, en orden.
 
@@ -70,6 +74,12 @@ Rama `fix/archive-owner-admin-only` (commit `62a7b19`):
 
 Limitación: los tests de punta a punta corren contra un Supabase **local** en CI. El panel todavía **no se probó contra el proyecto de desarrollo remoto**. Eso es lo que falta validar ahora.
 
+## Viernes 9, ~19:30 — CI en verde y migraciones 18–20 aplicadas
+
+* El CI de `main` estaba rojo por una prueba de registro inestable: escribía el email antes de que cargara la pantalla de registro. Arreglado en `e2e/onboarding.spec.ts` (PR #1, merge `7b06b77`). CI de `main`: verde.
+* Migraciones 18 y 19 aplicadas en desarrollo; la 20 ya estaba aplicada. Alertas de Supabase después de aplicar: nada nuevo (`loyalty.event_failures` sin policies es a propósito: solo service role).
+* La PC del dueño todavía no tiene Node ni `gh`: los tests se corren en el CI de GitHub.
+
 ## Trabajo del viernes 9 a la mañana (sin Supabase, sin Fase 4)
 
 Rama `chore/calidad-pre-piloto` (llevada a `main` con CI en verde; no toca la base de datos):
@@ -93,6 +103,15 @@ Rama `chore/calidad-pre-piloto` (llevada a `main` con CI en verde; no toca la ba
 * **Revisión de seguridad independiente** de `feat/equipo-y-privacidad`: sin fugas entre negocios; 5 problemas corregidos en `10f360a` (detalle en `docs/REVISION-PENDIENTE.md`). Tests de base locales: **154/154 OK** (11 archivos).
 * **Alertas de Supabase** del proyecto de desarrollo leídas (solo lectura). Una función agregada por Supabase (`public.rls_auto_enable`) queda abierta: quitarle el permiso **necesita aprobación**.
 * `SECURITY.md`, `CONTRIBUTING.md`, `CHANGELOG.md` y `docs/APLICAR-MIGRACIONES.md` (paso a paso para cuando se aprueben).
+
+## Viernes 9, 17–18 h — revisión de seguridad, arreglos, marca, PWA y deploy preparado
+
+* Revisión independiente de puntos, tarjeta y campañas: sin fugas entre negocios. Arreglado: un empleado podía fabricar puntos con visitas atrasadas (D-022); bajas de WhatsApp después de lanzar, campañas superpuestas, "nuevos" del tablero, desempate de consentimientos, números de segmento, horario de verano (D-023); tarjeta de clientes archivados, cámara que quedaba prendida, botón de WhatsApp sin teléfono.
+* **Mi negocio** (nombre, color, zona horaria, logo) y tarjeta con la marca del negocio; panel y tarjeta instalables (PWA) (D-024).
+* **Deploy preparado** en Cloudflare Pages (gratis), sin crear cuentas: `docs/DEPLOY.md`, `docs/CHECKLIST-PRODUCCION.md` (D-025).
+* Ramas del mentor (`feat/equipo-y-privacidad`, `feat/proteger-duenos`) puestas al día con `main`; sus migraciones renombradas a `20261009190100`–`190400` (11–14). Además el borrado de datos ahora limpia los mensajes de campañas. CI verde.
+* Tests de base en `main`: **246** (17 archivos). CI verde en `main`.
+* **Pendiente:** aplicar en desarrollo las migraciones 18–20 (requiere que el dueño confirme el aviso de Supabase).
 
 ## Viernes 9, 15:50 — Fase 5 (Tablero + Recuperación) hecha
 
@@ -150,7 +169,7 @@ Cómo volver atrás: cada cosa está en su rama; lo único integrado en `main` e
 
 ## Current blockers
 
-**Para probar lo nuevo:** Data API → Exposed schemas → agregar `loyalty` (dueño, en el dashboard). Guía: `docs/GUIA-PRUEBA-COMPLETA.md`.
+**Para probar lo nuevo:** (1) Data API → Exposed schemas → agregar `loyalty` (verificado 17:10: todavía no está). Las migraciones 18–20 ya están aplicadas. Guía: `docs/GUIA-PRUEBA-COMPLETA.md`.
 
 **Fase 6 (mensajería real con WhatsApp API) es checkpoint humano:** cuenta de Meta Business, número verificado, plantillas aprobadas y costos por mensaje. No se avanza sin decisión del dueño.
 

@@ -29,7 +29,10 @@ export type {
   CampaignInput,
   CampaignResults,
   CampaignStatus,
+  Coupon,
+  CouponStatus,
   Recipient as CampaignRecipient,
+  RecipientBlockedReason,
   Segment,
   SegmentPreview,
 } from './campaigns.ts'
@@ -45,6 +48,7 @@ export type {
   Program as LoyaltyProgram,
   ProgramInput as LoyaltyProgramInput,
   ProgramKind as LoyaltyProgramKind,
+  ProgramRule as LoyaltyProgramRule,
   Redemption as LoyaltyRedemption,
   Reward as LoyaltyReward,
 } from './loyalty.ts'
@@ -65,4 +69,14 @@ export {
 } from './customerImport.ts'
 export { formatPhone, normalizePhone } from './phone.ts'
 export { isValidSlug, slugify } from './slug.ts'
+export {
+  COMMON_TIMEZONES,
+  LOGO_ACCEPT,
+  LOGO_MAX_BYTES,
+  isValidHexColor,
+  logoFileError,
+  normalizeHexColor,
+  textColorOn,
+} from './branding.ts'
+export type { BrandingInput } from './businesses.ts'
 export type { Session } from '@supabase/supabase-js'

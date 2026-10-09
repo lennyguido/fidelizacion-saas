@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { businesses } from '@plataforma/sdk'
 import { useSession } from '../auth/AuthContext'
 
@@ -21,4 +21,11 @@ export function useEnabledModules(businessId: string) {
     queryFn: () => businesses.listEnabledModules(businessId),
     enabled: businessId !== '',
   })
+}
+
+/** Vuelve a leer los negocios del usuario (nombre, color y logo se muestran en todo el panel). */
+export function useInvalidateMyBusinesses() {
+  const session = useSession()
+  const queryClient = useQueryClient()
+  return () => queryClient.invalidateQueries({ queryKey: businessKeys.mine(session.user.id) })
 }

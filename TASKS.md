@@ -93,7 +93,7 @@ Ver secciones 30–38.
 * [x] Listas de clientes en riesgo / inactivos con valor histórico
 * [x] Segmentos (filtros fijos validados), campañas, destinatarios con grupo de control
 * [x] Envío MVP sin API de WhatsApp: el dueño envía desde su WhatsApp con links `wa.me` armados por el sistema (sin costo ni aprobación de Meta); solo a clientes con consentimiento
-* [~] Atribución por ventana y "dinero recuperado" (total + incremental). Pendiente: atribución por cupón
+* [x] Atribución por ventana, por cupón (D-026) y "dinero recuperado" (total + incremental)
 * [x] Tests de atribución y de las fórmulas (`030-campaigns`)
 
 ## Fase 6 — Mensajería real
@@ -972,16 +972,16 @@ Opciones posibles:
 
 # 27. WHITE-LABEL
 
-* [ ] Crear branding dinámico
-* [ ] Nombre dinámico
-* [ ] Logo dinámico
-* [ ] Colores dinámicos
+* [x] Crear branding dinámico
+* [x] Nombre dinámico
+* [x] Logo dinámico
+* [x] Colores dinámicos
 * [ ] Textos configurables
 * [ ] Recompensas dinámicas
 * [ ] Puntos dinámicos
 * [ ] Favicon dinámico
 * [ ] Metadata dinámica
-* [ ] Title dinámico
+* [x] Title dinámico
 * [ ] Open Graph dinámico
 * [ ] Test business A
 * [ ] Test business B
@@ -1009,7 +1009,7 @@ Opciones posibles:
 
 Separar frontend hosting de Supabase.
 
-* [ ] Definir proveedor de hosting
+* [x] Definir proveedor de hosting (Cloudflare Pages, D-025)
 * [ ] Definir arquitectura de dominios
 * [ ] Definir wildcard subdomain
 * [ ] Diseñar `club.negocio.com`
@@ -1212,7 +1212,7 @@ CANCELLED
 * [ ] Diseñar attribution model
 * [ ] Crear campaign attribution
 * [ ] Relacionar compra con campaña
-* [ ] Crear código/coupon attribution cuando convenga
+* [x] Crear código/coupon attribution cuando convenga (D-026)
 * [ ] Evitar atribuciones falsas
 * [ ] Mostrar ventas atribuidas
 * [ ] Mostrar recuperados

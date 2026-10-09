@@ -22,12 +22,19 @@ export type AppErrorCode =
   | 'empty_segment'
   | 'campaign_not_draft'
   | 'control_group'
+  | 'consent_revoked'
+  | 'coupon_not_found'
+  | 'coupon_already_used'
+  | 'coupon_expired'
+  | 'coupon_visit_mismatch'
+  | 'customer_inactive'
   | 'auth_invalid_credentials'
   | 'auth_email_not_confirmed'
   | 'auth_user_exists'
   | 'auth_weak_password'
   | 'auth_invalid_email'
   | 'rate_limited'
+  | 'upload_failed'
   | 'network'
   | 'unknown'
 
@@ -56,6 +63,12 @@ const DOMAIN_CODES = [
   'empty_segment',
   'campaign_not_draft',
   'control_group',
+  'consent_revoked',
+  'coupon_not_found',
+  'coupon_already_used',
+  'coupon_expired',
+  'coupon_visit_mismatch',
+  'customer_inactive',
   'insufficient_points',
   'reward_unavailable',
   'member_inactive',
@@ -152,12 +165,20 @@ export function errorMessage(error: unknown): string {
       'Nadie de este grupo puede recibir el mensaje: necesitan teléfono y haber aceptado WhatsApp.',
     campaign_not_draft: 'Esta campaña ya se lanzó o se canceló.',
     control_group: 'Este cliente es del grupo de control: no hay que escribirle.',
+    consent_revoked:
+      'Este cliente ya no quiere recibir mensajes (o fue archivado): no hay que escribirle.',
+    coupon_not_found: 'No existe ese cupón. Revisá las letras.',
+    coupon_already_used: 'Este cupón ya se usó.',
+    coupon_expired: 'Este cupón está vencido.',
+    coupon_visit_mismatch: 'El cupón es de otro cliente.',
+    customer_inactive: 'Este cliente está archivado.',
     auth_invalid_credentials: 'Email o contraseña incorrectos.',
     auth_email_not_confirmed: 'Confirmá tu email antes de ingresar. Revisá tu casilla.',
     auth_user_exists: 'Ya existe una cuenta con ese email. Probá ingresar.',
     auth_weak_password: 'La contraseña es muy débil. Usá al menos 8 caracteres.',
     auth_invalid_email: 'Revisá el email: no parece válido.',
     rate_limited: 'Demasiados intentos seguidos. Esperá unos minutos y probá de nuevo.',
+    upload_failed: 'No se pudo subir el archivo. Revisá tu conexión y probá de nuevo.',
     network: 'No hay conexión. Revisá tu internet.',
     unknown: 'Ocurrió un error inesperado. Probá de nuevo.',
   }

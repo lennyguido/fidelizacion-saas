@@ -12,6 +12,8 @@ describe('fromPostgrestError', () => {
     [{ code: '54000', message: 'limit' }, 'limit_reached'],
     [{ code: '22023', message: 'insufficient_points' }, 'insufficient_points'],
     [{ code: '42501', message: 'module_disabled' }, 'module_disabled'],
+    [{ code: '22023', message: 'coupon_already_used' }, 'coupon_already_used'],
+    [{ code: 'P0002', message: 'coupon_not_found' }, 'coupon_not_found'],
     [{ code: 'XX000', message: 'boom' }, 'unknown'],
   ])('%j → %s', (error, code) => {
     expect(fromPostgrestError(error).code).toBe(code)

@@ -54,12 +54,12 @@ select is_empty(format($$ select 1 from loyalty.members where business_id = %L $
 
 -- Acreditación -------------------------------------------------------------------
 select tests.authenticate_as(:'staff');
-select (core.record_visit(:'biz', null, :'ana', 350000, now() - interval '3 hours')).id as v1 \gset
+select (core.record_visit(:'biz', null, :'ana', 350000, now() - interval '20 minutes')).id as v1 \gset
 select is((select points_balance from loyalty.members where id = :'ana_m'), 4::bigint,
   'a $3.500 visit gives 1 + 3 = 4 points (rounded down)');
 select is((select lifetime_points from loyalty.members where id = :'ana_m'), 4::bigint, 'lifetime points too');
 
-select core.record_visit(:'biz', null, :'beto', 350000, now() - interval '3 hours');
+select core.record_visit(:'biz', null, :'beto', 350000, now() - interval '20 minutes');
 select is((select count(*)::int from loyalty.members where customer_id = :'beto'), 0,
   'customers who did not join get no points (and are not enrolled automatically)');
 select lives_ok(format($$ select core.record_visit(%L) $$, :'biz'), 'anonymous visits still work');
@@ -101,7 +101,7 @@ select is((select points_balance from loyalty.members where id = :'ana_m'), 0::b
 
 update core.business_modules set enabled = false where business_id = :'biz' and module_id = 'loyalty';
 select tests.authenticate_as(:'staff');
-select core.record_visit(:'biz', null, :'ana', null, now() - interval '1 hour');
+select core.record_visit(:'biz', null, :'ana', null, now() - interval '10 minutes');
 select is_empty(format($$ select 1 from loyalty.members where business_id = %L $$, :'biz'),
   'with the module disabled the team does not see loyalty data');
 reset role;
@@ -115,7 +115,7 @@ reset role;
 update core.business_modules set enabled = true where business_id = :'biz' and module_id = 'loyalty';
 select tests.authenticate_as(:'staff');
 select loyalty.leave_program(:'ana_m');
-select core.record_visit(:'biz', null, :'ana', null, now() - interval '30 minutes');
+select core.record_visit(:'biz', null, :'ana', null, now() - interval '5 minutes');
 select is((select points_balance from loyalty.members where id = :'ana_m'), 0::bigint,
   'members who left get no points');
 

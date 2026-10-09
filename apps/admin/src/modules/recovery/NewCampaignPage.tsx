@@ -5,6 +5,7 @@ import { campaigns, errorMessage, type CustomerStatus, type Segment } from '@pla
 import { Alert, Button, Card, TextField } from '@plataforma/ui'
 import { useActiveBusiness } from '../../features/business/ActiveBusinessContext'
 import { useDebouncedValue } from '../../hooks/useDebouncedValue'
+import { busyText } from './previewText'
 import { RECOVERY_MODULE, useInvalidateCampaigns, useSegmentPreview } from './queries'
 
 const AUDIENCES: Array<{ id: string; label: string; statuses: CustomerStatus[] }> = [
@@ -16,12 +17,13 @@ const AUDIENCES: Array<{ id: string; label: string; statuses: CustomerStatus[] }
 function buildSegment(audience: string, minVisits: string): Segment {
   return {
     statuses: AUDIENCES.find((a) => a.id === audience)?.statuses ?? ['AT_RISK'],
-    min_visits: Number(minVisits) || 0,
+    // La base acepta enteros de 0 a 100000.
+    min_visits: Math.min(100000, Math.max(0, Math.trunc(Number(minVisits)) || 0)),
   }
 }
 
 const DEFAULT_MESSAGE =
-  '¡Hola {nombre}! Hace un tiempo que no te vemos por {negocio}. Esta semana tenés {beneficio}. ¡Te esperamos!'
+  '¡Hola {nombre}! Hace un tiempo que no te vemos por {negocio}. Esta semana tenés {beneficio} mostrando el código {cupon}. ¡Te esperamos!'
 
 export function NewCampaignPage() {
   const { business } = useActiveBusiness()
@@ -80,6 +82,7 @@ export function NewCampaignPage() {
     nombre: 'Ana',
     negocio: business.name,
     beneficio: benefit,
+    cupon: 'K7P2QX',
   })
 
   return (
@@ -121,7 +124,7 @@ export function NewCampaignPage() {
           />
           <p className="rounded-lg bg-slate-50 p-3 text-sm" data-testid="segment-preview">
             {preview.data
-              ? `${preview.data.matching} clientes entran en este grupo; ${preview.data.reachable} tienen teléfono y aceptaron WhatsApp.`
+              ? `${preview.data.matching} clientes entran en este grupo; ${preview.data.reachable} pueden recibir el mensaje (tienen teléfono y aceptaron WhatsApp).${busyText(preview.data.busy)}`
               : 'Calculando…'}
           </p>
         </Card>
@@ -135,7 +138,10 @@ export function NewCampaignPage() {
               onChange={(e) => setMessage(e.target.value)}
             />
             <span className="text-xs text-slate-500">
-              Podés usar {'{nombre}'}, {'{negocio}'} y {'{beneficio}'}.
+              Podés usar {'{nombre}'}, {'{negocio}'}, {'{beneficio}'} y {'{cupon}'}.
+            </span>
+            <span className="text-xs text-slate-500">
+              {'{cupon}'}: un código por cliente; si lo muestra, volvió por la campaña.
             </span>
           </label>
           <TextField

@@ -20,6 +20,13 @@ export default defineConfig([
     extends: [reactHooks.configs.flat.recommended, reactRefresh.configs.vite],
   },
   {
+    files: ['apps/*/public/sw.js'],
+    extends: [js.configs.recommended, prettier],
+    languageOptions: {
+      globals: globals.serviceworker,
+    },
+  },
+  {
     files: ['**/*.config.{js,ts}'],
     languageOptions: {
       globals: globals.node,

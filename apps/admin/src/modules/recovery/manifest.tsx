@@ -1,5 +1,6 @@
 import type { ModuleManifest } from '../types'
 import { CampaignPage } from './CampaignPage'
+import { CouponCounterPanel } from './CouponCounterPanel'
 import { NewCampaignPage } from './NewCampaignPage'
 import { RecoveryPage } from './RecoveryPage'
 
@@ -12,4 +13,5 @@ export const recoveryManifest: ModuleManifest = {
     { path: 'recuperacion/campanas/nueva', element: <NewCampaignPage /> },
     { path: 'recuperacion/campanas/:campaignId', element: <CampaignPage /> },
   ],
+  counterPanel: CouponCounterPanel,
 }

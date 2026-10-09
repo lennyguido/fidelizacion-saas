@@ -6,6 +6,7 @@ import {
   formatPhone,
   type Campaign,
   type CampaignRecipient,
+  type RecipientBlockedReason,
 } from '@plataforma/sdk'
 import { Alert, Card, Spinner, useToast } from '@plataforma/ui'
 import { useActiveBusiness } from '../../features/business/ActiveBusinessContext'
@@ -71,25 +72,55 @@ function RecipientRow({ recipient }: { recipient: CampaignRecipient }) {
       <div className="min-w-0">
         <p className="truncate font-medium">{recipient.name}</p>
         <p className="truncate text-sm text-slate-500">
-          {formatPhone(recipient.phone)}
+          {recipient.blockedReason ? '' : formatPhone(recipient.phone)}
           {recipient.contactedAt ? ' · mensaje enviado' : ''}
         </p>
+        {recipient.couponCode && (
+          <p className="text-xs text-slate-500">
+            Cupón {recipient.couponCode}
+            {recipient.couponRedeemedAt ? ' · usado' : ''}
+          </p>
+        )}
         <Returned recipient={recipient} />
       </div>
-      <a
-        href={whatsappLink(recipient.phone, recipient.message ?? '')}
-        target="_blank"
-        rel="noreferrer"
-        onClick={() => contacted.mutate()}
-        className={`shrink-0 rounded-lg px-4 py-2 text-sm font-medium ${
-          recipient.contactedAt
-            ? 'text-green-700 ring-1 ring-inset ring-green-600'
-            : 'bg-green-600 text-white hover:bg-green-500'
-        }`}
-      >
-        {recipient.contactedAt ? 'Reenviar' : 'WhatsApp'}
-      </a>
+      {recipient.blockedReason ? (
+        <span className="shrink-0 rounded-lg bg-slate-100 px-3 py-2 text-sm text-slate-600">
+          {BLOCKED_LABELS[recipient.blockedReason]}
+        </span>
+      ) : (
+        <WhatsAppButton recipient={recipient} onOpen={() => contacted.mutate()} />
+      )}
     </li>
+  )
+}
+
+/** Ya no hay que escribirle: se dio de baja o se archivó después de lanzar. */
+const BLOCKED_LABELS: Record<RecipientBlockedReason, string> = {
+  consent_revoked: 'No quiere mensajes',
+  customer_inactive: 'Cliente archivado',
+}
+
+function WhatsAppButton({
+  recipient,
+  onOpen,
+}: {
+  recipient: CampaignRecipient
+  onOpen: () => void
+}) {
+  return (
+    <a
+      href={whatsappLink(recipient.phone, recipient.message ?? '')}
+      target="_blank"
+      rel="noreferrer"
+      onClick={onOpen}
+      className={`shrink-0 rounded-lg px-4 py-2 text-sm font-medium ${
+        recipient.contactedAt
+          ? 'text-green-700 ring-1 ring-inset ring-green-600'
+          : 'bg-green-600 text-white hover:bg-green-500'
+      }`}
+    >
+      {recipient.contactedAt ? 'Reenviar' : 'WhatsApp'}
+    </a>
   )
 }
 

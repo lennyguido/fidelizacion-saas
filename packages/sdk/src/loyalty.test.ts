@@ -11,6 +11,8 @@ const base: Program = {
   pointsPerAmount: 0,
   amountStepMinor: null,
   minAmountMinor: 0,
+  maxVisitsPerDay: 3,
+  maxPointsPerVisit: 1000,
 }
 
 describe('describeProgram', () => {

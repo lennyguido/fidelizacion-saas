@@ -1,0 +1,19 @@
+# Encabezados de seguridad del panel del negocio en Cloudflare Pages (docs/DEPLOY.md).
+# Vite copia este archivo de public/ a dist/ y Cloudflare lo aplica; no se publica como archivo.
+#
+# - Rutas como /clientes/123: Cloudflare sirve index.html solo porque dist/ no tiene 404.html
+#   (modo "single-page application"). No agregar 404.html ni una regla /* en _redirects.
+# - Si dos reglas repiten un encabezado, Cloudflare une los valores con coma: definir cada
+#   encabezado una sola vez.
+# - CSP: solo scripts y estilos propios; Supabase (https/wss *.supabase.co) para datos y
+#   logos; data: para imágenes chicas que Vite pueda incrustar. La cámara (lector de QR del
+#   mostrador) se permite solo para este sitio.
+
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: https://*.supabase.co; font-src 'self' data:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(self), microphone=(), geolocation=(), payment=(), usb=()
+  Strict-Transport-Security: max-age=31536000
+  Cross-Origin-Opener-Policy: same-origin
