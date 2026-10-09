@@ -7,6 +7,7 @@ Objetivo: comprobar con tus propios ojos que el panel funciona conectado a tu Su
 1. En Supabase, arriba a la izquierda dice **fidelizacion-saas**. Si dice otra cosa, cambiá de proyecto.
 2. **Project Settings → Data API → Exposed schemas**: tiene que estar `core`.
 3. **Authentication → URL Configuration → Redirect URLs**: tienen que estar `http://localhost:5173/**` y `https://*.app.github.dev/**`.
+4. Si el mail de confirmación te lleva a una página que no carga (por ejemplo `localhost:3000`), es porque falta el paso 3: agregá las URLs y pedí otro mail desde "Crear cuenta".
 
 ## Levantar el panel
 
@@ -32,3 +33,9 @@ Objetivo: comprobar con tus propios ojos que el panel funciona conectado a tu Su
 | 11 | Probar todo desde el celular (abrí el mismo link) | Se ve y se usa bien |
 
 Si algo da ❌, sacale una captura y mandásela a Claude junto con el número del paso.
+
+## Problemas conocidos
+
+* **"Falta configuración":** el archivo se tiene que llamar `.env.local` (con punto entre `env` y `local`) y estar en `apps/admin/`. Después de renombrarlo, cortá `npm run dev` (Ctrl+C) y volvé a correrlo.
+* **"Demasiados intentos seguidos":** el plan gratis de Supabase manda pocos mails por hora. Esperá unos minutos.
+* **No veo datos / error al cargar:** falta habilitar `core` en Exposed schemas (paso 2 de arriba).
