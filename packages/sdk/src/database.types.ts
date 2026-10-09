@@ -586,6 +586,230 @@ isOneToOne: false
           CompositeTypes: {
             [_ in never]: never
           }
+        },"loyalty": {
+          Tables: {
+            "ledger": {
+                  Row: {
+                    "business_id": string,"created_at": string,"created_by": string | null,"delta": number,"id": number,"member_id": string,"note": string | null,"reason": string,"redemption_id": string | null,"visit_id": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "business_id": string,"created_at"?: string,"created_by"?: string | null,"delta": number,"id"?: never,"member_id": string,"note"?: string | null,"reason": string,"redemption_id"?: string | null,"visit_id"?: string | null
+                  }
+                  Update: {
+                    "business_id"?: string,"created_at"?: string,"created_by"?: string | null,"delta"?: number,"id"?: never,"member_id"?: string,"note"?: string | null,"reason"?: string,"redemption_id"?: string | null,"visit_id"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "ledger_business_id_member_id_fkey"
+      columns: ["business_id","member_id"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["business_id","id"]
+    },{
+      foreignKeyName: "ledger_business_id_redemption_id_fkey"
+      columns: ["business_id","redemption_id"]
+isOneToOne: false
+      referencedRelation: "redemptions"
+      referencedColumns: ["business_id","id"]
+    }
+                  ]
+                },"members": {
+                  Row: {
+                    "business_id": string,"created_by": string | null,"customer_id": string,"id": string,"joined_at": string,"left_at": string | null,"lifetime_points": number,"points_balance": number,"status": string,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "business_id": string,"created_by"?: string | null,"customer_id": string,"id"?: string,"joined_at"?: string,"left_at"?: string | null,"lifetime_points"?: number,"points_balance"?: number,"status"?: string,"updated_at"?: string
+                  }
+                  Update: {
+                    "business_id"?: string,"created_by"?: string | null,"customer_id"?: string,"id"?: string,"joined_at"?: string,"left_at"?: string | null,"lifetime_points"?: number,"points_balance"?: number,"status"?: string,"updated_at"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
+                },"programs": {
+                  Row: {
+                    "amount_step_minor": number | null,"business_id": string,"created_at": string,"enabled": boolean,"kind": string,"min_amount_minor": number,"points_per_amount": number,"points_per_visit": number,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "amount_step_minor"?: number | null,"business_id": string,"created_at"?: string,"enabled"?: boolean,"kind"?: string,"min_amount_minor"?: number,"points_per_amount"?: number,"points_per_visit"?: number,"updated_at"?: string
+                  }
+                  Update: {
+                    "amount_step_minor"?: number | null,"business_id"?: string,"created_at"?: string,"enabled"?: boolean,"kind"?: string,"min_amount_minor"?: number,"points_per_amount"?: number,"points_per_visit"?: number,"updated_at"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
+                },"redemptions": {
+                  Row: {
+                    "business_id": string,"cancel_reason": string | null,"cancelled_at": string | null,"cancelled_by": string | null,"code": string,"created_at": string,"created_by": string | null,"id": string,"member_id": string,"points": number,"request_id": string | null,"reward_id": string,"reward_name": string,"status": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "business_id": string,"cancel_reason"?: string | null,"cancelled_at"?: string | null,"cancelled_by"?: string | null,"code": string,"created_at"?: string,"created_by"?: string | null,"id"?: string,"member_id": string,"points": number,"request_id"?: string | null,"reward_id": string,"reward_name": string,"status"?: string
+                  }
+                  Update: {
+                    "business_id"?: string,"cancel_reason"?: string | null,"cancelled_at"?: string | null,"cancelled_by"?: string | null,"code"?: string,"created_at"?: string,"created_by"?: string | null,"id"?: string,"member_id"?: string,"points"?: number,"request_id"?: string | null,"reward_id"?: string,"reward_name"?: string,"status"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "redemptions_business_id_member_id_fkey"
+      columns: ["business_id","member_id"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["business_id","id"]
+    },{
+      foreignKeyName: "redemptions_business_id_reward_id_fkey"
+      columns: ["business_id","reward_id"]
+isOneToOne: false
+      referencedRelation: "rewards"
+      referencedColumns: ["business_id","id"]
+    }
+                  ]
+                },"rewards": {
+                  Row: {
+                    "active": boolean,"available_until": string | null,"business_id": string,"cost_points": number,"created_at": string,"description": string | null,"id": string,"name": string,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "active"?: boolean,"available_until"?: string | null,"business_id": string,"cost_points": number,"created_at"?: string,"description"?: string | null,"id"?: string,"name": string,"updated_at"?: string
+                  }
+                  Update: {
+                    "active"?: boolean,"available_until"?: string | null,"business_id"?: string,"cost_points"?: number,"created_at"?: string,"description"?: string | null,"id"?: string,"name"?: string,"updated_at"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
+                }
+          }
+          Views: {
+            [_ in never]: never
+          }
+          Functions: {
+            "adjust_points":
+{ Args: { "p_delta": number,"p_member_id": string,"p_note": string }; Returns: {
+              "business_id": string,
+"created_by": string | null,
+"customer_id": string,
+"id": string,
+"joined_at": string,
+"left_at": string | null,
+"lifetime_points": number,
+"points_balance": number,
+"status": string,
+"updated_at": string
+            }
+                          SetofOptions: {
+        from: "*"
+        to: "members"
+        isOneToOne: true
+        isSetofReturn: false
+      } },
+"cancel_redemption":
+{ Args: { "p_reason": string,"p_redemption_id": string }; Returns: {
+              "business_id": string,
+"cancel_reason": string | null,
+"cancelled_at": string | null,
+"cancelled_by": string | null,
+"code": string,
+"created_at": string,
+"created_by": string | null,
+"id": string,
+"member_id": string,
+"points": number,
+"request_id": string | null,
+"reward_id": string,
+"reward_name": string,
+"status": string
+            }
+                          SetofOptions: {
+        from: "*"
+        to: "redemptions"
+        isOneToOne: true
+        isSetofReturn: false
+      } },
+"enroll_customer":
+{ Args: { "p_customer_id": string }; Returns: {
+              "business_id": string,
+"created_by": string | null,
+"customer_id": string,
+"id": string,
+"joined_at": string,
+"left_at": string | null,
+"lifetime_points": number,
+"points_balance": number,
+"status": string,
+"updated_at": string
+            }
+                          SetofOptions: {
+        from: "*"
+        to: "members"
+        isOneToOne: true
+        isSetofReturn: false
+      } },
+"leave_program":
+{ Args: { "p_member_id": string }; Returns: {
+              "business_id": string,
+"created_by": string | null,
+"customer_id": string,
+"id": string,
+"joined_at": string,
+"left_at": string | null,
+"lifetime_points": number,
+"points_balance": number,
+"status": string,
+"updated_at": string
+            }
+                          SetofOptions: {
+        from: "*"
+        to: "members"
+        isOneToOne: true
+        isSetofReturn: false
+      } },
+"new_redemption_code":
+{ Args: { "p_business_id": string }; Returns: string
+                           },
+"points_for_visit":
+{ Args: { "p_amount_minor": number,"p_program": Omit<Database["loyalty"]['Tables']["programs"]['Row'], Database["loyalty"]['Tables']["programs"]['ComputedFields']> }; Returns: number
+                           },
+"post_movement":
+{ Args: { "p_delta": number,"p_member": Omit<Database["loyalty"]['Tables']["members"]['Row'], Database["loyalty"]['Tables']["members"]['ComputedFields']>,"p_note"?: string,"p_reason": string,"p_redemption_id"?: string,"p_visit_id"?: string }; Returns: boolean
+                           },
+"redeem_reward":
+{ Args: { "p_member_id": string,"p_request_id"?: string,"p_reward_id": string }; Returns: {
+              "business_id": string,
+"cancel_reason": string | null,
+"cancelled_at": string | null,
+"cancelled_by": string | null,
+"code": string,
+"created_at": string,
+"created_by": string | null,
+"id": string,
+"member_id": string,
+"points": number,
+"request_id": string | null,
+"reward_id": string,
+"reward_name": string,
+"status": string
+            }
+                          SetofOptions: {
+        from: "*"
+        to: "redemptions"
+        isOneToOne: true
+        isSetofReturn: false
+      } },
+"require_module":
+{ Args: { "p_business_id": string }; Returns: undefined
+                           }
+          }
+          Enums: {
+            [_ in never]: never
+          }
+          CompositeTypes: {
+            [_ in never]: never
+          }
         }
 }
 
@@ -696,6 +920,10 @@ export type CompositeTypes<
 
 export const Constants = {
   "core": {
+          Enums: {
+            
+          }
+        },"loyalty": {
           Enums: {
             
           }
