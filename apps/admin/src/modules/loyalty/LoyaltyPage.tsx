@@ -11,8 +11,8 @@ export function LoyaltyPage() {
   const rewards = useRewards(business.id)
 
   if (program.isPending || rewards.isPending) return <FullPageSpinner />
-  const error = program.error ?? rewards.error
-  if (error) return <Alert tone="error">{errorMessage(error)}</Alert>
+  if (program.isError) return <Alert tone="error">{errorMessage(program.error)}</Alert>
+  if (rewards.isError) return <Alert tone="error">{errorMessage(rewards.error)}</Alert>
 
   return (
     <section className="flex flex-col gap-4">
