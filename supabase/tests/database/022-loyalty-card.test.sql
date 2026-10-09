@@ -25,7 +25,7 @@ select throws_ok(
 
 select loyalty.issue_card(:'rosa_m') as token \gset
 select ok(:'token' ~ '^[0-9a-f]{64}$', 'the card link code is long and random');
-select core.record_visit(:'biz', null, :'rosa', null, now() - interval '1 hour');
+select core.record_visit(:'biz', null, :'rosa', null, now() - interval '10 minutes');
 
 -- Sin sesión, con el link --------------------------------------------------------
 select tests.authenticate_as_anon();

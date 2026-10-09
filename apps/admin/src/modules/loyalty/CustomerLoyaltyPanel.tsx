@@ -425,18 +425,25 @@ function DigitalCard({
             {link}
           </p>
           <div className="flex flex-wrap gap-2">
-            <a
-              href={whatsappLink(phone, message)}
-              target="_blank"
-              rel="noreferrer"
-              className="rounded-lg bg-green-600 px-4 py-2 font-medium text-white hover:bg-green-500"
-            >
-              Mandar por WhatsApp
-            </a>
+            {phone && (
+              <a
+                href={whatsappLink(phone, message)}
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-lg bg-green-600 px-4 py-2 font-medium text-white hover:bg-green-500"
+              >
+                Mandar por WhatsApp
+              </a>
+            )}
             <Button variant="secondary" onClick={copy}>
               Copiar link
             </Button>
           </div>
+          {!phone && (
+            <p className="text-xs text-slate-500">
+              Cargale un teléfono para mandarlo por WhatsApp; mientras, copiá el link.
+            </p>
+          )}
           <p className="text-xs text-slate-500">Si generás otro link, este deja de funcionar.</p>
         </>
       ) : (

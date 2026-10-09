@@ -19,6 +19,8 @@ const DEFAULT_PROGRAM: Omit<LoyaltyProgram, 'businessId'> = {
   pointsPerAmount: 0,
   amountStepMinor: null,
   minAmountMinor: 0,
+  maxVisitsPerDay: 3,
+  maxPointsPerVisit: 1000,
 }
 
 /** Muestra la regla del programa; dueño/admin la pueden editar. */
@@ -71,6 +73,8 @@ function ProgramForm({ initial, onDone }: { initial: LoyaltyProgram; onDone: () 
   const [perAmount, setPerAmount] = useState(String(initial.pointsPerAmount))
   const [step, setStep] = useState(minorToInput(initial.amountStepMinor))
   const [minimum, setMinimum] = useState(minorToInput(initial.minAmountMinor))
+  const [maxPoints, setMaxPoints] = useState(String(initial.maxPointsPerVisit))
+  const [maxVisits, setMaxVisits] = useState(String(initial.maxVisitsPerDay))
   const [error, setError] = useState<string | null>(null)
 
   const save = useMutation({
@@ -101,7 +105,28 @@ function ProgramForm({ initial, onDone }: { initial: LoyaltyProgram; onDone: () 
       return setError('Indicá cada cuánto dinero se dan los puntos por compra.')
     }
     if (minAmountMinor === null) return setError('Revisá la compra mínima.')
-    save.mutate({ enabled, kind, pointsPerVisit, pointsPerAmount, amountStepMinor, minAmountMinor })
+    const maxPointsPerVisit = Number(maxPoints)
+    const maxVisitsPerDay = Number(maxVisits)
+    if (
+      !Number.isInteger(maxPointsPerVisit) ||
+      maxPointsPerVisit < 1 ||
+      maxPointsPerVisit > 100000
+    ) {
+      return setError('El tope de puntos por visita tiene que ser un número entre 1 y 100.000.')
+    }
+    if (!Number.isInteger(maxVisitsPerDay) || maxVisitsPerDay < 1 || maxVisitsPerDay > 50) {
+      return setError('Las visitas que suman por día tienen que ser un número entre 1 y 50.')
+    }
+    save.mutate({
+      enabled,
+      kind,
+      pointsPerVisit,
+      pointsPerAmount,
+      amountStepMinor,
+      minAmountMinor,
+      maxPointsPerVisit,
+      maxVisitsPerDay,
+    })
   }
 
   return (
@@ -149,7 +174,25 @@ function ProgramForm({ initial, onDone }: { initial: LoyaltyProgram; onDone: () 
           value={minimum}
           onChange={(e) => setMinimum(e.target.value)}
         />
+        <TextField
+          label="Tope de puntos por visita"
+          inputMode="numeric"
+          value={maxPoints}
+          onChange={(e) => setMaxPoints(e.target.value)}
+          hint="Ninguna visita da más que esto, aunque la compra sea muy grande."
+        />
+        <TextField
+          label="Visitas que suman por día"
+          inputMode="numeric"
+          value={maxVisits}
+          onChange={(e) => setMaxVisits(e.target.value)}
+          hint="Por cliente. Las visitas de más se registran, pero sin puntos."
+        />
       </div>
+      <p className="text-xs text-slate-500">
+        Solo suman puntos las visitas cargadas en el momento (hasta 30 minutos después). Si cargás
+        una visita de antes, queda registrada pero no da puntos.
+      </p>
       <label className="flex items-center gap-2 text-sm">
         <input type="checkbox" checked={enabled} onChange={(e) => setEnabled(e.target.checked)} />
         Programa activo (si lo pausás, las visitas no suman puntos)

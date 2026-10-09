@@ -15,8 +15,8 @@ function db() {
 
 export type ProgramKind = 'points' | 'stamps'
 
-export interface Program {
-  businessId: string
+/** La regla que ve el cliente (sin los topes internos). */
+export interface ProgramRule {
   enabled: boolean
   kind: ProgramKind
   pointsPerVisit: number
@@ -24,6 +24,14 @@ export interface Program {
   /** Cada cuánto dinero (unidades menores) se dan `pointsPerAmount` puntos. */
   amountStepMinor: number | null
   minAmountMinor: number
+}
+
+export interface Program extends ProgramRule {
+  businessId: string
+  /** Visitas que suman puntos por día y por socio (las demás se registran sin puntos). */
+  maxVisitsPerDay: number
+  /** Tope de puntos que puede dar una sola visita. */
+  maxPointsPerVisit: number
 }
 
 export type ProgramInput = Omit<Program, 'businessId'>
@@ -37,6 +45,8 @@ function toProgram(row: Row<'programs'>): Program {
     pointsPerAmount: row.points_per_amount,
     amountStepMinor: row.amount_step_minor === null ? null : Number(row.amount_step_minor),
     minAmountMinor: Number(row.min_amount_minor),
+    maxVisitsPerDay: row.max_visits_per_day,
+    maxPointsPerVisit: row.max_points_per_visit,
   }
 }
 
@@ -63,6 +73,8 @@ export async function saveProgram(businessId: string, input: ProgramInput): Prom
     points_per_amount: input.pointsPerAmount,
     amount_step_minor: input.pointsPerAmount > 0 ? input.amountStepMinor : null,
     min_amount_minor: input.minAmountMinor,
+    max_visits_per_day: input.maxVisitsPerDay,
+    max_points_per_visit: input.maxPointsPerVisit,
   }
   const updated = await db()
     .from('programs')
@@ -332,7 +344,10 @@ export async function cancelRedemption(redemptionId: string, reason: string): Pr
 }
 
 /** Texto para mostrar la regla del programa (solo presentación; el cálculo lo hace la base). */
-export function describeProgram(program: Program, formatAmount: (minor: number) => string): string {
+export function describeProgram(
+  program: ProgramRule,
+  formatAmount: (minor: number) => string,
+): string {
   const unit = program.kind === 'stamps' ? 'sello' : 'punto'
   const plural = (n: number) => `${n} ${unit}${n === 1 ? '' : 's'}`
   const parts: string[] = []

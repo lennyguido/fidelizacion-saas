@@ -26,11 +26,19 @@ export function QrScanner({
 
     async function start() {
       try {
-        stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+        const obtained = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: 'environment' },
+        })
         const video = videoRef.current
-        if (!video || stopped) return
+        if (!video || stopped) {
+          // Se cerró la cámara mientras el navegador pedía permiso: apagarla igual.
+          obtained.getTracks().forEach((track) => track.stop())
+          return
+        }
+        stream = obtained
         video.srcObject = stream
         await video.play()
+        if (stopped) return
         timer = window.setInterval(async () => {
           try {
             const codes = await detector.detect(video)
