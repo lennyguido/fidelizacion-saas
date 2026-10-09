@@ -28,4 +28,23 @@ El producto permite a los negocios:
 * `CLAUDE.md` — reglas para el agente de desarrollo.
 * `PROGRESS.md` — progreso actual.
 * `DECISIONS.md` — decisiones importantes de arquitectura y producto.
-"# fidelizacion-saas" 
+
+## Estructura
+
+* `app/` — frontend (React + TypeScript + Vite + Tailwind).
+* `supabase/` — configuración local, migraciones y seed (se crea en la sección 5 de `TASKS.md`).
+
+## Desarrollo local
+
+```bash
+cd app
+npm install
+cp .env.example .env.local   # completar con los datos del proyecto Supabase de desarrollo
+npm run dev
+```
+
+Comandos oficiales (desde `app/`):
+
+* `npm run dev` — servidor de desarrollo.
+* `npm run build` — typecheck + build de producción.
+* `npm run lint` — ESLint.

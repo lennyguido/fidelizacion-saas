@@ -197,11 +197,11 @@ docs: update architecture
 
 ## 1.1 Crear documentación base
 
-* [ ] Crear README.md
-* [ ] Crear CLAUDE.md
-* [ ] Crear TASKS.md
-* [ ] Crear PROGRESS.md
-* [ ] Crear DECISIONS.md
+* [x] Crear README.md
+* [x] Crear CLAUDE.md
+* [x] Crear TASKS.md
+* [x] Crear PROGRESS.md
+* [x] Crear DECISIONS.md
 * [ ] Crear CHANGELOG.md
 * [ ] Crear CONTRIBUTING.md
 * [ ] Crear SECURITY.md
@@ -237,26 +237,26 @@ Important decisions
 
 # 2. REPOSITORIO
 
-* [ ] Crear repositorio GitHub
-* [ ] Clonar repositorio localmente
-* [ ] Inicializar Git
-* [ ] Configurar branch principal
-* [ ] Crear `.gitignore`
-* [ ] Crear `.env.example`
+* [x] Crear repositorio GitHub
+* [x] Clonar repositorio localmente
+* [x] Inicializar Git
+* [x] Configurar branch principal
+* [x] Crear `.gitignore`
+* [x] Crear `.env.example`
 * [ ] Configurar Git hooks si son necesarios
-* [ ] Crear commit inicial
-* [ ] Configurar README inicial
+* [x] Crear commit inicial
+* [x] Configurar README inicial
 
 ---
 
 # 3. FRONTEND BASE
 
-* [ ] Crear proyecto Vite + React
-* [ ] Configurar TypeScript
-* [ ] Configurar Tailwind
-* [ ] Instalar Supabase client
+* [x] Crear proyecto Vite + React
+* [x] Configurar TypeScript
+* [x] Configurar Tailwind
+* [x] Instalar Supabase client
 * [ ] Instalar librerías necesarias
-* [ ] Configurar ESLint
+* [x] Configurar ESLint
 * [ ] Configurar Prettier
 * [ ] Configurar aliases de imports
 * [ ] Configurar estructura de carpetas
