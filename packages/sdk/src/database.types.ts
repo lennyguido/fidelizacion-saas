@@ -552,6 +552,29 @@ isOneToOne: false
               "email": string,"id": string,"last_visit_at": string,"name": string,"phone": string,"risk_score": number,"status": string,"total_spend_minor": number,"visit_count": number
             }[]
                            },
+"set_customer_status":
+{ Args: { "p_customer_id": string,"p_status": string }; Returns: {
+              "anonymized_at": string | null,
+"birthdate": string | null,
+"business_id": string,
+"created_at": string,
+"created_by": string | null,
+"email": string | null,
+"id": string,
+"name": string,
+"notes": string | null,
+"phone": string | null,
+"source": string,
+"status": string,
+"tags": (string)[],
+"updated_at": string
+            }
+                          SetofOptions: {
+        from: "*"
+        to: "customers"
+        isOneToOne: true
+        isSetofReturn: false
+      } },
 "status_settings":
 { Args: { "p_settings": Json }; Returns: Json
                            },

@@ -1,5 +1,5 @@
--- Regresión: un cliente archivado se puede encontrar y reactivar
--- (con los permisos vigentes antes de la migración 20261009120000).
+-- Regresión: un cliente archivado se puede encontrar y reactivar.
+-- Desde 20261009120000 el estado solo se cambia con core.set_customer_status.
 -- Es lo que usan customers.listArchived() y customers.reactivate() del SDK.
 begin;
 create extension if not exists pgtap with schema extensions;
@@ -27,13 +27,13 @@ select tests.authenticate_as(:'other');
 select is_empty(
   format($$ select 1 from core.customers where business_id = %L and status = 'archived' $$, :'biz'),
   'another business cannot see the archived customers');
-select is_empty(
-  format($$ update core.customers set status = 'active' where id = %L returning 1 $$, :'ema'),
-  'another business cannot reactivate them');
+select throws_ok(
+  format($$ select core.set_customer_status(%L, 'active') $$, :'ema'),
+  '42501', null, 'another business cannot reactivate them');
 
 select tests.authenticate_as(:'owner');
 select results_eq(
-  format($$ update core.customers set status = 'active' where id = %L returning status $$, :'ema'),
+  format($$ select (core.set_customer_status(%L, 'active')).status $$, :'ema'),
   $$ values ('active') $$,
   'the owner can reactivate an archived customer');
 select results_eq(

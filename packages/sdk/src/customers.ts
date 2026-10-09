@@ -224,21 +224,22 @@ export async function update(customerId: string, input: CustomerInput): Promise<
   return toCustomer(data as CustomerRow)
 }
 
-export async function archive(customerId: string): Promise<void> {
-  const { error } = await getSupabase()
-    .from('customers')
-    .update({ status: 'archived' })
-    .eq('id', customerId)
+/** Archiva o reactiva un cliente. Solo owner/admin (lo exige la base). */
+export async function setStatus(customerId: string, status: 'active' | 'archived'): Promise<void> {
+  const { error } = await getSupabase().rpc('set_customer_status', {
+    p_customer_id: customerId,
+    p_status: status,
+  })
   if (error) throw fromPostgrestError(error)
 }
 
-/** Vuelve a poner activo un cliente archivado. */
-export async function reactivate(customerId: string): Promise<void> {
-  const { error } = await getSupabase()
-    .from('customers')
-    .update({ status: 'active' })
-    .eq('id', customerId)
-  if (error) throw fromPostgrestError(error)
+export function archive(customerId: string): Promise<void> {
+  return setStatus(customerId, 'archived')
+}
+
+/** Vuelve a poner activo un cliente archivado. Solo owner/admin (lo exige la base). */
+export function reactivate(customerId: string): Promise<void> {
+  return setStatus(customerId, 'active')
 }
 
 export interface ArchivedCustomer {
