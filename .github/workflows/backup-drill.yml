@@ -1,0 +1,28 @@
+name: Backup drill
+
+# Simulacro de copia de seguridad y restauración con un Supabase local y datos de
+# prueba (scripts/backup-drill.sh). Corre una vez por semana, a mano desde la
+# pestaña Actions, y cuando cambian las migraciones o el procedimiento.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 9 * * 1'
+  push:
+    paths:
+      - 'supabase/migrations/**'
+      - 'scripts/backup-drill.sh'
+      - '.github/workflows/backup-drill.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  drill:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - run: supabase db start
+      - run: scripts/ci-run.sh "backup drill" bash scripts/backup-drill.sh
