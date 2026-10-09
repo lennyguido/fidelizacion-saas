@@ -40,3 +40,4 @@ Thumbs.db
 # Copias de la base (tienen datos personales; docs/DEPLOY.md, D7)
 
 /backups/
+.claude/worktrees/
