@@ -3,7 +3,8 @@ import { detectDelimiter, parseCsv, toCsv } from './csv.ts'
 
 describe('parseCsv', () => {
   it('parses Excel-style semicolon files with BOM', () => {
-    const text = '﻿Nombre;Teléfono\r\nAna;11 2233-4455\r\nDon Carlos;\r\n'
+    const text =
+      String.fromCharCode(0xfeff) + 'Nombre;Teléfono\r\nAna;11 2233-4455\r\nDon Carlos;\r\n'
     expect(detectDelimiter(text)).toBe(';')
     expect(parseCsv(text)).toEqual([
       ['Nombre', 'Teléfono'],

@@ -22,7 +22,7 @@ test('the owner imports customers from a CSV file', async ({ page }, testInfo) =
   await page.locator('input[type=file]').setInputFiles({
     name: 'clientes.csv',
     mimeType: 'text/csv',
-    buffer: Buffer.from('﻿' + csv, 'utf8'),
+    buffer: Buffer.from(String.fromCharCode(0xfeff) + csv, 'utf8'),
   })
 
   await expect(page.getByText('2 listos para importar · 2 con problemas')).toBeVisible()

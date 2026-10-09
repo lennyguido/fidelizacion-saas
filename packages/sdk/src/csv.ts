@@ -3,8 +3,14 @@
  * saltos de línea dentro de comillas, BOM y separador ',', ';' o tab
  * (Excel en castellano suele exportar con ';').
  */
+const BOM = String.fromCharCode(0xfeff)
+
+function stripBom(text: string): string {
+  return text.startsWith(BOM) ? text.slice(1) : text
+}
+
 export function detectDelimiter(text: string): string {
-  const firstLine = text.replace(/^﻿/, '').split(/\r?\n/, 1)[0] ?? ''
+  const firstLine = stripBom(text).split(/\r?\n/, 1)[0] ?? ''
   const candidates = [';', ',', '\t']
   let best = ','
   let bestCount = 0
@@ -19,7 +25,7 @@ export function detectDelimiter(text: string): string {
 }
 
 export function parseCsv(input: string, delimiter = detectDelimiter(input)): string[][] {
-  const text = input.replace(/^﻿/, '')
+  const text = stripBom(input)
   const rows: string[][] = []
   let row: string[] = []
   let field = ''
@@ -67,5 +73,5 @@ export function parseCsv(input: string, delimiter = detectDelimiter(input)): str
 export function toCsv(rows: string[][], delimiter = ';'): string {
   const escape = (value: string) =>
     /["\n\r]/.test(value) || value.includes(delimiter) ? `"${value.replace(/"/g, '""')}"` : value
-  return '﻿' + rows.map((row) => row.map(escape).join(delimiter)).join('\r\n') + '\r\n'
+  return BOM + rows.map((row) => row.map(escape).join(delimiter)).join('\r\n') + '\r\n'
 }
