@@ -1,0 +1,21 @@
+# Encabezados de seguridad de la tarjeta del cliente en Cloudflare Pages (docs/DEPLOY.md).
+# Vite copia este archivo de public/ a dist/ y Cloudflare lo aplica; no se publica como archivo.
+#
+# - /tarjeta (y cualquier ruta): Cloudflare sirve index.html solo porque dist/ no tiene 404.html
+#   (modo "single-page application"). No agregar 404.html ni una regla /* en _redirects.
+# - manifest.webmanifest y favicon.svg son archivos reales: se sirven tal cual (no index.html).
+# - Si dos reglas repiten un encabezado, Cloudflare une los valores con coma: definir cada
+#   encabezado una sola vez.
+# - CSP: solo scripts y estilos propios; Supabase (https/wss *.supabase.co) para leer la
+#   tarjeta y logos; data: para la imagen del QR (se genera en el teléfono).
+# - no-referrer: la dirección de la tarjeta nunca se manda a otros sitios.
+
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: https://*.supabase.co; font-src 'self' data:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: no-referrer
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+  Strict-Transport-Security: max-age=31536000
+  Cross-Origin-Opener-Policy: same-origin
+  X-Robots-Tag: noindex
