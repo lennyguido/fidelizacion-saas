@@ -5,6 +5,7 @@ import { Alert, Button, Card, FullPageSpinner, useToast } from '@plataforma/ui'
 import { useActiveBusiness } from '../../features/business/ActiveBusinessContext'
 import { formatDateTime } from '../../lib/format'
 import { CampaignResultsCard } from './CampaignResultsCard'
+import { busyText } from './previewText'
 import { RecipientsList } from './RecipientsList'
 import { useCampaign, useInvalidateCampaigns, useSegmentPreview } from './queries'
 
@@ -65,6 +66,7 @@ function DraftActions({ campaign }: { campaign: Campaign }) {
     onError: (err) => toast.show(errorMessage(err), 'error'),
   })
   const reachable = preview.data?.reachable ?? 0
+  const busy = preview.data?.busy ?? 0
   const control = Math.floor((reachable * campaign.controlPct) / 100)
 
   return (
@@ -72,7 +74,7 @@ function DraftActions({ campaign }: { campaign: Campaign }) {
       <p className="text-sm">{campaign.message}</p>
       <p className="rounded-lg bg-slate-50 p-3 text-sm">
         {preview.data
-          ? `Van a quedar ${reachable} clientes: a ${reachable - control} les escribís y ${control} quedan como grupo de control (no se les escribe, para comparar).`
+          ? `Van a quedar ${reachable} clientes: a ${reachable - control} les escribís y ${control} quedan como grupo de control (no se les escribe, para comparar).${busyText(busy)}`
           : 'Calculando…'}
       </p>
       <div className="flex flex-wrap gap-2">
@@ -87,7 +89,7 @@ function DraftActions({ campaign }: { campaign: Campaign }) {
           Cancelar
         </Button>
       </div>
-      {preview.data && reachable === 0 && (
+      {preview.data && reachable === 0 && busy === 0 && (
         <Alert>
           Nadie de este grupo aceptó WhatsApp todavía. Anotalo en la ficha de cada cliente
           ("Mensajes por WhatsApp").

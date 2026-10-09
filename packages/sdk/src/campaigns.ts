@@ -14,8 +14,12 @@ export type Segment = {
 }
 
 export interface SegmentPreview {
+  /** Clientes que entran en el segmento. */
   matching: number
+  /** Los que recibirían el mensaje al lanzar (teléfono + WhatsApp aceptado + libres). */
   reachable: number
+  /** Podrían recibirlo pero ya están en otra campaña activa: no se incluyen. */
+  busy: number
 }
 
 export type CampaignStatus = 'draft' | 'sent' | 'cancelled'
@@ -72,7 +76,7 @@ export async function previewSegment(
   })
   if (error) throw fromPostgrestError(error)
   const row = data?.[0]
-  return { matching: row?.matching ?? 0, reachable: row?.reachable ?? 0 }
+  return { matching: row?.matching ?? 0, reachable: row?.reachable ?? 0, busy: row?.busy ?? 0 }
 }
 
 export async function list(businessId: string, moduleId: string): Promise<Campaign[]> {
@@ -130,6 +134,9 @@ export async function markContacted(recipientId: string): Promise<void> {
   if (error) throw fromPostgrestError(error)
 }
 
+/** Por qué ya no hay que escribirle (se dio de baja o se archivó después de lanzar). */
+export type RecipientBlockedReason = 'consent_revoked' | 'customer_inactive'
+
 export interface Recipient {
   id: string
   customerId: string
@@ -141,6 +148,8 @@ export interface Recipient {
   contactedAt: string | null
   returnedAt: string | null
   returnedAmountMinor: number
+  /** Si no es null, la base no devuelve teléfono ni mensaje: no hay que escribirle. */
+  blockedReason: RecipientBlockedReason | null
 }
 
 export async function listRecipients(campaignId: string): Promise<Recipient[]> {
@@ -159,6 +168,7 @@ export async function listRecipients(campaignId: string): Promise<Recipient[]> {
     contactedAt: row.contacted_at,
     returnedAt: row.returned_at,
     returnedAmountMinor: Number(row.returned_amount_minor),
+    blockedReason: (row.blocked_reason as RecipientBlockedReason | null) ?? null,
   }))
 }
 
