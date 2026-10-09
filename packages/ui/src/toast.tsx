@@ -1,19 +1,12 @@
-import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react'
+import { useCallback, useMemo, useState, type ReactNode } from 'react'
 import { cn } from './cn.ts'
-
-type ToastTone = 'success' | 'error' | 'info'
+import { ToastContext, type ToastTone } from './toast-context.ts'
 
 interface ToastItem {
   id: number
   tone: ToastTone
   message: string
 }
-
-interface ToastApi {
-  show: (message: string, tone?: ToastTone) => void
-}
-
-const ToastContext = createContext<ToastApi | null>(null)
 
 const toneClass: Record<ToastTone, string> = {
   success: 'bg-emerald-600',
@@ -57,10 +50,4 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       </div>
     </ToastContext.Provider>
   )
-}
-
-export function useToast(): ToastApi {
-  const api = useContext(ToastContext)
-  if (!api) throw new Error('useToast debe usarse dentro de <ToastProvider>')
-  return api
 }
