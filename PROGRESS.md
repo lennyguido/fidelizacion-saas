@@ -35,7 +35,7 @@ Las migraciones 7–9 son solo aditivas (funciones e índices nuevos, sin cambio
 
 ## Cambios pendientes de revisión
 
-Rama `fix/archive-owner-admin-only` (commit `2b037f9`):
+Rama `fix/archive-owner-admin-only` (commit `62a7b19`):
 
 * Archivar/reactivar clientes pasa a ser **exclusivo de owner/admin**, también desde la base: se quita a los usuarios el permiso de modificar `customers.status` y se agrega `core.set_customer_status()` (exige owner/admin, queda auditado).
 * Los empleados siguen pudiendo editar nombre, teléfono, email y notas.
