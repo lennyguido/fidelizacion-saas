@@ -114,3 +114,18 @@ Consejo práctico: mandá los mensajes a todos los de la lista.
   (o no se anotó el monto), el sistema no lo puede saber.
 * **Es una estimación.** Nunca es una promesa: es la mejor cuenta honesta que se
   puede hacer con los datos que hay.
+
+## 7. Cupones (la prueba más segura)
+
+Si el mensaje incluye `{cupon}`, cada cliente del grupo contactado recibe un
+código propio de 6 letras y números (por ejemplo `K7P2QX`). Cuando vuelve y lo
+muestra, el cajero lo escribe en el **Mostrador** ("¿Trae un cupón de una
+campaña?") y toca "Usar cupón y registrar visita".
+
+* Un cupón se usa **una sola vez**, solo **dentro de la ventana** de la campaña y
+  solo si el cliente sigue activo.
+* Los resultados muestran **cuántos cupones se usaron**. Si después se anula la
+  visita, ese cupón deja de contar.
+* El cupón confirma que **esa persona** volvió por el mensaje. Igual, los números
+  de "incremental" se siguen calculando con el grupo de control (punto 3): hay
+  gente que vuelve por la campaña y se olvida de mostrar el cupón.

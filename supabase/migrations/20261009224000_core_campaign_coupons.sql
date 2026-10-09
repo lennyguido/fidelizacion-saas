@@ -133,28 +133,29 @@ $$;
 -- -----------------------------------------------------------------------------
 -- Estado de un cupón (interno). status: valid | used | expired | customer_inactive
 -- -----------------------------------------------------------------------------
-create function core.coupon_info(p_recipient core.campaign_recipients) returns jsonb
+create function core.coupon_info(p_recipient_id uuid) returns jsonb
 language sql
 stable
 set search_path = ''
 as $$
   select jsonb_build_object(
-    'recipientId', p_recipient.id,
-    'code', p_recipient.coupon_code,
+    'recipientId', p.id,
+    'code', p.coupon_code,
     'customerId', c.id,
     'customerName', c.name,
     'campaignName', k.name,
     'benefit', k.benefit,
     'expiresAt', k.sent_at + make_interval(days => k.attribution_days),
-    'redeemedAt', p_recipient.coupon_redeemed_at,
+    'redeemedAt', p.coupon_redeemed_at,
     'status', case
-      when p_recipient.coupon_redeemed_at is not null then 'used'
+      when p.coupon_redeemed_at is not null then 'used'
       when now() > k.sent_at + make_interval(days => k.attribution_days) then 'expired'
       when c.status <> 'active' or c.anonymized_at is not null then 'customer_inactive'
       else 'valid' end)
-    from core.campaigns k
-    join core.customers c on c.business_id = p_recipient.business_id and c.id = p_recipient.customer_id
-   where k.business_id = p_recipient.business_id and k.id = p_recipient.campaign_id
+    from core.campaign_recipients p
+    join core.campaigns k on k.business_id = p.business_id and k.id = p.campaign_id
+    join core.customers c on c.business_id = p.business_id and c.id = p.customer_id
+   where p.id = p_recipient_id
 $$;
 
 -- Buscar un cupón para mostrárselo al cajero antes de usarlo. Null si no existe.
@@ -177,7 +178,7 @@ begin
   if not found then
     return null;
   end if;
-  return core.coupon_info(v_recipient);
+  return core.coupon_info(v_recipient.id);
 end;
 $$;
 
@@ -207,7 +208,7 @@ begin
     raise exception 'coupon_not_found' using errcode = 'P0002';
   end if;
 
-  v_info := core.coupon_info(v_recipient);
+  v_info := core.coupon_info(v_recipient.id);
   if v_info ->> 'status' = 'used' then
     raise exception 'coupon_already_used' using errcode = '22023';
   elsif v_info ->> 'status' = 'expired' then
@@ -236,7 +237,7 @@ begin
   perform core.emit_event(p_business_id, 'campaign.coupon_redeemed', jsonb_build_object(
     'campaign_id', v_recipient.campaign_id, 'recipient_id', v_recipient.id,
     'customer_id', v_recipient.customer_id, 'visit_id', p_visit_id));
-  return core.coupon_info(v_recipient);
+  return core.coupon_info(v_recipient.id);
 end;
 $$;
 

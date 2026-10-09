@@ -40,6 +40,10 @@ export function CampaignResultsCard({ campaign }: { campaign: Campaign }) {
         />
         <Tile label="Gastaron los que volvieron" value={money(r.treatmentRevenueMinor)} />
       </dl>
+      <p className="text-sm text-slate-600">
+        Cupones usados en el mostrador: <strong>{r.couponsRedeemed}</strong> de {r.treatmentCount}.
+        Es la prueba más segura de que volvieron por el mensaje.
+      </p>
       {r.incrementalRevenueMinor === null ? (
         <Alert>
           Sin grupo de control no se puede saber cuántos hubieran vuelto igual. En la próxima

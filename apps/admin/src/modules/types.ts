@@ -21,6 +21,17 @@ export interface ModuleManifest {
   customerPanel?: ComponentType<CustomerPanelProps>
   /** Permite encontrar un cliente en el mostrador por un código del módulo (ej. QR de socio). */
   customerCodeLookup?: CustomerCodeLookup
+  /** Tarjeta opcional que el módulo agrega en el mostrador (ej. usar un cupón). */
+  counterPanel?: ComponentType<CounterPanelProps>
+}
+
+export interface CounterPanelProps {
+  /** Monto escrito en el mostrador (null si no hay o es inválido). */
+  amountMinor: number | null
+  /** Hay un monto escrito pero no se entiende: no registrar nada. */
+  amountInvalid: boolean
+  /** Avisa al mostrador que se registró una visita (limpia el formulario y refresca). */
+  onVisitRecorded: () => void
 }
 
 export interface CustomerPanelProps {
