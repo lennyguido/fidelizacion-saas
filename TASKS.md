@@ -307,9 +307,9 @@ docs: update architecture
 * [x] Crear TASKS.md
 * [x] Crear PROGRESS.md
 * [x] Crear DECISIONS.md
-* [ ] Crear CHANGELOG.md
-* [ ] Crear CONTRIBUTING.md
-* [ ] Crear SECURITY.md
+* [x] Crear CHANGELOG.md
+* [x] Crear CONTRIBUTING.md
+* [x] Crear SECURITY.md
 
 ## 1.2 Configurar reglas del agente
 
