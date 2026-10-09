@@ -2,45 +2,42 @@
 
 ## Current phase
 
-Fase 0 — Base del repositorio (ver PLAN POR FASES en `TASKS.md`)
+Fase 1 — Núcleo de base de datos: **terminada** (falta generar tipos, ver bloqueos). Siguiente: Fase 2.
 
 ## Current task
 
-Configurar Supabase CLI y autenticación (requiere acción humana, ver "Current blockers").
+Fase 2 — Auth, onboarding y shell del panel.
 
 ## Last completed task
 
-Preparación del repositorio:
+Fase 0 y Fase 1:
 
-* `claude.md` renombrado a `CLAUDE.md`.
-* `@supabase/supabase-js` movido de la raíz a `app/package.json`; eliminado el `package.json` de la raíz.
-* Creado `app/.env.example`.
-* README con estructura y comandos oficiales.
-* Marcadas en `TASKS.md` las tareas ya hechas de las secciones 1, 2 y 3.
-* Arquitectura de plataforma documentada (`docs/ARCHITECTURE.md`, D-005 a D-013) y plan por fases en `TASKS.md`.
+* Monorepo con npm workspaces (`apps/admin`, `packages/config|ui|sdk`), Prettier, ESLint compartido, alias `@`.
+* Núcleo `core` en 6 migraciones: tenancy y helpers RLS, módulos/planes/suscripciones, clientes y consentimientos, visitas + estadísticas + estados, auditoría + storage + job nocturno, índices de FKs.
+* 71 tests pgTAP: meta-test de seguridad, aislamiento entre negocios, `record_visit`/`void_visit`, estados del cliente.
+* Seed DEMO (Café Central, Panadería Sur).
+* CI en GitHub Actions: frontend (typecheck, lint, format, build) + base (migraciones + pgTAP en Supabase real).
+* Migraciones y seed aplicados al proyecto Supabase de desarrollo `fidelizacion-saas` (ref `dqpnqcumlyfifewgzyvh`) con el conector de Supabase.
 
 ## Next task
 
-Fase 0: convertir a monorepo (`app/` → `apps/admin/`, `packages/*`), Prettier, aliases; luego `supabase init` y `supabase link`.
-
-Antes: arquitectura de plataforma núcleo + módulos definida en `docs/ARCHITECTURE.md` y `DECISIONS.md` (D-005 a D-013).
+Fase 2: función de onboarding en la base (`core.create_business`), signup/login, negocio activo, shell del panel con manifest de módulos.
 
 ## Current blockers
 
 HUMAN ACTION REQUIRED:
 
-1. Correr `npm install` dentro de `app/` para actualizar `package-lock.json` con `@supabase/supabase-js`.
-2. Instalar Docker Desktop (Supabase local lo necesita).
-3. Autenticarse en Supabase CLI: `npx supabase login` (abre el navegador).
-4. Proyecto Supabase de desarrollo: ya creado. Falta pasar el Project ref al agente y completar `app/.env.local` a partir de `app/.env.example`.
+1. **Exponer el esquema `core`** en Supabase: Project Settings → Data API → Exposed schemas → agregar `core`. Sin esto la app no puede leer las tablas y no se pueden generar los tipos TypeScript.
+2. **`package-lock.json`**: correr `npm install` en la raíz (Codespaces o una compu con Node) y commitearlo. El entorno del agente no tiene acceso a npm.
 
 ## Last test result
 
-No verificado en este cambio: npm no tuvo acceso al registro en el entorno del agente. Verificar con `npm run build` y `npm run lint` en `app/` después de `npm install`.
+* Local (Postgres 16 + pgTAP): 71/71 OK.
+* CI `f4471ae`: Frontend OK, Database OK.
 
 ## Last commit
 
-`docs: define platform architecture (core + modules)`
+Ver `git log`.
 
 ## Important decisions
 
@@ -50,4 +47,5 @@ No verificado en este cambio: npm no tuvo acceso al registro en el entorno del a
 * Plataforma núcleo (`core`) + módulos por esquema; los módulos nunca dependen entre sí.
 * La visita (`core.visits`) es el dato central; identidad del cliente separada del programa de puntos.
 * Monorepo: `apps/admin`, `apps/client`, `packages/*`, `supabase/`.
+* Migraciones del remoto aplicadas con el conector de Supabase: los nombres de archivo usan la misma versión que registra el remoto.
 * El backlog operativo principal se encuentra en `TASKS.md`.

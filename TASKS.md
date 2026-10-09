@@ -44,7 +44,8 @@ Ver secciones 8–13 y 46 para detalle.
 * [x] Tests pgTAP: acceso cross-tenant rechazado en todas las tablas del núcleo
 * [x] Tests pgTAP: `record_visit` (idempotencia, anónimas, permisos) y cálculo de estados
 * [x] Seed DEMO "Café Central" (+ un segundo negocio para probar aislamiento)
-* [ ] Generar tipos TypeScript para todos los esquemas
+* [ ] Generar tipos TypeScript para todos los esquemas (bloqueado: exponer `core` en el remoto)
+* [x] Aplicar migraciones y seed al proyecto Supabase de desarrollo
 * [x] Sumar `supabase test db` al CI
 
 ## Fase 2 — Auth, onboarding y shell del panel
