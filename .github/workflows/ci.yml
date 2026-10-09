@@ -14,8 +14,8 @@ jobs:
     name: Frontend (typecheck, lint, format, build)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version-file: .nvmrc
       # Hasta que exista package-lock.json en la raíz se usa install; después, npm ci.
@@ -29,9 +29,24 @@ jobs:
     name: Database (migrations + pgTAP)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: supabase/setup-cli@v1
         with:
           version: latest
-      - run: supabase db start
-      - run: supabase test db
+      # Los errores se publican como anotaciones para poder leerlos desde la API de checks.
+      - name: Start database (migrations + seed)
+        run: |
+          set -o pipefail
+          supabase db start 2>&1 | tee db-start.txt || {
+            msg="$(grep -iE 'error|failed|psql' db-start.txt | head -30 | sed ':a;N;$!ba;s/\n/%0A/g')"
+            echo "::error title=supabase db start::${msg}"
+            exit 1
+          }
+      - name: Run pgTAP tests
+        run: |
+          set -o pipefail
+          supabase test db 2>&1 | tee test-output.txt || {
+            msg="$(grep -E 'not ok|Failed|ERROR|Looks like|Dubious|psql:|Result|#' test-output.txt | head -60 | sed ':a;N;$!ba;s/\n/%0A/g')"
+            echo "::error title=supabase test db::${msg}"
+            exit 1
+          }
