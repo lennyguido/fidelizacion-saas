@@ -979,29 +979,29 @@ Opciones posibles:
 * [ ] Textos configurables
 * [ ] Recompensas dinámicas
 * [ ] Puntos dinámicos
-* [ ] Favicon dinámico
-* [ ] Metadata dinámica
+* [x] Favicon dinámico
+* [x] Metadata dinámica
 * [x] Title dinámico
-* [ ] Open Graph dinámico
+* [ ] Open Graph dinámico (necesita un servidor que arme el HTML por negocio; hoy los links de la tarjeta son privados y no se indexan)
 * [ ] Test business A
 * [ ] Test business B
 * [ ] Test business C
-* [ ] Confirmar aislamiento
+* [x] Confirmar aislamiento (pgTAP `002-tenant-isolation`)
 
 ---
 
 # 28. SLUGS
 
-* [ ] Crear slug
-* [ ] Validar slug
-* [ ] Crear disponibilidad
-* [ ] Evitar duplicados
-* [ ] Crear route dinámica
-* [ ] Detectar business
-* [ ] Cargar branding
-* [ ] Cargar datos correctos
-* [ ] Manejar negocio inexistente
-* [ ] Manejar slug inválido
+* [x] Crear slug
+* [x] Validar slug
+* [x] Crear disponibilidad
+* [x] Evitar duplicados
+* [x] Crear route dinámica
+* [x] Detectar business
+* [x] Cargar branding
+* [x] Cargar datos correctos
+* [x] Manejar negocio inexistente
+* [x] Manejar slug inválido
 
 ---
 
@@ -1605,14 +1605,14 @@ A nunca ve B
 
 # 56. PWA
 
-* [ ] Crear manifest
+* [x] Crear manifest
 * [ ] Crear app name dinámico
 * [ ] Crear icon dinámico
-* [ ] Crear favicon dinámico
-* [ ] Configurar standalone
-* [ ] Configurar theme color
-* [ ] Configurar display
-* [ ] Configurar service worker si necesario
+* [x] Crear favicon dinámico
+* [x] Configurar standalone
+* [x] Configurar theme color
+* [x] Configurar display
+* [x] Configurar service worker si necesario
 * [ ] Test iPhone
 * [ ] Test Android
 * [ ] Test desktop
@@ -1737,12 +1737,12 @@ CAFÉ CENTRAL
 
 # 63. CI/CD
 
-* [ ] Crear GitHub Actions
-* [ ] Ejecutar install
-* [ ] Ejecutar lint
-* [ ] Ejecutar typecheck
-* [ ] Ejecutar tests
-* [ ] Ejecutar build
+* [x] Crear GitHub Actions
+* [x] Ejecutar install
+* [x] Ejecutar lint
+* [x] Ejecutar typecheck
+* [x] Ejecutar tests
+* [x] Ejecutar build
 * [ ] Bloquear merge si falla
 * [ ] Configurar deploy de preview
 * [ ] Configurar deploy production
@@ -1785,9 +1785,9 @@ PRODUCTION
 
 # 66. DEPLOY
 
-* [ ] Elegir hosting frontend
+* [x] Elegir hosting frontend (Cloudflare Pages, D-025)
 * [ ] Configurar repository
-* [ ] Configurar build
+* [x] Configurar build
 * [ ] Configurar variables
 * [ ] Configurar preview
 * [ ] Configurar production

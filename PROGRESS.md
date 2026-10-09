@@ -4,7 +4,7 @@
 
 ## Current phase
 
-Fases 0–5 construidas (2026-10-09). Fase 4 y 5 integradas en `main` y aplicadas en desarrollo. **Siguiente:** Fase 6 (mensajería real) requiere checkpoint humano (WhatsApp real); mientras tanto, pendientes chicos de las fases 4–5 y Fase 7 (PWA/deploy).
+Fases 0–5 construidas y completas (2026-10-09, incluida la atribución por cupón). Integradas en `main` y aplicadas en desarrollo. **Siguiente:** Fase 6 (mensajería real) requiere checkpoint humano (WhatsApp real); mientras tanto, pendientes chicos de las fases 4–5 y Fase 7 (PWA/deploy).
 
 ## Current task
 
@@ -38,6 +38,7 @@ Proyecto de **desarrollo**: `fidelizacion-saas`, ref `dqpnqcumlyfifewgzyvh` (ún
 | 18 | 20261009191000 | loyalty_hardening | aplicada 2026-10-09 ~19:30 (CI de `main` en verde, no destructiva) |
 | 19 | 20261009191100 | core_campaigns_hardening | aplicada 2026-10-09 ~19:30 (los `drop` solo reemplazan funciones internas y un índice; no borra datos) |
 | 20 | 20261009191200 | core_timezone_check_grant | aplicada 2026-10-09 19:03 (en Supabase figura con versión `20261009220309`) |
+| 21 | 20261009224000 | core_campaign_coupons | aplicada 2026-10-09 ~20:30 (D-026; CI verde, no destructiva: agrega columnas y reemplaza funciones) |
 
 Regla vigente desde 2026-10-09: ninguna migración se aplica sin aprobación explícita del dueño después de revisarla.
 
@@ -70,6 +71,14 @@ Rama `fix/archive-owner-admin-only` (commit `62a7b19`):
 | Punta a punta (Playwright) | CI: `supabase start` + build + `vite preview` + `npx playwright test` (celular y escritorio) | OK: registro → onboarding → panel → login; credenciales incorrectas; mostrador; importación CSV |
 
 Limitación: los tests de punta a punta corren contra un Supabase **local** en CI. El panel todavía **no se probó contra el proyecto de desarrollo remoto**. Eso es lo que falta validar ahora.
+
+## Viernes 9, ~20:30 — cupones de campaña (Fase 5 completa)
+
+* **Cupones (D-026):** cada cliente contactado recibe un código propio de 6 caracteres (`{cupon}` en el mensaje). En el **Mostrador**, "¿Trae un cupón de una campaña?" lo valida, registra la visita con el monto y lo marca usado (una vez, dentro de la ventana). Resultados y lista de destinatarios muestran los cupones. Explicado en `docs/RESULTADOS.md` §7.
+* Los módulos pueden sumar una tarjeta al mostrador (`counterPanel` en el manifest).
+* Tests: `032-campaign-coupons` (17) + unitarios. CI verde. Migración 21 aplicada en desarrollo.
+* Tarjeta del cliente: el logo del negocio aparece como ícono de la pestaña.
+* Rama del mentor `feat/proteger-duenos` actualizada con `main` (sin aplicar nada).
 
 ## Viernes 9, ~19:30 — CI en verde y migraciones 18–20 aplicadas
 
@@ -117,7 +126,7 @@ Rama `chore/calidad-pre-piloto` (llevada a `main` con CI en verde; no toca la ba
 * **Ficha del cliente:** "Mensajes por WhatsApp" para anotar si acepta o no (consentimiento, Ley 25.326).
 * **Recuperación:** listas de en riesgo e inactivos ordenadas por lo que gastaron; campañas con vista previa en vivo, grupo de control al azar, mensaje personalizado, envío por `wa.me` y resultados (volvieron, gastaron, incremental vs. control).
 * Tests: `030-campaigns` (21) + unitarios + e2e. CI verde.
-* Pendiente de Fase 5: atribución por cupón.
+* Atribución por cupón: hecha el 9 a la noche (D-026).
 
 ## Viernes 9, 15:40 — Fase 4 (Fidelización) terminada
 
