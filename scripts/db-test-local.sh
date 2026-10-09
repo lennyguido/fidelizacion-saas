@@ -13,7 +13,7 @@ PSQL=(psql -X -q -v ON_ERROR_STOP=1 -d "$DB")
 dropdb --if-exists "$DB"
 createdb "$DB"
 
-"${PSQL[@]}" -f "$ROOT/supabase/tests/local/supabase_shim.sql"
+"${PSQL[@]}" -f "$ROOT/scripts/supabase_shim.sql"
 "${PSQL[@]}" -c 'create extension if not exists pgtap with schema extensions;'
 
 for f in "$ROOT"/supabase/migrations/*.sql; do
