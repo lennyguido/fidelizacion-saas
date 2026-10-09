@@ -19,7 +19,7 @@
 | 3 | Nueva recompensa "Café gratis", 5 puntos → Agregar | Aparece en la lista |
 | 4 | Abrí un cliente → tarjeta **Puntos** → "Sumar al programa" | Muestra 0 puntos |
 | 5 | En su ficha: "+ Registrar visita" | Pasa a 1 punto |
-| 6 | En el **Mostrador**, buscalo, monto 3.500 → +1 (esperá 1 minuto desde la visita anterior) | Suma 1 + 3 = 4 → total 5 |
+| 6 | En el **Mostrador**, buscalo, monto 3.500 → +1 (esperá 2 minutos desde la visita anterior: es la protección contra doble carga) | Suma 1 + 3 = 4 → total 5 |
 | 7 | En su ficha: "Canjear" en Café gratis | "Canje confirmado. Código: XXXXXX" y vuelve a 0 |
 | 8 | "Cancelar canje" con un motivo | Vuelven los 5 puntos |
 | 9 | "Ajustar puntos a mano": +10, motivo "Regalo" | 15 puntos y aparece en Movimientos |
