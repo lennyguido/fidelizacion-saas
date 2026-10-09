@@ -1,10 +1,10 @@
 # Progreso del proyecto
 
-> Estado verificado el 2026-10-09 ~08:30 (hora Argentina).
+> Estado verificado el 2026-10-09 ~16:30 (hora Argentina).
 
 ## Current phase
 
-Fase 3 — Clientes y registro de visitas: construida. **No se avanza a la Fase 4** hasta dejar el entorno de desarrollo funcionando y validar el mostrador con datos de prueba.
+Fase 3 validada en desarrollo por el dueño (2026-10-09). **Fase 4 (Fidelización) en curso** en `feat/loyalty-db`, en paralelo con el piloto (D-017).
 
 ## Current task
 
@@ -32,6 +32,7 @@ Proyecto de **desarrollo**: `fidelizacion-saas`, ref `dqpnqcumlyfifewgzyvh` (ún
 | 12 | 20261009130100 | core_customer_anonymize | **pendiente de revisión — NO aplicada** |
 | 13 | 20261009130200 | core_housekeeping | **pendiente de revisión — NO aplicada** |
 | 14 | 20261009130300 | core_team_owner_protection | **pendiente de revisión — NO aplicada** (rama `feat/proteger-duenos`) |
+| 15 | 20261009150000 | loyalty_core | **pendiente de revisión — NO aplicada** (rama `feat/loyalty-db`) |
 
 Regla vigente desde 2026-10-09: ninguna migración se aplica sin aprobación explícita del dueño después de revisarla.
 
@@ -88,6 +89,19 @@ Rama `chore/calidad-pre-piloto` (llevada a `main` con CI en verde; no toca la ba
 * **Revisión de seguridad independiente** de `feat/equipo-y-privacidad`: sin fugas entre negocios; 5 problemas corregidos en `10f360a` (detalle en `docs/REVISION-PENDIENTE.md`). Tests de base locales: **154/154 OK** (11 archivos).
 * **Alertas de Supabase** del proyecto de desarrollo leídas (solo lectura). Una función agregada por Supabase (`public.rls_auto_enable`) queda abierta: quitarle el permiso **necesita aprobación**.
 * `SECURITY.md`, `CONTRIBUTING.md`, `CHANGELOG.md` y `docs/APLICAR-MIGRACIONES.md` (paso a paso para cuando se aprueben).
+
+## Viernes 9, 16 h — Fase 4 (Fidelización) empezada
+
+El dueño validó el panel contra desarrollo (registro, login, negocio, clientes, visitas, archivado, reactivación: "anda todo") y pidió avanzar. Fase 4 en paralelo con el piloto (D-017).
+
+Rama **`feat/loyalty-db`** (CI verde; nada aplicado en Supabase):
+
+* Migración **15** `20261009150000_loyalty_core`: esquema `loyalty` con programa, socios, libro de puntos (solo se agrega), recompensas y canjes. Los puntos se acreditan y revierten solos con cada visita (D-018).
+* Panel: página **Fidelización** (regla del programa y recompensas) y tarjeta **Puntos** en la ficha del cliente (sumarse, saldo, canjear, movimientos, cancelar canje, ajuste manual).
+* Tests: `020-loyalty-points` (25), `021-loyalty-redemptions` (22), unitarios de `loyalty.ts`, e2e `loyalty.spec.ts`.
+* Falta de la Fase 4: QR personal y app del cliente (`apps/client`).
+
+Para usarlo en desarrollo hace falta (con aprobación): aplicar la migración 15 y agregar `loyalty` en **Data API → Exposed schemas**.
 
 ## Viernes 9, 15 h — plan del mentor en 6 pasos
 
