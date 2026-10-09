@@ -64,10 +64,13 @@ Ver secciones 3, 14, 16, 17.
 
 Ver secciones 18–20.
 
-* [ ] CRUD de clientes (incluye clientes sin teléfono / sin app)
-* [ ] Pantalla de mostrador: buscar cliente o "+1 visita anónima", monto opcional, < 5 segundos
+* [x] CRUD de clientes (incluye clientes sin teléfono / sin app)
+* [x] Pantalla de mostrador: buscar cliente o "+1 visita anónima", monto opcional, < 5 segundos
 * [ ] Importación CSV
-* [ ] Ficha del cliente con estadísticas y estado
+* [x] Ficha del cliente con estadísticas y estado
+* [x] Búsqueda de clientes en la base (`core.search_customers`) + tests
+* [x] Test E2E del mostrador
+* [ ] Aplicar migración `core_customer_search` al proyecto de desarrollo (pendiente de OK humano)
 * [ ] **CHECKPOINT DE PRODUCTO:** probar con un negocio real que el personal registre visitas durante 2 semanas. Si no lo hace, rediseñar la carga antes de seguir.
 
 ## Fase 4 — Módulo Fidelización (`loyalty`)

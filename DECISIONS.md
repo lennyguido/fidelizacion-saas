@@ -62,3 +62,15 @@ React Router, TanStack Query, zod, react-hook-form, Vitest + Testing Library, Pl
 ## D-013 — Suscripciones modeladas desde el inicio, cobro después (2026-10-08, vigente)
 
 `core.modules`, `core.plans`, `core.subscriptions` y `core.business_modules` existen desde el núcleo y controlan acceso (RLS + menú). La integración con un proveedor de pagos se implementa cuando haya demanda real.
+
+## D-014 — Teléfonos en E.164 con normalización argentina en el SDK (2026-10-09, vigente)
+
+La base guarda teléfonos solo en E.164 (`+5491122334455`). El SDK (`normalizePhone`) convierte lo que se escribe en el mostrador ("11 2233-4455", "011 15 …") asumiendo números celulares argentinos (con el 9), que son los que sirven para WhatsApp. Números de otros países se cargan con `+` y código de país.
+
+## D-015 — Tres niveles de tests (2026-10-09, vigente)
+
+* pgTAP (`supabase/tests/database`): seguridad, aislamiento y reglas de negocio en la base.
+* Vitest (`*.test.ts`): lógica pura del frontend/SDK (formatos, validaciones).
+* Playwright (`e2e/`): recorridos completos contra Supabase local en CI, en celular y escritorio.
+
+Todo corre en GitHub Actions en cada push. Ningún cambio se lleva a `main` con el CI en rojo.
