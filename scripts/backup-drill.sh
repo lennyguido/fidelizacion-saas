@@ -46,8 +46,9 @@ mv "$OUT/migrations" supabase/migrations
 mv "$OUT/seed.sql" supabase/seed.sql
 
 echo "== Restauración (docs/RESTAURAR.md)"
+# roles.sql no se restaura: el proyecto no crea roles propios y el nuevo ya trae
+# los de Supabase (intentar cambiarlos da "permission denied").
 psql "$DB_URL" -v ON_ERROR_STOP=1 --single-transaction \
-  -f "$OUT/roles.sql" \
   -f "$OUT/schema.sql" \
   -c 'set session_replication_role = replica' \
   -f "$OUT/data.sql"

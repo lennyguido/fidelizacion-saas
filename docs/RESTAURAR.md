@@ -21,7 +21,6 @@ verde, el procedimiento funciona.
 
    ```bash
    psql "PEGAR-ACÁ-LA-DIRECCIÓN" --single-transaction \
-     -f roles.sql \
      -f schema.sql \
      -c 'set session_replication_role = replica' \
      -f data.sql
@@ -30,6 +29,8 @@ verde, el procedimiento funciona.
    `--single-transaction` hace que, si algo falla, no quede nada a medias.
    `session_replication_role = replica` evita que los triggers (por ejemplo, los que
    suman puntos) vuelvan a correr mientras se cargan los datos.
+   `roles.sql` no se usa: este proyecto no crea roles propios y el proyecto nuevo ya
+   trae los de Supabase. Se guarda igual por si algún día se agregan.
 
 4. **Revisar** que estén los datos: en el SQL Editor del proyecto nuevo,
 
