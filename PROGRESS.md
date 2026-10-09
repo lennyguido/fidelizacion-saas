@@ -2,38 +2,51 @@
 
 ## Current phase
 
-Fase 1 — Núcleo de base de datos: **terminada** (falta generar tipos, ver bloqueos). Siguiente: Fase 2.
+Fase 3 — Clientes y registro de visitas: **construida**. Falta el **checkpoint de producto** (probar con un negocio real) antes de la Fase 4.
 
 ## Current task
 
-Fase 2 — Auth, onboarding y shell del panel.
+Aplicar al proyecto Supabase de desarrollo las migraciones nuevas y probar el panel con datos reales de prueba.
 
 ## Last completed task
 
-Fase 0 y Fase 1:
+Noche del 8 al 9 de octubre (sin intervención humana):
 
-* Monorepo con npm workspaces (`apps/admin`, `packages/config|ui|sdk`), Prettier, ESLint compartido, alias `@`.
-* Núcleo `core` en 6 migraciones: tenancy y helpers RLS, módulos/planes/suscripciones, clientes y consentimientos, visitas + estadísticas + estados, auditoría + storage + job nocturno, índices de FKs.
-* 71 tests pgTAP: meta-test de seguridad, aislamiento entre negocios, `record_visit`/`void_visit`, estados del cliente.
-* Seed DEMO (Café Central, Panadería Sur).
-* CI en GitHub Actions: frontend (typecheck, lint, format, build) + base (migraciones + pgTAP en Supabase real).
-* Migraciones y seed aplicados al proyecto Supabase de desarrollo `fidelizacion-saas` (ref `dqpnqcumlyfifewgzyvh`) con el conector de Supabase.
+* **Fase 2:** onboarding en la base (`core.create_business`, `core.is_slug_available`), login/registro/recuperar contraseña, negocio activo (`/b/:slug`), menú armado con los manifests de módulos, componentes en `packages/ui`, acceso a datos en `packages/sdk`.
+* **Fase 3:** búsqueda de clientes (`core.search_customers`), mostrador (+1 visita con monto opcional, alta rápida, visita anónima, aviso de doble carga), listado con filtros por estado, ficha con estadísticas, edición, archivo e historial con anulación, importación CSV (`core.import_customers`).
+* **Calidad:** 122 tests de base (pgTAP), tests unitarios (Vitest) de teléfonos/montos/CSV, tests de punta a punta (Playwright) en celular y escritorio contra Supabase local: registro → onboarding → panel → login, mostrador, importación.
 
 ## Next task
 
-Fase 2: función de onboarding en la base (`core.create_business`), signup/login, negocio activo, shell del panel con manifest de módulos.
+1. (Humano) Pasos de "Current blockers".
+2. Aplicar las 3 migraciones pendientes al proyecto de desarrollo y renombrar los archivos con la versión que registre el remoto.
+3. Checkpoint de producto (TASKS.md Fase 3): probar el mostrador con un negocio real.
+4. Fase 4 — módulo Fidelización.
 
 ## Current blockers
 
 HUMAN ACTION REQUIRED:
 
-1. **Exponer el esquema `core`** en Supabase: Project Settings → Data API → Exposed schemas → agregar `core`. Sin esto la app no puede leer las tablas y no se pueden generar los tipos TypeScript.
-2. **`package-lock.json`**: correr `npm install` en la raíz (Codespaces o una compu con Node) y commitearlo. El entorno del agente no tiene acceso a npm.
+1. **Exponer el esquema `core`**: Supabase → Project Settings → Data API → Exposed schemas → agregar `core`. Sin esto el panel no puede leer datos.
+2. **URLs de Auth**: Supabase → Authentication → URL Configuration → agregar `http://localhost:5173/**` en Redirect URLs (para los links de confirmación y de recuperar contraseña mientras se desarrolla).
+3. **OK para aplicar migraciones** al proyecto de desarrollo: `core_onboarding`, `core_customer_search`, `core_customer_import`.
+4. **`package-lock.json`**: `npm install` en la raíz (Codespaces o una compu con Node) y commitearlo.
+5. **Probar el panel**: copiar `apps/admin/.env.example` a `apps/admin/.env.local` con la URL y la publishable key del proyecto, y `npm run dev`.
+
+## Pending migrations (dev project)
+
+| Archivo local | Estado en `dqpnqcumlyfifewgzyvh` |
+|---|---|
+| `20261009030000_core_onboarding.sql` | pendiente |
+| `20261009040000_core_customer_search.sql` | pendiente |
+| `20261009050000_core_customer_import.sql` | pendiente |
+
+Al aplicarlas con el conector, renombrar cada archivo con la versión que devuelve `list_migrations`.
 
 ## Last test result
 
-* Local (Postgres 16 + pgTAP): 71/71 OK.
-* CI `f4471ae`: Frontend OK, Database OK.
+* Local (Postgres 16 + pgTAP): 122/122 OK.
+* CI en `main`: Frontend OK · Database OK · End-to-end OK.
 
 ## Last commit
 
@@ -41,11 +54,9 @@ Ver `git log`.
 
 ## Important decisions
 
-* Stack inicial: React + TypeScript + Vite + Tailwind.
-* Backend: Supabase + PostgreSQL.
-* Arquitectura: multi-tenant (`business_id` + RLS).
-* Plataforma núcleo (`core`) + módulos por esquema; los módulos nunca dependen entre sí.
-* La visita (`core.visits`) es el dato central; identidad del cliente separada del programa de puntos.
-* Monorepo: `apps/admin`, `apps/client`, `packages/*`, `supabase/`.
-* Migraciones del remoto aplicadas con el conector de Supabase: los nombres de archivo usan la misma versión que registra el remoto.
-* El backlog operativo principal se encuentra en `TASKS.md`.
+* Plataforma núcleo (`core`) + módulos por esquema; los módulos nunca dependen entre sí (D-005).
+* La visita (`core.visits`) es el dato central; identidad del cliente separada del programa de puntos (D-006, D-007).
+* Lógica crítica en Postgres; el frontend no calcula nada que importe (D-008).
+* Teléfonos en E.164 con normalización argentina en el SDK (D-014).
+* Tres niveles de tests en CI; nada llega a `main` en rojo (D-015).
+* Pendiente de decidir: los empleados (`staff`) hoy pueden editar y archivar clientes por RLS (la UI oculta "Archivar"). Evaluar si archivar debe ser solo de owner/admin.

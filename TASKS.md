@@ -66,7 +66,8 @@ Ver secciones 18–20.
 
 * [x] CRUD de clientes (incluye clientes sin teléfono / sin app)
 * [x] Pantalla de mostrador: buscar cliente o "+1 visita anónima", monto opcional, < 5 segundos
-* [ ] Importación CSV
+* [x] Importación CSV (plantilla, mapeo de columnas, vista previa, lotes, reporte de errores)
+* [ ] Aplicar migración `core_customer_import` al proyecto de desarrollo (pendiente de OK humano)
 * [x] Ficha del cliente con estadísticas y estado
 * [x] Búsqueda de clientes en la base (`core.search_customers`) + tests
 * [x] Test E2E del mostrador
