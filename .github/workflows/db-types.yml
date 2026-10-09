@@ -21,7 +21,7 @@ jobs:
         with:
           version: latest
       - run: supabase db start
-      - run: supabase gen types typescript --local --schema core > packages/sdk/src/database.types.ts
+      - run: supabase gen types typescript --local --schema core,loyalty > packages/sdk/src/database.types.ts
       - name: Commit if changed
         run: |
           if git diff --quiet -- packages/sdk/src/database.types.ts; then

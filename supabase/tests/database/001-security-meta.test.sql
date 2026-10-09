@@ -91,7 +91,12 @@ select set_eq(
        ('core.create_business(text,text,text)'),
        ('core.search_customers(uuid,text,text,integer,integer)'),
        ('core.import_customers(uuid,jsonb)'),
-       ('core.set_customer_status(uuid,text)') $$,
+       ('core.set_customer_status(uuid,text)'),
+       ('loyalty.enroll_customer(uuid)'),
+       ('loyalty.leave_program(uuid)'),
+       ('loyalty.redeem_reward(uuid,uuid,uuid)'),
+       ('loyalty.cancel_redemption(uuid,text)'),
+       ('loyalty.adjust_points(uuid,bigint,text)') $$,
   'authenticated can execute only the intended functions'
 );
 

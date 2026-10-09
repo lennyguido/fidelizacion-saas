@@ -79,6 +79,17 @@ Todo corre en GitHub Actions en cada push. Ningún cambio se lleva a `main` con 
 
 `packages/sdk/src/database.types.ts` lo genera el workflow `DB types` (`supabase gen types --local --schema core`) cada vez que cambian las migraciones, y lo commitea solo. El SDK usa esos tipos (`Tables<'...'>`, `FunctionReturns<'...'>`) en lugar de interfaces escritas a mano. No se edita a mano. Ojo: los commits del bot no disparan el CI (regla de GitHub); después de que el bot actualiza los tipos, hacer un push más para que corran las pruebas.
 
+## D-017 — Fase 4 en paralelo con el piloto (2026-10-09, vigente)
+
+El dueño validó en el proyecto de desarrollo registro, login, negocio, clientes, visitas, archivado y reactivación, y decidió empezar la Fase 4 mientras corre el piloto de 2 semanas (checkpoint de producto de la Fase 3). Si el piloto muestra que el personal no registra visitas, se rediseña la carga antes de lanzar puntos a clientes reales.
+
+## D-018 — Cómo funciona el módulo de puntos (2026-10-09, vigente)
+
+* **Reacciona a eventos del núcleo** con un trigger propio sobre `core.events` (`visit.recorded`, `visit.voided`, `customer.anonymized`). El núcleo no sabe que `loyalty` existe; la acreditación es inmediata (en la misma transacción que la visita). El trigger nunca lanza errores: si falla, la visita se registra igual y queda un warning en el log.
+* **Fórmula:** `puntos = puntos_por_visita + floor(monto / paso) × puntos_por_paso` si el monto llega al mínimo. Siempre redondeo hacia abajo, tope de 100.000 por visita. "Sellos" es la misma mecánica mostrada como tarjeta.
+* **Libro de puntos append-only** (`loyalty.ledger`); el saldo en `loyalty.members` se actualiza en la misma transacción y siempre es igual a la suma del libro. Una visita o un canje no se acreditan ni revierten dos veces (índices únicos).
+* **Sin puntos:** visitas importadas (historial), socios que se fueron, módulo apagado, clientes no socios. Sumarse al programa es opcional (D-007).
+* **Canje en el mostrador:** se confirma en el momento, descuenta los puntos y genera un código de 6 caracteres como comprobante. Un `request_id` evita el doble toque. Cancelar (con motivo, solo dueño/admin) devuelve los puntos. El canje iniciado por el cliente desde su app (código con vencimiento) llega con `apps/client`.
 ## D-019 — Migraciones en desarrollo sin pedir permiso cada vez (2026-10-09, vigente)
 
 El dueño pidió no tener que aprobar cada migración. En el proyecto de **desarrollo** (`dqpnqcumlyfifewgzyvh`) se aplican las migraciones no destructivas con CI en verde, registrándolas en `PROGRESS.md`. Siguen necesitando aprobación: producción, migraciones destructivas, borrar datos y lo que el mentor haya pedido revisar (migraciones 11–14 de equipo y dueños). Cada migración aplicada se integra a `main` en el mismo momento (rama con merge `--no-ff`, reversible).
