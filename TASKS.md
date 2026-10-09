@@ -58,7 +58,7 @@ Ver secciones 3, 14, 16, 17.
 * [x] "Negocio activo" en el frontend
 * [x] Sistema de `manifest` de módulos: el menú muestra solo los módulos habilitados
 * [x] Test E2E (Playwright) del recorrido registro → onboarding → panel → login, en CI
-* [ ] Aplicar migración `core_onboarding` al proyecto de desarrollo (pendiente de OK humano)
+* [x] Aplicar migración `core_onboarding` al proyecto de desarrollo
 
 ## Fase 3 — Clientes y registro de visitas en mostrador
 
@@ -67,11 +67,11 @@ Ver secciones 18–20.
 * [x] CRUD de clientes (incluye clientes sin teléfono / sin app)
 * [x] Pantalla de mostrador: buscar cliente o "+1 visita anónima", monto opcional, < 5 segundos
 * [x] Importación CSV (plantilla, mapeo de columnas, vista previa, lotes, reporte de errores)
-* [ ] Aplicar migración `core_customer_import` al proyecto de desarrollo (pendiente de OK humano)
+* [x] Aplicar migración `core_customer_import` al proyecto de desarrollo
 * [x] Ficha del cliente con estadísticas y estado
 * [x] Búsqueda de clientes en la base (`core.search_customers`) + tests
 * [x] Test E2E del mostrador
-* [ ] Aplicar migración `core_customer_search` al proyecto de desarrollo (pendiente de OK humano)
+* [x] Aplicar migración `core_customer_search` al proyecto de desarrollo
 * [ ] **CHECKPOINT DE PRODUCTO:** probar con un negocio real que el personal registre visitas durante 2 semanas. Si no lo hace, rediseñar la carga antes de seguir.
 
 ## Fase 4 — Módulo Fidelización (`loyalty`)

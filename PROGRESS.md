@@ -19,7 +19,6 @@ Noche del 8 al 9 de octubre (sin intervención humana):
 ## Next task
 
 1. (Humano) Pasos de "Current blockers".
-2. Aplicar las 3 migraciones pendientes al proyecto de desarrollo y renombrar los archivos con la versión que registre el remoto.
 3. Checkpoint de producto (TASKS.md Fase 3): probar el mostrador con un negocio real.
 4. Fase 4 — módulo Fidelización.
 
@@ -29,19 +28,12 @@ HUMAN ACTION REQUIRED:
 
 1. **Exponer el esquema `core`**: Supabase → Project Settings → Data API → Exposed schemas → agregar `core`. Sin esto el panel no puede leer datos.
 2. **URLs de Auth**: Supabase → Authentication → URL Configuration → agregar `http://localhost:5173/**` en Redirect URLs (para los links de confirmación y de recuperar contraseña mientras se desarrolla).
-3. **OK para aplicar migraciones** al proyecto de desarrollo: `core_onboarding`, `core_customer_search`, `core_customer_import`.
 4. **`package-lock.json`**: `npm install` en la raíz (Codespaces o una compu con Node) y commitearlo.
 5. **Probar el panel**: copiar `apps/admin/.env.example` a `apps/admin/.env.local` con la URL y la publishable key del proyecto, y `npm run dev`.
 
 ## Pending migrations (dev project)
 
-| Archivo local | Estado en `dqpnqcumlyfifewgzyvh` |
-|---|---|
-| `20261009030000_core_onboarding.sql` | pendiente |
-| `20261009040000_core_customer_search.sql` | pendiente |
-| `20261009050000_core_customer_import.sql` | pendiente |
-
-Al aplicarlas con el conector, renombrar cada archivo con la versión que devuelve `list_migrations`.
+Ninguna: las 9 migraciones están aplicadas en `dqpnqcumlyfifewgzyvh` (2026-10-09).
 
 ## Last test result
 
