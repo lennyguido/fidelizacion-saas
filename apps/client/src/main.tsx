@@ -2,12 +2,15 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { initSupabase, readPublicEnv } from '@plataforma/sdk'
-import { ErrorBoundary } from '@plataforma/ui'
+import { ErrorBoundary, registerServiceWorker } from '@plataforma/ui'
 import { App } from '@/App'
 import '@/index.css'
 
 const rootElement = document.getElementById('root')
 if (!rootElement) throw new Error('No se encontró el elemento #root')
+
+// Solo en producción (npm run build): en desarrollo no hay service worker.
+if (import.meta.env.PROD) registerServiceWorker()
 
 let configError: string | null = null
 try {

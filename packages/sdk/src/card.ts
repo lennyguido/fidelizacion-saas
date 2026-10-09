@@ -23,6 +23,8 @@ export interface Card {
     slug: string
     currency: string
     primaryColor: string | null
+    /** Ruta del logo en el bucket público; armar el link con businesses.logoUrl(). */
+    logoPath: string | null
   }
   firstName: string
   memberCode: string
@@ -34,7 +36,13 @@ export interface Card {
 }
 
 interface RawCard {
-  business: { name: string; slug: string; currency: string; primaryColor: string | null }
+  business: {
+    name: string
+    slug: string
+    currency: string
+    primaryColor: string | null
+    logoPath?: string | null
+  }
   firstName: string
   memberCode: string
   pointsBalance: number
@@ -68,7 +76,7 @@ export async function getCard(token: string): Promise<Card | null> {
   if (!data) return null
   const raw = data as unknown as RawCard
   return {
-    business: raw.business,
+    business: { ...raw.business, logoPath: raw.business.logoPath ?? null },
     firstName: raw.firstName,
     memberCode: raw.memberCode,
     pointsBalance: Number(raw.pointsBalance),

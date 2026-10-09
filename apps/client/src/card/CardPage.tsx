@@ -1,10 +1,20 @@
 import { useQuery } from '@tanstack/react-query'
-import { card as cardApi, errorMessage, formatMoney, loyalty, type Card } from '@plataforma/sdk'
+import {
+  businesses,
+  card as cardApi,
+  errorMessage,
+  formatMoney,
+  isValidHexColor,
+  loyalty,
+  textColorOn,
+  type Card,
+} from '@plataforma/sdk'
 import { Spinner } from '@plataforma/ui'
 import { MemberQr } from './MemberQr'
 import { Movements } from './Movements'
 import { NoCard } from './NoCard'
 import { Rewards } from './Rewards'
+import { useDocumentBranding } from './useDocumentBranding'
 
 export function CardPage({ token, onForget }: { token: string; onForget: () => void }) {
   const query = useQuery({
@@ -30,14 +40,31 @@ export function CardPage({ token, onForget }: { token: string; onForget: () => v
 }
 
 function CardView({ card, onForget }: { card: Card; onForget: () => void }) {
-  const brand = card.business.primaryColor ?? '#0f172a'
+  const color = card.business.primaryColor
+  const brand = color && isValidHexColor(color) ? color : '#0f172a'
+  const logo = businesses.logoUrl(card.business.logoPath)
+  useDocumentBranding(card.business.name, brand)
   const unit = card.program?.kind === 'stamps' ? 'sellos' : 'puntos'
   const money = (minor: number) => formatMoney(minor, card.business.currency)
 
   return (
     <main className="mx-auto flex min-h-dvh max-w-md flex-col gap-4 p-4 pb-10">
-      <header className="rounded-2xl p-5 text-white shadow" style={{ backgroundColor: brand }}>
-        <p className="text-sm opacity-80">{card.business.name}</p>
+      <header
+        className="rounded-2xl p-5 shadow"
+        style={{ backgroundColor: brand, color: textColorOn(brand) }}
+      >
+        <div className="mb-2 flex items-center gap-3">
+          {logo && (
+            <img
+              src={logo}
+              alt={`Logo de ${card.business.name}`}
+              className="h-10 w-10 rounded-lg bg-white object-contain p-0.5"
+            />
+          )}
+          <p className="text-sm opacity-80" data-testid="card-business">
+            {card.business.name}
+          </p>
+        </div>
         <h1 className="text-xl font-semibold">Hola, {card.firstName}</h1>
         <p className="mt-4">
           <span className="text-5xl font-bold" data-testid="card-balance">
@@ -56,7 +83,7 @@ function CardView({ card, onForget }: { card: Card; onForget: () => void }) {
         <MemberQr code={card.memberCode} />
       </section>
 
-      <Rewards card={card} unit={unit} />
+      <Rewards card={card} unit={unit} brand={brand} />
       <Movements movements={card.movements} />
 
       <button

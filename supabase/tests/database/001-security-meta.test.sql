@@ -87,6 +87,7 @@ select set_eq(
        ('core.has_role(uuid,text[])'),
        ('core.has_module(uuid,text)'),
        ('core.is_platform_admin()'),
+       ('core.is_valid_timezone(text)'),
        ('core.record_visit(uuid,uuid,uuid,bigint,timestamp with time zone,text,text,text)'),
        ('core.void_visit(uuid,text)'),
        ('core.is_slug_available(text)'),
