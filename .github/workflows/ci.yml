@@ -50,3 +50,32 @@ jobs:
             echo "::error title=supabase test db::${msg}"
             exit 1
           }
+
+  e2e:
+    name: End-to-end (Supabase local + panel)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - run: scripts/ci-run.sh install bash -c 'if [ -f package-lock.json ]; then npm ci; else npm install; fi'
+      - run: scripts/ci-run.sh "supabase start" supabase start -x studio,imgproxy,vector,logflare,supavisor,edge-runtime
+      - name: Configure panel env from local Supabase
+        run: |
+          supabase status -o env > supabase.env
+          set -a; . ./supabase.env; set +a
+          {
+            echo "VITE_SUPABASE_URL=${API_URL}"
+            echo "VITE_SUPABASE_PUBLISHABLE_KEY=${PUBLISHABLE_KEY:-$ANON_KEY}"
+          } > apps/admin/.env.local
+      - run: scripts/ci-run.sh "build admin" npm run build -w @plataforma/admin
+      - run: npx playwright install --with-deps chromium
+      - name: Serve panel
+        run: |
+          npm run preview -w @plataforma/admin -- --port 4173 --strictPort > preview.log 2>&1 &
+          npx --yes wait-on http://localhost:4173 --timeout 60000
+      - run: scripts/ci-run.sh e2e npx playwright test
