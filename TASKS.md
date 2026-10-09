@@ -93,7 +93,7 @@ Ver secciones 30–38.
 * [x] Listas de clientes en riesgo / inactivos con valor histórico
 * [x] Segmentos (filtros fijos validados), campañas, destinatarios con grupo de control
 * [x] Envío MVP sin API de WhatsApp: el dueño envía desde su WhatsApp con links `wa.me` armados por el sistema (sin costo ni aprobación de Meta); solo a clientes con consentimiento
-* [~] Atribución por ventana y "dinero recuperado" (total + incremental). Pendiente: atribución por cupón
+* [x] Atribución por ventana, por cupón (D-026) y "dinero recuperado" (total + incremental)
 * [x] Tests de atribución y de las fórmulas (`030-campaigns`)
 
 ## Fase 6 — Mensajería real
@@ -1212,7 +1212,7 @@ CANCELLED
 * [ ] Diseñar attribution model
 * [ ] Crear campaign attribution
 * [ ] Relacionar compra con campaña
-* [ ] Crear código/coupon attribution cuando convenga
+* [x] Crear código/coupon attribution cuando convenga (D-026)
 * [ ] Evitar atribuciones falsas
 * [ ] Mostrar ventas atribuidas
 * [ ] Mostrar recuperados

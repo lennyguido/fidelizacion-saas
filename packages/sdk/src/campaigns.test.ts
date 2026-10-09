@@ -1,16 +1,28 @@
 import { describe, expect, it } from 'vitest'
-import { renderPreview } from './campaigns.ts'
+import { looksLikeCouponCode, renderPreview } from './campaigns.ts'
 import { percentChange } from './dashboard.ts'
 
 describe('renderPreview', () => {
   it('replaces every placeholder', () => {
     expect(
-      renderPreview('Hola {nombre}, en {negocio}: {beneficio}. ¡Chau {nombre}!', {
+      renderPreview('Hola {nombre}, en {negocio}: {beneficio} con {cupon}. ¡Chau {nombre}!', {
         nombre: 'Ana',
         negocio: 'Café',
         beneficio: '2x1',
+        cupon: 'K7P2QX',
       }),
-    ).toBe('Hola Ana, en Café: 2x1. ¡Chau Ana!')
+    ).toBe('Hola Ana, en Café: 2x1 con K7P2QX. ¡Chau Ana!')
+  })
+})
+
+describe('looksLikeCouponCode', () => {
+  it('accepts 6 characters ignoring case, spaces and dashes', () => {
+    expect(looksLikeCouponCode('K7P2QX')).toBe(true)
+    expect(looksLikeCouponCode('k7p-2qx')).toBe(true)
+  })
+  it('rejects member codes and ambiguous characters', () => {
+    expect(looksLikeCouponCode('ABCDEFGH')).toBe(false)
+    expect(looksLikeCouponCode('K7P2Q0')).toBe(false)
   })
 })
 

@@ -18,6 +18,11 @@ export type AppErrorCode =
   | 'campaign_not_draft'
   | 'control_group'
   | 'consent_revoked'
+  | 'coupon_not_found'
+  | 'coupon_already_used'
+  | 'coupon_expired'
+  | 'coupon_visit_mismatch'
+  | 'customer_inactive'
   | 'auth_invalid_credentials'
   | 'auth_email_not_confirmed'
   | 'auth_user_exists'
@@ -54,6 +59,11 @@ const DOMAIN_CODES = [
   'campaign_not_draft',
   'control_group',
   'consent_revoked',
+  'coupon_not_found',
+  'coupon_already_used',
+  'coupon_expired',
+  'coupon_visit_mismatch',
+  'customer_inactive',
   'insufficient_points',
   'reward_unavailable',
   'member_inactive',
@@ -139,6 +149,11 @@ export function errorMessage(error: unknown): string {
     control_group: 'Este cliente es del grupo de control: no hay que escribirle.',
     consent_revoked:
       'Este cliente ya no quiere recibir mensajes (o fue archivado): no hay que escribirle.',
+    coupon_not_found: 'No existe ese cupón. Revisá las letras.',
+    coupon_already_used: 'Este cupón ya se usó.',
+    coupon_expired: 'Este cupón está vencido.',
+    coupon_visit_mismatch: 'El cupón es de otro cliente.',
+    customer_inactive: 'Este cliente está archivado.',
     auth_invalid_credentials: 'Email o contraseña incorrectos.',
     auth_email_not_confirmed: 'Confirmá tu email antes de ingresar. Revisá tu casilla.',
     auth_user_exists: 'Ya existe una cuenta con ese email. Probá ingresar.',

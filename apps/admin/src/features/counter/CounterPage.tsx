@@ -11,6 +11,7 @@ import {
   type CustomerListItem,
 } from '@plataforma/sdk'
 import { Alert, Button, Card, Spinner, TextField, useToast } from '@plataforma/ui'
+import { CounterModulePanels } from '../../modules/CounterModulePanels'
 import { useCustomerCodeMatch } from '../../modules/useCustomerCodeMatch'
 import { useActiveBusiness } from '../business/ActiveBusinessContext'
 import { QrScanner } from './QrScanner'
@@ -137,6 +138,15 @@ export function CounterPage() {
           onCreate={() => setCreating(true)}
         />
       )}
+
+      <CounterModulePanels
+        amountMinor={amountMinor}
+        amountInvalid={amountInvalid}
+        onVisitRecorded={() => {
+          reset()
+          void invalidate()
+        }}
+      />
 
       <Button
         variant="secondary"

@@ -75,6 +75,12 @@ function RecipientRow({ recipient }: { recipient: CampaignRecipient }) {
           {recipient.blockedReason ? '' : formatPhone(recipient.phone)}
           {recipient.contactedAt ? ' · mensaje enviado' : ''}
         </p>
+        {recipient.couponCode && (
+          <p className="text-xs text-slate-500">
+            Cupón {recipient.couponCode}
+            {recipient.couponRedeemedAt ? ' · usado' : ''}
+          </p>
+        )}
         <Returned recipient={recipient} />
       </div>
       {recipient.blockedReason ? (

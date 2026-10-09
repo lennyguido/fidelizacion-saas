@@ -27,6 +27,8 @@ export type {
   CampaignInput,
   CampaignResults,
   CampaignStatus,
+  Coupon,
+  CouponStatus,
   Recipient as CampaignRecipient,
   RecipientBlockedReason,
   Segment,

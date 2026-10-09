@@ -150,6 +150,9 @@ export interface Recipient {
   returnedAmountMinor: number
   /** Si no es null, la base no devuelve teléfono ni mensaje: no hay que escribirle. */
   blockedReason: RecipientBlockedReason | null
+  /** Cupón del grupo contactado (null en control, si está bloqueado o en campañas viejas). */
+  couponCode: string | null
+  couponRedeemedAt: string | null
 }
 
 export async function listRecipients(campaignId: string): Promise<Recipient[]> {
@@ -169,6 +172,8 @@ export async function listRecipients(campaignId: string): Promise<Recipient[]> {
     returnedAt: row.returned_at,
     returnedAmountMinor: Number(row.returned_amount_minor),
     blockedReason: (row.blocked_reason as RecipientBlockedReason | null) ?? null,
+    couponCode: row.coupon_code,
+    couponRedeemedAt: row.coupon_redeemed_at,
   }))
 }
 
@@ -188,6 +193,8 @@ export interface CampaignResults {
   incrementalRevenueMinor: number | null
   windowEndsAt: string
   windowOpen: boolean
+  /** Cupones usados (de visitas no anuladas). */
+  couponsRedeemed: number
 }
 
 const num = (value: number | string | null): number | null =>
@@ -212,13 +219,14 @@ export async function results(campaignId: string): Promise<CampaignResults> {
     incrementalRevenueMinor: num(row.incremental_revenue_minor),
     windowEndsAt: row.window_ends_at,
     windowOpen: row.window_open,
+    couponsRedeemed: row.coupons_redeemed,
   }
 }
 
 /** Placeholders que la base reemplaza al lanzar (vista previa para el formulario). */
 export function renderPreview(
   message: string,
-  values: { nombre: string; negocio: string; beneficio: string },
+  values: { nombre: string; negocio: string; beneficio: string; cupon: string },
 ): string {
   return message
     .split('{nombre}')
@@ -227,4 +235,51 @@ export function renderPreview(
     .join(values.negocio)
     .split('{beneficio}')
     .join(values.beneficio)
+    .split('{cupon}')
+    .join(values.cupon)
+}
+
+// Cupones de campaña (D-026): el cliente lo muestra al volver y el cajero lo usa.
+
+export type CouponStatus = 'valid' | 'used' | 'expired' | 'customer_inactive'
+
+export interface Coupon {
+  recipientId: string
+  code: string
+  customerId: string
+  customerName: string
+  campaignName: string
+  benefit: string | null
+  expiresAt: string
+  redeemedAt: string | null
+  status: CouponStatus
+}
+
+/** ¿Tiene forma de cupón? 6 caracteres sin I, O, 0 ni 1 (ignora guiones y espacios). */
+export function looksLikeCouponCode(text: string): boolean {
+  return /^[A-HJ-NP-Z2-9]{6}$/.test(text.replace(/[\s-]/g, '').toUpperCase())
+}
+
+export async function findCoupon(businessId: string, code: string): Promise<Coupon | null> {
+  const { data, error } = await getSupabase().rpc('find_campaign_coupon', {
+    p_business_id: businessId,
+    p_code: code,
+  })
+  if (error) throw fromPostgrestError(error)
+  return (data as Coupon | null) ?? null
+}
+
+/** Usa el cupón (una sola vez), atado a la visita en la que lo trajo. */
+export async function redeemCoupon(
+  businessId: string,
+  code: string,
+  visitId: string | null,
+): Promise<Coupon> {
+  const { data, error } = await getSupabase().rpc('redeem_campaign_coupon', {
+    p_business_id: businessId,
+    p_code: code,
+    p_visit_id: visitId ?? undefined,
+  })
+  if (error) throw fromPostgrestError(error)
+  return data as unknown as Coupon
 }

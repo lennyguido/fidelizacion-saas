@@ -67,14 +67,14 @@ isOneToOne: false
                   ]
                 },"campaign_recipients": {
                   Row: {
-                    "business_id": string,"campaign_id": string,"contacted_at": string | null,"customer_id": string,"id": string,"is_control": boolean,"message": string | null,"risk_score_at_send": number,"status_at_send": string
+                    "business_id": string,"campaign_id": string,"contacted_at": string | null,"coupon_code": string | null,"coupon_redeemed_at": string | null,"coupon_redeemed_by": string | null,"coupon_visit_id": string | null,"customer_id": string,"id": string,"is_control": boolean,"message": string | null,"risk_score_at_send": number,"status_at_send": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "business_id": string,"campaign_id": string,"contacted_at"?: string | null,"customer_id": string,"id"?: string,"is_control": boolean,"message"?: string | null,"risk_score_at_send"?: number,"status_at_send": string
+                    "business_id": string,"campaign_id": string,"contacted_at"?: string | null,"coupon_code"?: string | null,"coupon_redeemed_at"?: string | null,"coupon_redeemed_by"?: string | null,"coupon_visit_id"?: string | null,"customer_id": string,"id"?: string,"is_control": boolean,"message"?: string | null,"risk_score_at_send"?: number,"status_at_send": string
                   }
                   Update: {
-                    "business_id"?: string,"campaign_id"?: string,"contacted_at"?: string | null,"customer_id"?: string,"id"?: string,"is_control"?: boolean,"message"?: string | null,"risk_score_at_send"?: number,"status_at_send"?: string
+                    "business_id"?: string,"campaign_id"?: string,"contacted_at"?: string | null,"coupon_code"?: string | null,"coupon_redeemed_at"?: string | null,"coupon_redeemed_by"?: string | null,"coupon_visit_id"?: string | null,"customer_id"?: string,"id"?: string,"is_control"?: boolean,"message"?: string | null,"risk_score_at_send"?: number,"status_at_send"?: string
                   }
                   Relationships: [
                     {
@@ -82,6 +82,12 @@ isOneToOne: false
       columns: ["business_id","campaign_id"]
 isOneToOne: false
       referencedRelation: "campaigns"
+      referencedColumns: ["business_id","id"]
+    },{
+      foreignKeyName: "campaign_recipients_business_id_coupon_visit_id_fkey"
+      columns: ["business_id","coupon_visit_id"]
+isOneToOne: false
+      referencedRelation: "visits"
       referencedColumns: ["business_id","id"]
     },{
       foreignKeyName: "campaign_recipients_business_id_customer_id_fkey"
@@ -461,7 +467,7 @@ isOneToOne: false
           Functions: {
             "campaign_results":
 { Args: { "p_campaign_id": string }; Returns: {
-              "contacted_count": number,"control_count": number,"control_rate": number,"control_returned": number,"control_revenue_minor": number,"incremental_customers": number,"incremental_revenue_minor": number,"treatment_count": number,"treatment_rate": number,"treatment_returned": number,"treatment_revenue_minor": number,"window_ends_at": string,"window_open": boolean
+              "contacted_count": number,"control_count": number,"control_rate": number,"control_returned": number,"control_revenue_minor": number,"coupons_redeemed": number,"incremental_customers": number,"incremental_revenue_minor": number,"treatment_count": number,"treatment_rate": number,"treatment_returned": number,"treatment_revenue_minor": number,"window_ends_at": string,"window_open": boolean
             }[]
                            },
 "cancel_campaign":
@@ -492,6 +498,9 @@ isOneToOne: false
       } },
 "compute_customer_status":
 { Args: { "p_first_visit_at": string,"p_is_new_visit": boolean,"p_last_visit_at": string,"p_median_interval": number,"p_now": string,"p_prev_changed_at": string,"p_prev_status": string,"p_settings": Json,"p_visit_count": number }; Returns: Record<string, unknown>
+                           },
+"coupon_info":
+{ Args: { "p_recipient_id": string }; Returns: Json
                            },
 "create_business":
 { Args: { "p_name": string,"p_slug": string,"p_timezone"?: string }; Returns: {
@@ -549,6 +558,9 @@ isOneToOne: false
 "emit_event":
 { Args: { "p_business_id": string,"p_payload"?: Json,"p_type": string }; Returns: number
                            },
+"find_campaign_coupon":
+{ Args: { "p_business_id": string,"p_code": string }; Returns: Json
+                           },
 "has_module":
 { Args: { "p_business_id": string,"p_module": string }; Returns: boolean
                            },
@@ -604,7 +616,7 @@ isOneToOne: false
       } },
 "list_campaign_recipients":
 { Args: { "p_campaign_id": string }; Returns: {
-              "blocked_reason": string,"contacted_at": string,"customer_id": string,"is_control": boolean,"message": string,"name": string,"phone": string,"recipient_id": string,"returned_amount_minor": number,"returned_at": string,"status_at_send": string
+              "blocked_reason": string,"contacted_at": string,"coupon_code": string,"coupon_redeemed_at": string,"customer_id": string,"is_control": boolean,"message": string,"name": string,"phone": string,"recipient_id": string,"returned_amount_minor": number,"returned_at": string,"status_at_send": string
             }[]
                            },
 "mark_recipient_contacted":
@@ -612,6 +624,10 @@ isOneToOne: false
               "business_id": string,
 "campaign_id": string,
 "contacted_at": string | null,
+"coupon_code": string | null,
+"coupon_redeemed_at": string | null,
+"coupon_redeemed_by": string | null,
+"coupon_visit_id": string | null,
 "customer_id": string,
 "id": string,
 "is_control": boolean,
@@ -636,6 +652,12 @@ isOneToOne: false
                            },
 "my_customer_ids":
 { Args: Record<PropertyKey, never>; Returns: string[]
+                           },
+"new_coupon_code":
+{ Args: { "p_business_id": string }; Returns: string
+                           },
+"normalize_coupon_code":
+{ Args: { "p_code": string }; Returns: string
                            },
 "preview_segment":
 { Args: { "p_business_id": string,"p_segment": Json }; Returns: {
@@ -693,6 +715,9 @@ isOneToOne: false
         isOneToOne: true
         isSetofReturn: false
       } },
+"redeem_campaign_coupon":
+{ Args: { "p_business_id": string,"p_code": string,"p_visit_id"?: string }; Returns: Json
+                           },
 "refresh_customer_stats":
 { Args: { "p_customer_id": string,"p_is_new_visit"?: boolean,"p_prev_status"?: string,"p_reason": string }; Returns: {
               "avg_ticket_minor": number | null,

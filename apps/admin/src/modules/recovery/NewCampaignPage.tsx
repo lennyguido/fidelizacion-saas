@@ -23,7 +23,7 @@ function buildSegment(audience: string, minVisits: string): Segment {
 }
 
 const DEFAULT_MESSAGE =
-  '¡Hola {nombre}! Hace un tiempo que no te vemos por {negocio}. Esta semana tenés {beneficio}. ¡Te esperamos!'
+  '¡Hola {nombre}! Hace un tiempo que no te vemos por {negocio}. Esta semana tenés {beneficio} mostrando el código {cupon}. ¡Te esperamos!'
 
 export function NewCampaignPage() {
   const { business } = useActiveBusiness()
@@ -82,6 +82,7 @@ export function NewCampaignPage() {
     nombre: 'Ana',
     negocio: business.name,
     beneficio: benefit,
+    cupon: 'K7P2QX',
   })
 
   return (
@@ -137,7 +138,10 @@ export function NewCampaignPage() {
               onChange={(e) => setMessage(e.target.value)}
             />
             <span className="text-xs text-slate-500">
-              Podés usar {'{nombre}'}, {'{negocio}'} y {'{beneficio}'}.
+              Podés usar {'{nombre}'}, {'{negocio}'}, {'{beneficio}'} y {'{cupon}'}.
+            </span>
+            <span className="text-xs text-slate-500">
+              {'{cupon}'}: un código por cliente; si lo muestra, volvió por la campaña.
             </span>
           </label>
           <TextField
