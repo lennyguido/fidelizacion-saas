@@ -77,7 +77,8 @@ function RecipientRow({ recipient }: { recipient: CampaignRecipient }) {
         </p>
         {recipient.couponCode && (
           <p className="text-xs text-slate-500">
-            Cupón {recipient.couponCode}{recipient.couponRedeemedAt ? ' · usado' : ''}
+            Cupón {recipient.couponCode}
+            {recipient.couponRedeemedAt ? ' · usado' : ''}
           </p>
         )}
         <Returned recipient={recipient} />
