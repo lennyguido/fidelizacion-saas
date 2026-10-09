@@ -57,6 +57,7 @@ Comandos oficiales (desde la raíz):
 * `npm run typecheck` — TypeScript en todos los workspaces.
 * `npm run lint` — ESLint.
 * `npm run format` / `npm run format:check` — Prettier.
+* `npm run test:e2e` — tests de punta a punta (Playwright; requiere Supabase local y `vite preview`).
 
 ## Base de datos
 

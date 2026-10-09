@@ -52,11 +52,13 @@ Ver secciones 8–13 y 46 para detalle.
 
 Ver secciones 3, 14, 16, 17.
 
-* [ ] Router, layout, error boundary, notificaciones, componentes base en `packages/ui`
-* [ ] Signup / login / logout / reset de contraseña del negocio
-* [ ] Onboarding: crea negocio + sucursal + membership owner + módulos de prueba (función en la base)
-* [ ] "Negocio activo" en el frontend
-* [ ] Sistema de `manifest` de módulos: el menú muestra solo los módulos habilitados
+* [x] Router, layout, error boundary, notificaciones, componentes base en `packages/ui`
+* [x] Signup / login / logout / reset de contraseña del negocio
+* [x] Onboarding: crea negocio + sucursal + membership owner + módulos de prueba (función en la base)
+* [x] "Negocio activo" en el frontend
+* [x] Sistema de `manifest` de módulos: el menú muestra solo los módulos habilitados
+* [x] Test E2E (Playwright) del recorrido registro → onboarding → panel → login, en CI
+* [ ] Aplicar migración `core_onboarding` al proyecto de desarrollo (pendiente de OK humano)
 
 ## Fase 3 — Clientes y registro de visitas en mostrador
 
