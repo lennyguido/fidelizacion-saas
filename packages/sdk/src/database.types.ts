@@ -65,6 +65,64 @@ isOneToOne: false
                   Relationships: [
                     
                   ]
+                },"campaign_recipients": {
+                  Row: {
+                    "business_id": string,"campaign_id": string,"contacted_at": string | null,"customer_id": string,"id": string,"is_control": boolean,"message": string | null,"risk_score_at_send": number,"status_at_send": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "business_id": string,"campaign_id": string,"contacted_at"?: string | null,"customer_id": string,"id"?: string,"is_control": boolean,"message"?: string | null,"risk_score_at_send"?: number,"status_at_send": string
+                  }
+                  Update: {
+                    "business_id"?: string,"campaign_id"?: string,"contacted_at"?: string | null,"customer_id"?: string,"id"?: string,"is_control"?: boolean,"message"?: string | null,"risk_score_at_send"?: number,"status_at_send"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "campaign_recipients_business_id_campaign_id_fkey"
+      columns: ["business_id","campaign_id"]
+isOneToOne: false
+      referencedRelation: "campaigns"
+      referencedColumns: ["business_id","id"]
+    },{
+      foreignKeyName: "campaign_recipients_business_id_customer_id_fkey"
+      columns: ["business_id","customer_id"]
+isOneToOne: false
+      referencedRelation: "customers"
+      referencedColumns: ["business_id","id"]
+    },{
+      foreignKeyName: "campaign_recipients_business_id_fkey"
+      columns: ["business_id"]
+isOneToOne: false
+      referencedRelation: "businesses"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"campaigns": {
+                  Row: {
+                    "attribution_days": number,"benefit": string | null,"business_id": string,"cancelled_at": string | null,"channel": string,"control_pct": number,"created_at": string,"created_by": string | null,"id": string,"message": string,"module_id": string,"name": string,"recipients_count": number,"segment": NonNullable<Json>,"sent_at": string | null,"status": string,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "attribution_days"?: number,"benefit"?: string | null,"business_id": string,"cancelled_at"?: string | null,"channel"?: string,"control_pct"?: number,"created_at"?: string,"created_by"?: string | null,"id"?: string,"message": string,"module_id": string,"name": string,"recipients_count"?: number,"segment": NonNullable<Json>,"sent_at"?: string | null,"status"?: string,"updated_at"?: string
+                  }
+                  Update: {
+                    "attribution_days"?: number,"benefit"?: string | null,"business_id"?: string,"cancelled_at"?: string | null,"channel"?: string,"control_pct"?: number,"created_at"?: string,"created_by"?: string | null,"id"?: string,"message"?: string,"module_id"?: string,"name"?: string,"recipients_count"?: number,"segment"?: NonNullable<Json>,"sent_at"?: string | null,"status"?: string,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "campaigns_business_id_fkey"
+      columns: ["business_id"]
+isOneToOne: false
+      referencedRelation: "businesses"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "campaigns_module_id_fkey"
+      columns: ["module_id"]
+isOneToOne: false
+      referencedRelation: "modules"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"customer_accounts": {
                   Row: {
                     "business_id": string,"created_at": string,"customer_id": string,"id": string,"user_id": string
@@ -401,7 +459,38 @@ isOneToOne: false
                 }
           }
           Functions: {
-            "compute_customer_status":
+            "campaign_results":
+{ Args: { "p_campaign_id": string }; Returns: {
+              "contacted_count": number,"control_count": number,"control_rate": number,"control_returned": number,"control_revenue_minor": number,"incremental_customers": number,"incremental_revenue_minor": number,"treatment_count": number,"treatment_rate": number,"treatment_returned": number,"treatment_revenue_minor": number,"window_ends_at": string,"window_open": boolean
+            }[]
+                           },
+"cancel_campaign":
+{ Args: { "p_campaign_id": string }; Returns: {
+              "attribution_days": number,
+"benefit": string | null,
+"business_id": string,
+"cancelled_at": string | null,
+"channel": string,
+"control_pct": number,
+"created_at": string,
+"created_by": string | null,
+"id": string,
+"message": string,
+"module_id": string,
+"name": string,
+"recipients_count": number,
+"segment": NonNullable<Json>,
+"sent_at": string | null,
+"status": string,
+"updated_at": string
+            }
+                          SetofOptions: {
+        from: "*"
+        to: "campaigns"
+        isOneToOne: true
+        isSetofReturn: false
+      } },
+"compute_customer_status":
 { Args: { "p_first_visit_at": string,"p_is_new_visit": boolean,"p_last_visit_at": string,"p_median_interval": number,"p_now": string,"p_prev_changed_at": string,"p_prev_status": string,"p_settings": Json,"p_visit_count": number }; Returns: Record<string, unknown>
                            },
 "create_business":
@@ -428,6 +517,35 @@ isOneToOne: false
         isOneToOne: true
         isSetofReturn: false
       } },
+"create_campaign":
+{ Args: { "p_attribution_days"?: number,"p_benefit"?: string,"p_business_id": string,"p_control_pct"?: number,"p_message": string,"p_module_id": string,"p_name": string,"p_segment": Json }; Returns: {
+              "attribution_days": number,
+"benefit": string | null,
+"business_id": string,
+"cancelled_at": string | null,
+"channel": string,
+"control_pct": number,
+"created_at": string,
+"created_by": string | null,
+"id": string,
+"message": string,
+"module_id": string,
+"name": string,
+"recipients_count": number,
+"segment": NonNullable<Json>,
+"sent_at": string | null,
+"status": string,
+"updated_at": string
+            }
+                          SetofOptions: {
+        from: "*"
+        to: "campaigns"
+        isOneToOne: true
+        isSetofReturn: false
+      } },
+"dashboard_summary":
+{ Args: { "p_business_id": string }; Returns: Json
+                           },
 "emit_event":
 { Args: { "p_business_id": string,"p_payload"?: Json,"p_type": string }; Returns: number
                            },
@@ -455,6 +573,55 @@ isOneToOne: false
 "is_valid_timezone":
 { Args: { "p_tz": string }; Returns: boolean
                            },
+"launch_campaign":
+{ Args: { "p_campaign_id": string }; Returns: {
+              "attribution_days": number,
+"benefit": string | null,
+"business_id": string,
+"cancelled_at": string | null,
+"channel": string,
+"control_pct": number,
+"created_at": string,
+"created_by": string | null,
+"id": string,
+"message": string,
+"module_id": string,
+"name": string,
+"recipients_count": number,
+"segment": NonNullable<Json>,
+"sent_at": string | null,
+"status": string,
+"updated_at": string
+            }
+                          SetofOptions: {
+        from: "*"
+        to: "campaigns"
+        isOneToOne: true
+        isSetofReturn: false
+      } },
+"list_campaign_recipients":
+{ Args: { "p_campaign_id": string }; Returns: {
+              "contacted_at": string,"customer_id": string,"is_control": boolean,"message": string,"name": string,"phone": string,"recipient_id": string,"returned_amount_minor": number,"returned_at": string,"status_at_send": string
+            }[]
+                           },
+"mark_recipient_contacted":
+{ Args: { "p_recipient_id": string }; Returns: {
+              "business_id": string,
+"campaign_id": string,
+"contacted_at": string | null,
+"customer_id": string,
+"id": string,
+"is_control": boolean,
+"message": string | null,
+"risk_score_at_send": number,
+"status_at_send": string
+            }
+                          SetofOptions: {
+        from: "*"
+        to: "campaign_recipients"
+        isOneToOne: true
+        isSetofReturn: false
+      } },
 "my_business_ids":
 { Args: Record<PropertyKey, never>; Returns: string[]
                            },
@@ -466,6 +633,11 @@ isOneToOne: false
                            },
 "my_customer_ids":
 { Args: Record<PropertyKey, never>; Returns: string[]
+                           },
+"preview_segment":
+{ Args: { "p_business_id": string,"p_segment": Json }; Returns: {
+              "matching": number,"reachable": number
+            }[]
                            },
 "raise_forbidden":
 { Args: { "p_message"?: string }; Returns: undefined
@@ -552,8 +724,39 @@ isOneToOne: false
               "email": string,"id": string,"last_visit_at": string,"name": string,"phone": string,"risk_score": number,"status": string,"total_spend_minor": number,"visit_count": number
             }[]
                            },
+"segment_members":
+{ Args: { "p_business_id": string,"p_segment": Json }; Returns: {
+              "customer_id": string,"first_name": string,"reachable": boolean,"risk_score": number,"status": string
+            }[]
+                           },
+"set_customer_status":
+{ Args: { "p_customer_id": string,"p_status": string }; Returns: {
+              "anonymized_at": string | null,
+"birthdate": string | null,
+"business_id": string,
+"created_at": string,
+"created_by": string | null,
+"email": string | null,
+"id": string,
+"name": string,
+"notes": string | null,
+"phone": string | null,
+"source": string,
+"status": string,
+"tags": (string)[],
+"updated_at": string
+            }
+                          SetofOptions: {
+        from: "*"
+        to: "customers"
+        isOneToOne: true
+        isSetofReturn: false
+      } },
 "status_settings":
 { Args: { "p_settings": Json }; Returns: Json
+                           },
+"validate_segment":
+{ Args: { "p_segment": Json }; Returns: undefined
                            },
 "void_visit":
 { Args: { "p_reason": string,"p_visit_id": string }; Returns: {
@@ -579,6 +782,268 @@ isOneToOne: false
         isOneToOne: true
         isSetofReturn: false
       } }
+          }
+          Enums: {
+            [_ in never]: never
+          }
+          CompositeTypes: {
+            [_ in never]: never
+          }
+        },"loyalty": {
+          Tables: {
+            "cards": {
+                  Row: {
+                    "business_id": string,"issued_at": string,"member_id": string,"token_hash": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "business_id": string,"issued_at"?: string,"member_id": string,"token_hash": string
+                  }
+                  Update: {
+                    "business_id"?: string,"issued_at"?: string,"member_id"?: string,"token_hash"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "cards_business_id_member_id_fkey"
+      columns: ["business_id","member_id"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["business_id","id"]
+    }
+                  ]
+                },"ledger": {
+                  Row: {
+                    "business_id": string,"created_at": string,"created_by": string | null,"delta": number,"id": number,"member_id": string,"note": string | null,"reason": string,"redemption_id": string | null,"visit_id": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "business_id": string,"created_at"?: string,"created_by"?: string | null,"delta": number,"id"?: never,"member_id": string,"note"?: string | null,"reason": string,"redemption_id"?: string | null,"visit_id"?: string | null
+                  }
+                  Update: {
+                    "business_id"?: string,"created_at"?: string,"created_by"?: string | null,"delta"?: number,"id"?: never,"member_id"?: string,"note"?: string | null,"reason"?: string,"redemption_id"?: string | null,"visit_id"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "ledger_business_id_member_id_fkey"
+      columns: ["business_id","member_id"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["business_id","id"]
+    },{
+      foreignKeyName: "ledger_business_id_redemption_id_fkey"
+      columns: ["business_id","redemption_id"]
+isOneToOne: false
+      referencedRelation: "redemptions"
+      referencedColumns: ["business_id","id"]
+    }
+                  ]
+                },"members": {
+                  Row: {
+                    "business_id": string,"card_issued_at": string | null,"created_by": string | null,"customer_id": string,"id": string,"joined_at": string,"left_at": string | null,"lifetime_points": number,"member_code": string,"points_balance": number,"status": string,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "business_id": string,"card_issued_at"?: string | null,"created_by"?: string | null,"customer_id": string,"id"?: string,"joined_at"?: string,"left_at"?: string | null,"lifetime_points"?: number,"member_code": string,"points_balance"?: number,"status"?: string,"updated_at"?: string
+                  }
+                  Update: {
+                    "business_id"?: string,"card_issued_at"?: string | null,"created_by"?: string | null,"customer_id"?: string,"id"?: string,"joined_at"?: string,"left_at"?: string | null,"lifetime_points"?: number,"member_code"?: string,"points_balance"?: number,"status"?: string,"updated_at"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
+                },"programs": {
+                  Row: {
+                    "amount_step_minor": number | null,"business_id": string,"created_at": string,"enabled": boolean,"kind": string,"min_amount_minor": number,"points_per_amount": number,"points_per_visit": number,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "amount_step_minor"?: number | null,"business_id": string,"created_at"?: string,"enabled"?: boolean,"kind"?: string,"min_amount_minor"?: number,"points_per_amount"?: number,"points_per_visit"?: number,"updated_at"?: string
+                  }
+                  Update: {
+                    "amount_step_minor"?: number | null,"business_id"?: string,"created_at"?: string,"enabled"?: boolean,"kind"?: string,"min_amount_minor"?: number,"points_per_amount"?: number,"points_per_visit"?: number,"updated_at"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
+                },"redemptions": {
+                  Row: {
+                    "business_id": string,"cancel_reason": string | null,"cancelled_at": string | null,"cancelled_by": string | null,"code": string,"created_at": string,"created_by": string | null,"id": string,"member_id": string,"points": number,"request_id": string | null,"reward_id": string,"reward_name": string,"status": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "business_id": string,"cancel_reason"?: string | null,"cancelled_at"?: string | null,"cancelled_by"?: string | null,"code": string,"created_at"?: string,"created_by"?: string | null,"id"?: string,"member_id": string,"points": number,"request_id"?: string | null,"reward_id": string,"reward_name": string,"status"?: string
+                  }
+                  Update: {
+                    "business_id"?: string,"cancel_reason"?: string | null,"cancelled_at"?: string | null,"cancelled_by"?: string | null,"code"?: string,"created_at"?: string,"created_by"?: string | null,"id"?: string,"member_id"?: string,"points"?: number,"request_id"?: string | null,"reward_id"?: string,"reward_name"?: string,"status"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "redemptions_business_id_member_id_fkey"
+      columns: ["business_id","member_id"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["business_id","id"]
+    },{
+      foreignKeyName: "redemptions_business_id_reward_id_fkey"
+      columns: ["business_id","reward_id"]
+isOneToOne: false
+      referencedRelation: "rewards"
+      referencedColumns: ["business_id","id"]
+    }
+                  ]
+                },"rewards": {
+                  Row: {
+                    "active": boolean,"available_until": string | null,"business_id": string,"cost_points": number,"created_at": string,"description": string | null,"id": string,"name": string,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "active"?: boolean,"available_until"?: string | null,"business_id": string,"cost_points": number,"created_at"?: string,"description"?: string | null,"id"?: string,"name": string,"updated_at"?: string
+                  }
+                  Update: {
+                    "active"?: boolean,"available_until"?: string | null,"business_id"?: string,"cost_points"?: number,"created_at"?: string,"description"?: string | null,"id"?: string,"name"?: string,"updated_at"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
+                }
+          }
+          Views: {
+            [_ in never]: never
+          }
+          Functions: {
+            "adjust_points":
+{ Args: { "p_delta": number,"p_member_id": string,"p_note": string }; Returns: {
+              "business_id": string,
+"card_issued_at": string | null,
+"created_by": string | null,
+"customer_id": string,
+"id": string,
+"joined_at": string,
+"left_at": string | null,
+"lifetime_points": number,
+"member_code": string,
+"points_balance": number,
+"status": string,
+"updated_at": string
+            }
+                          SetofOptions: {
+        from: "*"
+        to: "members"
+        isOneToOne: true
+        isSetofReturn: false
+      } },
+"cancel_redemption":
+{ Args: { "p_reason": string,"p_redemption_id": string }; Returns: {
+              "business_id": string,
+"cancel_reason": string | null,
+"cancelled_at": string | null,
+"cancelled_by": string | null,
+"code": string,
+"created_at": string,
+"created_by": string | null,
+"id": string,
+"member_id": string,
+"points": number,
+"request_id": string | null,
+"reward_id": string,
+"reward_name": string,
+"status": string
+            }
+                          SetofOptions: {
+        from: "*"
+        to: "redemptions"
+        isOneToOne: true
+        isSetofReturn: false
+      } },
+"enroll_customer":
+{ Args: { "p_customer_id": string }; Returns: {
+              "business_id": string,
+"card_issued_at": string | null,
+"created_by": string | null,
+"customer_id": string,
+"id": string,
+"joined_at": string,
+"left_at": string | null,
+"lifetime_points": number,
+"member_code": string,
+"points_balance": number,
+"status": string,
+"updated_at": string
+            }
+                          SetofOptions: {
+        from: "*"
+        to: "members"
+        isOneToOne: true
+        isSetofReturn: false
+      } },
+"find_member_by_code":
+{ Args: { "p_business_id": string,"p_code": string }; Returns: string
+                           },
+"get_card":
+{ Args: { "p_token": string }; Returns: Json
+                           },
+"issue_card":
+{ Args: { "p_member_id": string }; Returns: string
+                           },
+"leave_program":
+{ Args: { "p_member_id": string }; Returns: {
+              "business_id": string,
+"card_issued_at": string | null,
+"created_by": string | null,
+"customer_id": string,
+"id": string,
+"joined_at": string,
+"left_at": string | null,
+"lifetime_points": number,
+"member_code": string,
+"points_balance": number,
+"status": string,
+"updated_at": string
+            }
+                          SetofOptions: {
+        from: "*"
+        to: "members"
+        isOneToOne: true
+        isSetofReturn: false
+      } },
+"new_member_code":
+{ Args: { "p_business_id": string }; Returns: string
+                           },
+"new_redemption_code":
+{ Args: { "p_business_id": string }; Returns: string
+                           },
+"points_for_visit":
+{ Args: { "p_amount_minor": number,"p_program": Omit<Database["loyalty"]['Tables']["programs"]['Row'], Database["loyalty"]['Tables']["programs"]['ComputedFields']> }; Returns: number
+                           },
+"post_movement":
+{ Args: { "p_delta": number,"p_member": Omit<Database["loyalty"]['Tables']["members"]['Row'], Database["loyalty"]['Tables']["members"]['ComputedFields']>,"p_note"?: string,"p_reason": string,"p_redemption_id"?: string,"p_visit_id"?: string }; Returns: boolean
+                           },
+"redeem_reward":
+{ Args: { "p_member_id": string,"p_request_id"?: string,"p_reward_id": string }; Returns: {
+              "business_id": string,
+"cancel_reason": string | null,
+"cancelled_at": string | null,
+"cancelled_by": string | null,
+"code": string,
+"created_at": string,
+"created_by": string | null,
+"id": string,
+"member_id": string,
+"points": number,
+"request_id": string | null,
+"reward_id": string,
+"reward_name": string,
+"status": string
+            }
+                          SetofOptions: {
+        from: "*"
+        to: "redemptions"
+        isOneToOne: true
+        isSetofReturn: false
+      } },
+"require_module":
+{ Args: { "p_business_id": string }; Returns: undefined
+                           }
           }
           Enums: {
             [_ in never]: never
@@ -696,6 +1161,10 @@ export type CompositeTypes<
 
 export const Constants = {
   "core": {
+          Enums: {
+            
+          }
+        },"loyalty": {
           Enums: {
             
           }

@@ -12,12 +12,14 @@ import {
   type Visit,
 } from '@plataforma/sdk'
 import { Alert, Button, Card, FullPageSpinner, useToast } from '@plataforma/ui'
+import { CustomerModulePanels } from '../../modules/CustomerModulePanels'
 import { useActiveBusiness } from '../business/ActiveBusinessContext'
 import { formatDateTime, formatDaysAgo } from '../../lib/format'
 import { CustomerForm } from './CustomerForm'
 import { useCustomer, useCustomerVisits, useInvalidateCustomers } from './queries'
 import { StatusBadge } from './StatusBadge'
 import { VisitHistory } from './VisitHistory'
+import { WhatsappConsentCard } from './WhatsappConsentCard'
 
 export function CustomerDetailPage() {
   const { customerId = '' } = useParams()
@@ -35,6 +37,13 @@ export function CustomerDetailPage() {
       </Link>
       <CustomerHeader customer={customer.data} />
       <CustomerStatsCard customer={customer.data} />
+      <WhatsappConsentCard customerId={customer.data.id} hasPhone={Boolean(customer.data.phone)} />
+      <CustomerModulePanels
+        customerId={customer.data.id}
+        customerName={customer.data.name}
+        phone={customer.data.phone}
+        archived={customer.data.status === 'archived'}
+      />
       <Card>
         <h2 className="mb-2 text-base font-semibold">Historial de visitas</h2>
         {history.isPending && <p className="text-sm text-slate-500">Cargando…</p>}
@@ -97,6 +106,15 @@ function CustomerHeader({ customer }: { customer: Customer }) {
     onError: (err) => toast.show(errorMessage(err), 'error'),
   })
 
+  const reactivate = useMutation({
+    mutationFn: () => customers.reactivate(customer.id),
+    onSuccess: async () => {
+      await invalidate()
+      toast.show(`${customer.name} volvió a la lista de clientes`, 'success')
+    },
+    onError: (err) => toast.show(errorMessage(err), 'error'),
+  })
+
   if (editing) {
     return (
       <Card>
@@ -135,7 +153,21 @@ function CustomerHeader({ customer }: { customer: Customer }) {
         {customer.stats && <StatusBadge status={customer.stats.status} />}
       </div>
       {customer.status === 'archived' ? (
-        <Alert>Este cliente está archivado.</Alert>
+        <div className="flex flex-col gap-3">
+          <Alert>Este cliente está archivado: no aparece en la lista ni en el mostrador.</Alert>
+          {canManage && (
+            <div>
+              <Button
+                variant="secondary"
+                size="lg"
+                loading={reactivate.isPending}
+                onClick={() => reactivate.mutate()}
+              >
+                Reactivar
+              </Button>
+            </div>
+          )}
+        </div>
       ) : (
         <div className="flex flex-wrap gap-2">
           <Button size="lg" loading={recordVisit.isPending} onClick={() => recordVisit.mutate()}>

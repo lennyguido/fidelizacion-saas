@@ -224,12 +224,51 @@ export async function update(customerId: string, input: CustomerInput): Promise<
   return toCustomer(data as CustomerRow)
 }
 
-export async function archive(customerId: string): Promise<void> {
-  const { error } = await getSupabase()
-    .from('customers')
-    .update({ status: 'archived' })
-    .eq('id', customerId)
+/** Archiva o reactiva un cliente. Solo owner/admin (lo exige la base). */
+export async function setStatus(customerId: string, status: 'active' | 'archived'): Promise<void> {
+  const { error } = await getSupabase().rpc('set_customer_status', {
+    p_customer_id: customerId,
+    p_status: status,
+  })
   if (error) throw fromPostgrestError(error)
+}
+
+export function archive(customerId: string): Promise<void> {
+  return setStatus(customerId, 'archived')
+}
+
+/** Vuelve a poner activo un cliente archivado. Solo owner/admin (lo exige la base). */
+export function reactivate(customerId: string): Promise<void> {
+  return setStatus(customerId, 'active')
+}
+
+export interface ArchivedCustomer {
+  id: string
+  name: string
+  phone: string | null
+  email: string | null
+  /** Última modificación (normalmente, cuando se archivó). */
+  archivedAt: string
+}
+
+/** Clientes archivados del negocio (no aparecen en la búsqueda normal). */
+export async function listArchived(businessId: string, limit = 100): Promise<ArchivedCustomer[]> {
+  const { data, error } = await getSupabase()
+    .from('customers')
+    .select('id, name, phone, email, updated_at')
+    .eq('business_id', businessId)
+    .eq('status', 'archived')
+    .is('anonymized_at', null)
+    .order('updated_at', { ascending: false })
+    .limit(limit)
+  if (error) throw fromPostgrestError(error)
+  return (data ?? []).map((row) => ({
+    id: row.id,
+    name: row.name,
+    phone: row.phone,
+    email: row.email,
+    archivedAt: row.updated_at,
+  }))
 }
 
 export interface ImportBatchResult {
@@ -249,4 +288,42 @@ export async function importBatch(
   if (error) throw fromPostgrestError(error)
   const result = data as unknown as ImportBatchResult
   return { inserted: Number(result.inserted), skipped: result.skipped ?? [] }
+}
+
+export interface WhatsappConsent {
+  granted: boolean
+  recordedAt: string
+}
+
+/** Último registro de "acepta mensajes de WhatsApp del negocio" (null = nunca se preguntó). */
+export async function getWhatsappConsent(customerId: string): Promise<WhatsappConsent | null> {
+  const { data, error } = await getSupabase()
+    .from('customer_consent_status')
+    .select('granted, recorded_at')
+    .eq('customer_id', customerId)
+    .eq('channel', 'whatsapp')
+    .eq('purpose', 'marketing')
+    .maybeSingle()
+  if (error) throw fromPostgrestError(error)
+  return data && data.granted !== null && data.recorded_at !== null
+    ? { granted: data.granted, recordedAt: data.recorded_at }
+    : null
+}
+
+/** Registra si acepta o no recibir WhatsApp (queda el historial; nunca se edita). */
+export async function setWhatsappConsent(
+  businessId: string,
+  customerId: string,
+  granted: boolean,
+  source: 'counter' | 'admin' = 'admin',
+): Promise<void> {
+  const { error } = await getSupabase().from('customer_consents').insert({
+    business_id: businessId,
+    customer_id: customerId,
+    channel: 'whatsapp',
+    purpose: 'marketing',
+    granted,
+    source,
+  })
+  if (error) throw fromPostgrestError(error)
 }

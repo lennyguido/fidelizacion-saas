@@ -51,13 +51,15 @@ select is_empty(
   'every business table has an index starting with business_id'
 );
 
--- 4. anon no puede ejecutar ninguna función de la plataforma.
-select is_empty(
+-- 4. anon (sin sesión) solo puede ejecutar las funciones públicas previstas:
+--    la tarjeta digital del cliente (D-020). Ninguna otra.
+select set_eq(
   $$ select p.oid::regprocedure::text
        from pg_proc p join pg_namespace n on n.oid = p.pronamespace
       where n.nspname in (select name from platform_schemas)
         and has_function_privilege('anon', p.oid, 'execute') $$,
-  'anon cannot execute platform functions'
+  $$ values ('loyalty.get_card(text)') $$,
+  'anon can execute only the public card function'
 );
 
 -- 5. Ninguna función queda ejecutable por PUBLIC (default de Postgres).
@@ -90,7 +92,24 @@ select set_eq(
        ('core.is_slug_available(text)'),
        ('core.create_business(text,text,text)'),
        ('core.search_customers(uuid,text,text,integer,integer)'),
-       ('core.import_customers(uuid,jsonb)') $$,
+       ('core.import_customers(uuid,jsonb)'),
+       ('core.set_customer_status(uuid,text)'),
+       ('core.preview_segment(uuid,jsonb)'),
+       ('core.create_campaign(uuid,text,text,jsonb,text,text,integer,integer)'),
+       ('core.launch_campaign(uuid)'),
+       ('core.cancel_campaign(uuid)'),
+       ('core.mark_recipient_contacted(uuid)'),
+       ('core.list_campaign_recipients(uuid)'),
+       ('core.campaign_results(uuid)'),
+       ('core.dashboard_summary(uuid)'),
+       ('loyalty.enroll_customer(uuid)'),
+       ('loyalty.leave_program(uuid)'),
+       ('loyalty.redeem_reward(uuid,uuid,uuid)'),
+       ('loyalty.cancel_redemption(uuid,text)'),
+       ('loyalty.adjust_points(uuid,bigint,text)'),
+       ('loyalty.issue_card(uuid)'),
+       ('loyalty.get_card(text)'),
+       ('loyalty.find_member_by_code(uuid,text)') $$,
   'authenticated can execute only the intended functions'
 );
 
