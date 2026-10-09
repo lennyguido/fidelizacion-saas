@@ -62,6 +62,7 @@ export function LoginPage() {
           </Link>
           <Link
             to="/signup"
+            state={{ from }}
             className="font-medium text-slate-900 underline-offset-4 hover:underline"
           >
             Crear cuenta

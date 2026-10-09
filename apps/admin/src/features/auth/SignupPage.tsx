@@ -86,6 +86,7 @@ export function SignupPage() {
           ¿Ya tenés cuenta?{' '}
           <Link
             to="/login"
+            state={{ from }}
             className="font-medium text-slate-900 underline-offset-4 hover:underline"
           >
             Ingresá

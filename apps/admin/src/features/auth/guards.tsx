@@ -15,10 +15,16 @@ export function RequireAuth({ children }: { children: ReactNode }) {
   return children
 }
 
-/** Solo sin sesión (login, registro); si ya ingresó, al inicio. */
+/**
+ * Solo sin sesión (login, registro). Al iniciar sesión vuelve a la página de la que
+ * venía (por ejemplo, el link de una invitación) o al inicio.
+ */
 export function PublicOnly({ children }: { children: ReactNode }) {
   const state = useAuth()
+  const location = useLocation()
+  const from = (location.state as { from?: string } | null)?.from
   if (state.status === 'loading') return <FullPageSpinner />
-  if (state.status === 'signed_in') return <Navigate to="/" replace />
+  if (state.status === 'signed_in')
+    return <Navigate to={from && from !== '/' ? from : '/'} replace />
   return children
 }
