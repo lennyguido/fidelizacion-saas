@@ -28,12 +28,23 @@ Proyecto de **desarrollo**: `fidelizacion-saas`, ref `dqpnqcumlyfifewgzyvh` (ún
 | 8 | 20261009110534 | core_customer_search | aplicada 2026-10-09 08:05 (con OK del dueño) |
 | 9 | 20261009110548 | core_customer_import | aplicada 2026-10-09 08:05 (con OK del dueño) |
 | 10 | 20261009120000 | core_archive_owner_admin_only | **pendiente de revisión — NO aplicada** |
+| 11 | 20261009130000 | core_team | **pendiente de revisión — NO aplicada** |
+| 12 | 20261009130100 | core_customer_anonymize | **pendiente de revisión — NO aplicada** |
+| 13 | 20261009130200 | core_housekeeping | **pendiente de revisión — NO aplicada** |
 
 Regla vigente desde 2026-10-09: ninguna migración se aplica sin aprobación explícita del dueño después de revisarla.
 
 Las migraciones 7–9 son solo aditivas (funciones e índices nuevos, sin cambios de datos ni de tablas existentes). Si se quisieran revertir: `drop function core.import_customers(uuid, jsonb)`, `drop function core.search_customers(uuid, text, text, integer, integer)`, `drop index core.customers_name_trgm_idx, core.customers_phone_trgm_idx`, `drop function core.create_business(text, text, text)`, `drop function core.is_slug_available(text)`, `drop function core.is_reserved_slug(text)`.
 
 ## Cambios pendientes de revisión
+
+Resumen en simple para revisar: `docs/REVISION-PENDIENTE.md`.
+
+* `fix/archive-owner-admin-only` — archivar solo owner/admin.
+* `feat/equipo-y-privacidad` (encima de la anterior) — invitar empleados, administrar el equipo, borrar datos personales de un cliente, limpieza semanal. Migraciones `20261009130000`, `20261009130100`, `20261009130200`, **no aplicadas**.
+
+Detalle de la primera rama:
+
 
 Rama `fix/archive-owner-admin-only` (commit `62a7b19`):
 
@@ -67,9 +78,9 @@ Rama `chore/calidad-pre-piloto` (llevada a `main` con CI en verde; no toca la ba
 ### Hallazgos que necesitan decisión
 
 1. **`core` todavía NO está expuesto** en el proyecto de desarrollo: los tipos generados desde Supabase solo traían `public`. Sin esto el panel no puede leer datos.
-2. **Cuentas de empleados:** hoy no hay forma de invitar a un empleado desde el panel. Para el piloto, el cajero usaría la cuenta del dueño en el dispositivo del mostrador. Decidir si se agrega "Invitar empleado" antes del piloto.
-3. **Limpieza de registros:** `core.events` y el historial de `pg_cron` crecen sin límite. No urge; agendar un job de limpieza antes de producción.
-4. **Pedido de baja de datos** (`core.anonymize_customer`, Ley 25.326): documentado en la arquitectura pero no implementado. Necesario antes de clientes reales en forma comercial.
+2. **Cuentas de empleados:** resuelto en la rama `feat/equipo-y-privacidad` (pendiente de revisión).
+3. **Limpieza de registros:** resuelto en la rama `feat/equipo-y-privacidad` (pendiente de revisión).
+4. **Pedido de baja de datos** (Ley 25.326): resuelto en la rama `feat/equipo-y-privacidad` (pendiente de revisión).
 
 ## Current blockers
 
