@@ -2,7 +2,7 @@
 // es solo lectura y la arma la base (loyalty.get_card).
 import { getSupabase } from './client.ts'
 import { fromPostgrestError } from './errors.ts'
-import type { MovementReason, Program, ProgramKind } from './loyalty.ts'
+import type { MovementReason, ProgramKind, ProgramRule } from './loyalty.ts'
 
 export interface CardReward {
   id: string
@@ -28,7 +28,7 @@ export interface Card {
   memberCode: string
   pointsBalance: number
   lifetimePoints: number
-  program: Program | null
+  program: ProgramRule | null
   rewards: CardReward[]
   movements: CardMovement[]
 }
@@ -75,7 +75,6 @@ export async function getCard(token: string): Promise<Card | null> {
     lifetimePoints: Number(raw.lifetimePoints),
     program: raw.program
       ? {
-          businessId: '',
           ...raw.program,
           amountStepMinor:
             raw.program.amountStepMinor === null ? null : Number(raw.program.amountStepMinor),

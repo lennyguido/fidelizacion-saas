@@ -43,6 +43,7 @@ export type {
   Program as LoyaltyProgram,
   ProgramInput as LoyaltyProgramInput,
   ProgramKind as LoyaltyProgramKind,
+  ProgramRule as LoyaltyProgramRule,
   Redemption as LoyaltyRedemption,
   Reward as LoyaltyReward,
 } from './loyalty.ts'

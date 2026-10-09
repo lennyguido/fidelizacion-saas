@@ -811,6 +811,20 @@ isOneToOne: false
       referencedColumns: ["business_id","id"]
     }
                   ]
+                },"event_failures": {
+                  Row: {
+                    "business_id": string,"created_at": string,"error": string | null,"event_id": number | null,"id": number
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "business_id": string,"created_at"?: string,"error"?: string | null,"event_id"?: number | null,"id"?: never
+                  }
+                  Update: {
+                    "business_id"?: string,"created_at"?: string,"error"?: string | null,"event_id"?: number | null,"id"?: never
+                  }
+                  Relationships: [
+                    
+                  ]
                 },"ledger": {
                   Row: {
                     "business_id": string,"created_at": string,"created_by": string | null,"delta": number,"id": number,"member_id": string,"note": string | null,"reason": string,"redemption_id": string | null,"visit_id": string | null
@@ -853,14 +867,14 @@ isOneToOne: false
                   ]
                 },"programs": {
                   Row: {
-                    "amount_step_minor": number | null,"business_id": string,"created_at": string,"enabled": boolean,"kind": string,"min_amount_minor": number,"points_per_amount": number,"points_per_visit": number,"updated_at": string
+                    "amount_step_minor": number | null,"business_id": string,"created_at": string,"enabled": boolean,"kind": string,"max_points_per_visit": number,"max_visits_per_day": number,"min_amount_minor": number,"points_per_amount": number,"points_per_visit": number,"updated_at": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "amount_step_minor"?: number | null,"business_id": string,"created_at"?: string,"enabled"?: boolean,"kind"?: string,"min_amount_minor"?: number,"points_per_amount"?: number,"points_per_visit"?: number,"updated_at"?: string
+                    "amount_step_minor"?: number | null,"business_id": string,"created_at"?: string,"enabled"?: boolean,"kind"?: string,"max_points_per_visit"?: number,"max_visits_per_day"?: number,"min_amount_minor"?: number,"points_per_amount"?: number,"points_per_visit"?: number,"updated_at"?: string
                   }
                   Update: {
-                    "amount_step_minor"?: number | null,"business_id"?: string,"created_at"?: string,"enabled"?: boolean,"kind"?: string,"min_amount_minor"?: number,"points_per_amount"?: number,"points_per_visit"?: number,"updated_at"?: string
+                    "amount_step_minor"?: number | null,"business_id"?: string,"created_at"?: string,"enabled"?: boolean,"kind"?: string,"max_points_per_visit"?: number,"max_visits_per_day"?: number,"min_amount_minor"?: number,"points_per_amount"?: number,"points_per_visit"?: number,"updated_at"?: string
                   }
                   Relationships: [
                     
