@@ -109,6 +109,8 @@ Hoy el dueño arma las campañas a mano y manda cada wa.me uno por uno. Tiene qu
 
 ### 3. Conexión con cajas (las visitas entran solas, sin escanear nada)
 
+> **Hecha** (2026-10-10, D-033): en `main` y aplicada en desarrollo (`20261010154103_core_sales_ingest`). Falta publicar la Edge Function. Ver `docs/CAPTURA-AUTOMATICA.md`.
+
 **Puerta de entrada de ventas:**
 - Edge Function `sales-ingest`.
 - Clave por negocio, generada por nuestro sistema y guardada con hash.

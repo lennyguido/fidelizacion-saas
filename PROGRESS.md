@@ -45,6 +45,7 @@ Proyecto de **desarrollo**: `fidelizacion-saas`, ref `dqpnqcumlyfifewgzyvh` (ún
 | 25 | 20261010144420 | core_automations | aplicada 2026-10-10 ~11:45 (D-031; CI verde, no destructiva; pg_cron `core-run-automations` 13:00 UTC; archivo renombrado de `20261011020000`) |
 | 26 | 20261011010000 | core_self_signup | **pendiente de revisión del mentor — NO aplicar** (D-032: junto con la 27 agrega la función anon `loyalty.self_signup`) |
 | 27 | 20261011010100 | loyalty_self_signup | **pendiente de revisión del mentor — NO aplicar** (D-032) |
+| 28 | 20261010154103 | core_sales_ingest | aplicada 2026-10-10 ~12:40 (D-033; CI verde, no destructiva, sin funciones para anon; archivo renombrado de `20261011000000`) |
 
 Regla vigente desde 2026-10-09: ninguna migración se aplica sin aprobación explícita del dueño después de revisarla.
 
