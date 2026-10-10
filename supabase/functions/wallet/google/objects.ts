@@ -2,6 +2,7 @@
 // Funciones puras: arman el JSON que se manda a la API REST y al JWT de "Guardar".
 // Referencia: https://developers.google.com/wallet/retail/loyalty-cards/rest/v1/loyaltyclass
 import type { PassData } from '../lib/passData.ts'
+import { stampImageUrl } from '../lib/stamps.ts'
 import { brandColor, rewardText, unitLabel } from '../lib/text.ts'
 
 export const GOOGLE_SAVE_URL = 'https://pay.google.com/gp/v/save/'
@@ -37,8 +38,25 @@ export function buildLoyaltyClass(issuerId: string, data: PassData, logoUrl: str
   }
 }
 
+/**
+ * Imagen de la fila de sellos (heroImage del objeto). La URL cambia con los sellos y
+ * la marca, así Google baja la nueva en cada sync. null si el pase no es de sellos.
+ */
+export function stampHeroImage(data: PassData, stampBase: string | null | undefined) {
+  const uri = stampBase ? stampImageUrl(stampBase, data) : null
+  if (!uri) return null
+  return { sourceUri: { uri }, contentDescription: localized(stampDescription(data)) }
+}
+
+function stampDescription(data: PassData): string {
+  const goal = data.stampGoal ?? 0
+  const progress = Math.min(Math.max(0, Math.trunc(data.pointsBalance)), goal)
+  return `${progress} de ${goal} ${data.unit}`
+}
+
 /** Campos del objeto que cambian con el saldo (se usan también en el PATCH del sync). */
-export function loyaltyObjectFields(data: PassData) {
+export function loyaltyObjectFields(data: PassData, stampBase?: string | null) {
+  const heroImage = stampHeroImage(data, stampBase)
   return {
     state: data.active ? 'ACTIVE' : 'INACTIVE',
     accountId: data.memberCode,
@@ -50,14 +68,15 @@ export function loyaltyObjectFields(data: PassData) {
     barcode: { type: 'QR_CODE', value: data.memberCode, alternateText: data.memberCode },
     textModulesData: [{ id: 'next_reward', header: 'Próxima recompensa', body: rewardText(data) }],
     hexBackgroundColor: brandColor(data.business.primaryColor),
+    ...(heroImage ? { heroImage } : {}),
   }
 }
 
-export function buildLoyaltyObject(issuerId: string, data: PassData) {
+export function buildLoyaltyObject(issuerId: string, data: PassData, stampBase?: string | null) {
   return {
     id: objectIdFor(issuerId, data.objectId),
     classId: classIdFor(issuerId, data.businessId),
-    ...loyaltyObjectFields(data),
+    ...loyaltyObjectFields(data, stampBase),
   }
 }
 
@@ -65,9 +84,9 @@ export function buildLoyaltyObject(issuerId: string, data: PassData) {
  * PATCH del sync. Con notifyPreference = "notifyOnUpdate", Google avisa en la pantalla
  * del teléfono cuando cambia loyaltyPoints.balance (hasta 3 avisos por pase cada 24 h).
  */
-export function buildObjectPatch(data: PassData, notify: boolean) {
+export function buildObjectPatch(data: PassData, notify: boolean, stampBase?: string | null) {
   return {
-    ...loyaltyObjectFields(data),
+    ...loyaltyObjectFields(data, stampBase),
     ...(notify && data.active ? { notifyPreference: 'notifyOnUpdate' } : {}),
   }
 }

@@ -13,7 +13,11 @@ import type { AppleConfig, Config } from '../lib/config.ts'
 import { randomHex, sha256Hex, type Rpc } from '../lib/db.ts'
 import { CARD_TOKEN, fail, json, readJson } from '../lib/http.ts'
 import { toPassData, type PassData } from '../lib/passData.ts'
-import { brandColor, isPng, publicLogoUrl } from '../lib/text.ts'
+import { fetchLogoPng } from '../lib/logo.ts'
+import { decodePng } from '../lib/png.ts'
+import { APPLE_STRIP_2X_SIZE, APPLE_STRIP_SIZE, stampPng } from '../lib/stampImage.ts'
+import { stampView } from '../lib/stamps.ts'
+import { brandColor } from '../lib/text.ts'
 import { buildManifest, buildPassJson, encodeJson, type PassFiles } from './pass.ts'
 import { solidPng } from './png.ts'
 import { zipStored } from './zip.ts'
@@ -51,26 +55,35 @@ export async function buildPkpass(
   return zipStored({ ...files, 'manifest.json': manifest, signature })
 }
 
-/** Imágenes del pase: el logo del negocio si es PNG; si no, un ícono del color de la marca. */
-async function passImages(deps: AppleDeps, data: PassData): Promise<PassFiles> {
+/**
+ * Imágenes del pase: el logo del negocio si es PNG (si no, un ícono del color de la
+ * marca) y, en las tarjetas de sellos, la fila de sellos como strip.png.
+ */
+export async function passImages(
+  deps: Pick<AppleDeps, 'fetch' | 'log'> & { config: { supabaseUrl: string } },
+  data: PassData,
+): Promise<PassFiles> {
   const brand = brandColor(data.business.primaryColor)
   const images: PassFiles = {
     'icon.png': await solidPng(29, 29, brand),
     'icon@2x.png': await solidPng(58, 58, brand),
   }
-  const url = isPng(data.business.logoPath)
-    ? publicLogoUrl(deps.config.supabaseUrl, data.business.logoPath)
-    : null
-  if (!url) return images
-  try {
-    const res = await deps.fetch(url, { signal: AbortSignal.timeout(5000) })
-    const bytes = new Uint8Array(await res.arrayBuffer())
-    if (res.ok && bytes.length > 0 && bytes.length <= 1024 * 1024) {
-      images['logo.png'] = bytes
-      images['logo@2x.png'] = bytes
-    }
-  } catch (error) {
-    deps.log(`apple logo fetch failed: ${error instanceof Error ? error.message : String(error)}`)
+  const logoBytes = await fetchLogoPng(
+    deps.fetch,
+    deps.config.supabaseUrl,
+    data.business.logoPath,
+    deps.log,
+  )
+  if (logoBytes) {
+    images['logo.png'] = logoBytes
+    images['logo@2x.png'] = logoBytes
+  }
+  const stamps = stampView(data)
+  if (stamps) {
+    const logo = logoBytes ? await decodePng(logoBytes) : null
+    const strip = { ...stamps, color: data.business.primaryColor, logo }
+    images['strip.png'] = await stampPng({ ...APPLE_STRIP_SIZE, ...strip })
+    images['strip@2x.png'] = await stampPng({ ...APPLE_STRIP_2X_SIZE, ...strip })
   }
   return images
 }

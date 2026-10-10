@@ -1203,6 +1203,9 @@ isOneToOne: false
                            },
 "wallet_pass_data":
 { Args: { "p_pass_id": string }; Returns: Json
+                           },
+"wallet_stamp_brand":
+{ Args: { "p_business_id": string }; Returns: Json
                            }
           }
           Enums: {

@@ -98,3 +98,64 @@ export async function getCard(token: string): Promise<Card | null> {
 export function nextReward(card: Pick<Card, 'pointsBalance' | 'rewards'>): CardReward | null {
   return card.rewards.find((reward) => reward.costPoints > card.pointsBalance) ?? null
 }
+
+/** Máximo de casilleros que se dibujan en la tarjeta de sellos. */
+export const MAX_STAMP_SLOTS = 20
+
+export interface StampSlots {
+  /** Casilleros que se dibujan (como mucho MAX_STAMP_SLOTS). */
+  total: number
+  /** Casilleros llenos (0..total). */
+  filled: number
+  /** Costo real de la recompensa a la que apunta la tarjeta. */
+  goal: number
+  /** Sellos que ya cuentan para esa recompensa (0..goal). */
+  progress: number
+  /** Sellos que faltan (0 si ya le alcanza para todas). */
+  missing: number
+  /** La recompensa a la que apunta: la próxima, o la más barata si ya llegó a todas. */
+  reward: CardReward
+  /** Recompensas que ya puede canjear (costo ≤ saldo). */
+  readyCount: number
+}
+
+/**
+ * Casilleros de la tarjeta de sellos. Apunta a la próxima recompensa que todavía no
+ * le alcanza; si ya le alcanzan todas, a la más barata (y se muestra llena).
+ * Con recompensas de más de MAX_STAMP_SLOTS, los casilleros se llenan en proporción.
+ * null si no hay recompensas. Misma regla que supabase/functions/wallet/lib/stamps.ts.
+ */
+export function stampSlots(balance: number, rewards: CardReward[]): StampSlots | null {
+  const sorted = rewards
+    .filter((r) => Number.isFinite(r.costPoints) && r.costPoints > 0)
+    .sort((a, b) => a.costPoints - b.costPoints)
+  const cheapest = sorted[0]
+  if (!cheapest) return null
+  const points = Math.max(0, Math.trunc(Number.isFinite(balance) ? balance : 0))
+  const reward = sorted.find((r) => r.costPoints > points) ?? cheapest
+  const goal = reward.costPoints
+  const progress = Math.min(points, goal)
+  const total = Math.min(goal, MAX_STAMP_SLOTS)
+  const filled = progress >= goal ? total : Math.floor((progress * total) / goal)
+  return {
+    total,
+    filled,
+    goal,
+    progress,
+    missing: goal - progress,
+    reward,
+    readyCount: sorted.filter((r) => r.costPoints <= points).length,
+  }
+}
+
+/**
+ * La tarjeta se dibuja con sellos en los programas de sellos y, en los de puntos,
+ * cuando la recompensa cuesta pocos puntos (≤ MAX_STAMP_SLOTS).
+ */
+export function showsStamps(
+  kind: ProgramKind | null | undefined,
+  slots: StampSlots | null,
+): slots is StampSlots {
+  if (!slots) return false
+  return kind === 'stamps' || slots.goal <= MAX_STAMP_SLOTS
+}

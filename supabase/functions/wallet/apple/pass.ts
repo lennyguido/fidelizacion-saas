@@ -3,6 +3,7 @@
 import type { PassData } from '../lib/passData.ts'
 import { brandColor, hexToRgb, rewardText, textColorOn, unitLabel } from '../lib/text.ts'
 import { toHex } from '../lib/db.ts'
+import { stampView } from '../lib/stamps.ts'
 
 export interface ApplePassOptions {
   passTypeId: string
@@ -17,6 +18,15 @@ export function buildPassJson(data: PassData, options: ApplePassOptions) {
   const brand = brandColor(data.business.primaryColor)
   const text = hexToRgb(textColorOn(brand))
   const unit = unitLabel(data)
+  const balance = {
+    key: 'balance',
+    label: unit.toUpperCase(),
+    value: data.pointsBalance,
+    changeMessage: `Ahora tenés %@ ${data.unit}`,
+  }
+  // En la tarjeta de sellos la fila de sellos (strip.png) ocupa el centro del pase:
+  // el saldo pasa arriba, al lado del logo, para no taparla.
+  const stamps = stampView(data) !== null
   return {
     formatVersion: 1,
     passTypeIdentifier: options.passTypeId,
@@ -41,14 +51,8 @@ export function buildPassJson(data: PassData, options: ApplePassOptions) {
       },
     ],
     storeCard: {
-      primaryFields: [
-        {
-          key: 'balance',
-          label: unit.toUpperCase(),
-          value: data.pointsBalance,
-          changeMessage: `Ahora tenés %@ ${data.unit}`,
-        },
-      ],
+      headerFields: stamps ? [balance] : [],
+      primaryFields: stamps ? [] : [balance],
       secondaryFields: data.firstName
         ? [{ key: 'member', label: 'SOCIO', value: data.firstName }]
         : [],

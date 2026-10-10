@@ -14,6 +14,7 @@ import { MemberQr } from './MemberQr'
 import { Movements } from './Movements'
 import { NoCard } from './NoCard'
 import { Rewards } from './Rewards'
+import { StampCard } from './StampCard'
 import { useDocumentBranding } from './useDocumentBranding'
 import { WalletButtons } from './WalletButtons'
 
@@ -47,6 +48,8 @@ function CardView({ card, token, onForget }: { card: Card; token: string; onForg
   useDocumentBranding(card.business.name, brand, logo)
   const unit = card.program?.kind === 'stamps' ? 'sellos' : 'puntos'
   const money = (minor: number) => formatMoney(minor, card.business.currency)
+  const slots = cardApi.stampSlots(card.pointsBalance, card.rewards)
+  const stamps = cardApi.showsStamps(card.program?.kind, slots) ? slots : null
 
   return (
     <main className="mx-auto flex min-h-dvh max-w-md flex-col gap-4 p-4 pb-10">
@@ -80,13 +83,15 @@ function CardView({ card, token, onForget }: { card: Card; token: string; onForg
         )}
       </header>
 
+      {stamps && <StampCard slots={stamps} unit={unit} brand={brand} logo={logo} />}
+
       <section className="rounded-2xl bg-white p-5 shadow-sm">
         <MemberQr code={card.memberCode} />
       </section>
 
       <WalletButtons token={token} />
 
-      <Rewards card={card} unit={unit} brand={brand} />
+      <Rewards card={card} unit={unit} brand={brand} showProgress={!stamps} />
       <Movements movements={card.movements} />
 
       <button

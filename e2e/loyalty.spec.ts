@@ -42,7 +42,9 @@ test('points: set up, join, digital card, earn at the counter by code, redeem', 
   await card.goto(link)
   await expect(card.getByText('Hola, Lola')).toBeVisible()
   await expect(card.getByTestId('card-balance')).toHaveText('0')
-  await expect(card.getByText(/Te faltan/)).toBeVisible()
+  // Recompensa de 1 punto: la tarjeta se dibuja con sellos (1 casillero vacío).
+  await expect(card.getByText(/Te falta/)).toBeVisible()
+  await expect(card.getByRole('img', { name: '0 de 1 puntos' })).toBeVisible()
   const memberCode = (await card.getByTestId('member-code').textContent())?.trim() ?? ''
   expect(memberCode).toMatch(/^[A-Z2-9]{8}$/)
 

@@ -15,6 +15,8 @@ export function passData(overrides: Partial<PassData> = {}): PassData {
     memberCode: 'ABCD2345',
     pointsBalance: 7,
     unit: 'puntos',
+    programKind: 'points',
+    stampGoal: null,
     nextReward: { name: 'Café gratis', costPoints: 10 },
     rewardsAvailable: 0,
     ...overrides,

@@ -1,8 +1,19 @@
 import { card as cardApi, type Card } from '@plataforma/sdk'
 
-export function Rewards({ card, unit, brand }: { card: Card; unit: string; brand: string }) {
+export function Rewards({
+  card,
+  unit,
+  brand,
+  showProgress = true,
+}: {
+  card: Card
+  unit: string
+  brand: string
+  /** false cuando la tarjeta de sellos ya muestra cuánto falta. */
+  showProgress?: boolean
+}) {
   if (card.rewards.length === 0) return null
-  const next = cardApi.nextReward(card)
+  const next = showProgress ? cardApi.nextReward(card) : null
 
   return (
     <section className="rounded-2xl bg-white p-5 shadow-sm">

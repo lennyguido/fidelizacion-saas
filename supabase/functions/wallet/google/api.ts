@@ -29,6 +29,8 @@ export interface GoogleApiOptions {
   /** Espera entre reintentos (se reemplaza en los tests). */
   sleep?: (ms: number) => Promise<void>
   now?: () => number
+  /** `${SUPABASE_URL}/functions/v1/wallet/stamps.png`: imagen de sellos del pase. */
+  stampImageBase?: string | null
 }
 
 export function createGoogleApi(config: GoogleConfig, options: GoogleApiOptions) {
@@ -37,6 +39,7 @@ export function createGoogleApi(config: GoogleConfig, options: GoogleApiOptions)
   let keyPromise: Promise<CryptoKey> | null = null
   let token: { value: string; expiresAt: number } | null = null
 
+  const stampBase = options.stampImageBase ?? null
   const key = () => (keyPromise ??= importRsaPrivateKey(config.privateKeyPem))
 
   async function accessToken(): Promise<string> {
@@ -103,7 +106,7 @@ export function createGoogleApi(config: GoogleConfig, options: GoogleApiOptions)
 
   /** Crea el objeto del socio o, si ya existe, actualiza su saldo. */
   async function upsertObject(data: PassData): Promise<void> {
-    const object = buildLoyaltyObject(config.issuerId, data)
+    const object = buildLoyaltyObject(config.issuerId, data, stampBase)
     const res = await call('POST', '/loyaltyObject', object)
     if (res.status !== 409) return expectOk(res, 'insert object')
     await res.body?.cancel()
@@ -111,7 +114,7 @@ export function createGoogleApi(config: GoogleConfig, options: GoogleApiOptions)
       await call(
         'PATCH',
         `/loyaltyObject/${encodeURIComponent(object.id)}`,
-        buildObjectPatch(data, false),
+        buildObjectPatch(data, false, stampBase),
       ),
       'patch object',
     )
@@ -123,7 +126,7 @@ export function createGoogleApi(config: GoogleConfig, options: GoogleApiOptions)
     const res = await call(
       'PATCH',
       `/loyaltyObject/${encodeURIComponent(id)}`,
-      buildObjectPatch(data, notify),
+      buildObjectPatch(data, notify, stampBase),
     )
     if (res.status === 404) {
       await res.body?.cancel()
