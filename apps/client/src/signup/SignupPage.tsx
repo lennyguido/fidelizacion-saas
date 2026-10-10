@@ -8,7 +8,13 @@ import { SIGNUP_MESSAGES } from './signupMessages'
  * Alta por QR (D-032): la persona escanea el cartel del mostrador, pone su nombre
  * y su celular y recibe la tarjeta. Las dos casillas van sin tildar.
  */
-export function SignupPage({ code, onCreated }: { code: string; onCreated: (token: string) => void }) {
+export function SignupPage({
+  code,
+  onCreated,
+}: {
+  code: string
+  onCreated: (token: string) => void
+}) {
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
   const [terms, setTerms] = useState(false)
@@ -76,8 +82,8 @@ export function SignupPage({ code, onCreated }: { code: string; onCreated: (toke
             onChange={(e) => setTerms(e.target.checked)}
           />
           <span>
-            Acepto que el negocio guarde mi nombre y celular para el programa de puntos. Puedo
-            pedir que los borren cuando quiera.
+            Acepto que el negocio guarde mi nombre y celular para el programa de puntos. Puedo pedir
+            que los borren cuando quiera.
           </span>
         </label>
         <label className="flex items-start gap-3 text-sm">
