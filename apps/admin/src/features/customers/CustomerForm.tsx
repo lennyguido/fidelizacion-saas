@@ -43,7 +43,7 @@ export function CustomerForm({
       phone: normalizedPhone,
       email: values.email.trim() || null,
       notes: values.notes.trim() || null,
-      birthday: birthday === 'invalid' ? null : birthday,
+      birthday,
     })
   }
 
