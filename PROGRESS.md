@@ -39,6 +39,8 @@ Proyecto de **desarrollo**: `fidelizacion-saas`, ref `dqpnqcumlyfifewgzyvh` (ún
 | 19 | 20261009222552 | loyalty_hardening | aplicada 2026-10-09 ~19:30 (CI de `main` en verde, no destructiva; archivo renombrado de `20261009191000` a la versión de Supabase) |
 | 20 | 20261009222648 | core_campaigns_hardening | aplicada 2026-10-09 ~19:30 (los `drop` solo reemplazan funciones internas y un índice; no borra datos; archivo renombrado de `20261009191100` a la versión de Supabase) |
 | 21 | 20261009225015 | core_campaign_coupons | aplicada 2026-10-09 ~20:30 (D-026; CI verde, no destructiva: agrega columnas y reemplaza funciones; archivo renombrado de `20261009224000` a la versión de Supabase) |
+| 22 | 20261010031000 | core_coupons_hardening | en `main` (D-027) — ver estado abajo |
+| 23 | 20261010120000 | loyalty_wallet | en `main` (D-028) — ver estado abajo |
 
 Regla vigente desde 2026-10-09: ninguna migración se aplica sin aprobación explícita del dueño después de revisarla.
 
@@ -173,6 +175,12 @@ Cómo volver atrás: cada cosa está en su rama; lo único integrado en `main` e
 ## Marketing (solo documentos)
 
 `docs/marketing/`: nombre recomendado **Vueltita** (falta verificar INPI y nic.ar), marca y colores, análisis de mercado con fuentes, precios propuestos, guion de ventas y textos de la web. No cambia el backlog ni el código.
+
+## Sábado 10, madrugada — cupones reforzados, Wallet y análisis de oportunidades
+
+* Revisión de los 19 commits hechos con Claude Code (cupones, simulacro de backup): sin fugas entre negocios; arreglado que un cupón contara sin visita, el doble paso del mostrador, módulo apagado, códigos con azar seguro, auto-canje, script de backup seguro (D-027). Archivos de migraciones 18–21 renombrados a las versiones de desarrollo.
+* **Google Wallet / Apple Wallet** (D-028): Edge Function `wallet`, tablas y cola de avisos, botones en la tarjeta; sin credenciales todavía (pasos en `docs/WALLET.md`).
+* **`docs/OPORTUNIDADES.md`**: 30 oportunidades con evidencia y hoja de ruta de 90 días (D-029).
 
 ## Current blockers
 

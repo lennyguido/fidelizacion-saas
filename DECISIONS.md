@@ -132,3 +132,15 @@ Vercel Hobby prohíbe uso comercial y Netlify gratis pausa los sitios al quedars
 ## D-026 — Atribución por cupón (2026-10-09, vigente)
 
 Al lanzar una campaña, cada cliente del grupo contactado recibe un cupón de 6 caracteres (sin I, O, 0 ni 1; único en el negocio) que el mensaje incluye con `{cupon}`. El grupo de control no tiene cupón. En el mostrador cualquier miembro del equipo lo valida (`core.find_campaign_coupon`) y lo usa (`core.redeem_campaign_coupon`): se registra la visita con el monto y el cupón queda atado a esa visita, una sola vez, dentro de la ventana de la campaña y solo si el cliente sigue activo. Los resultados muestran los cupones usados (si la visita se anula, deja de contar). El cupón es una prueba más fuerte de que el cliente volvió por el mensaje, pero **no reemplaza** la comparación con el grupo de control: "volvió" e "incremental" se siguen calculando igual (D-021). El mostrador recibe tarjetas de los módulos con `counterPanel` en el manifest (la del cupón la aporta `recovery`).
+
+## D-027 — Endurecimiento de cupones (2026-10-10, vigente)
+
+Un cupón usado queda siempre atado a una visita real (mismo negocio y cliente, no anulada, dentro de la ventana de la campaña). Los resultados cuentan solo cupones con esa visita vigente. En el mostrador se usa una sola función, `core.record_visit_with_coupon`, que en la misma transacción registra la visita (o reusa la recién cargada, sin cambiar su monto) y marca el cupón; `core.redeem_campaign_coupon` queda interna. Los cupones respetan el módulo de la campaña, nadie del equipo puede usar un cupón de su propia ficha de cliente (`self_redemption`) y los códigos usan bytes aleatorios de pgcrypto.
+
+## D-028 — Tarjeta en Google Wallet / Apple Wallet (2026-10-10, propuesta: faltan las cuentas del dueño)
+
+El cliente guarda su tarjeta en la billetera del teléfono desde la tarjeta por link (D-020). Todo pasa por la Edge Function `wallet` (service role); `loyalty.wallet_passes`, `wallet_devices` y `wallet_updates` no tienen permisos para el panel ni para anon. Al pase viajan solo nombre de pila, puntos, código de socio y marca del negocio. Un trigger sobre `loyalty.members` encola avisos; un cron llama a `/wallet/google/sync`, que actualiza el pase con aviso gratis en el teléfono (Google: hasta 3 por día), por tandas, idempotente y con reintentos. Google primero (gratis); Apple listo detrás de sus secrets (cuenta de USD 99/año) y su aviso por APNs queda pendiente. Sin secrets, la función responde 501 y los botones no aparecen. Guía: `docs/WALLET.md`.
+
+## D-029 — Prioridades de producto (2026-10-10, propuesta)
+
+Análisis en `docs/OPORTUNIDADES.md`. Mínimo para competir en 2026: Wallet con avisos gratis (canal por defecto; WhatsApp API cuesta por mensaje y va con cupo por plan). Hoja de ruta de 90 días atada al piloto: Wallet → alta del cliente por QR con consentimiento + plantillas por rubro + cartel imprimible → resumen semanal al dueño (detector de pérdidas) → cumpleaños y segunda visita automáticos → "traé un amigo" → pedido de reseña en Google (a todos, sin premio) → prueba técnica de Mercado Pago.
