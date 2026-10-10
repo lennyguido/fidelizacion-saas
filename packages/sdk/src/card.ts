@@ -129,9 +129,10 @@ export function stampSlots(balance: number, rewards: CardReward[]): StampSlots |
   const sorted = rewards
     .filter((r) => Number.isFinite(r.costPoints) && r.costPoints > 0)
     .sort((a, b) => a.costPoints - b.costPoints)
-  if (sorted.length === 0) return null
+  const cheapest = sorted[0]
+  if (!cheapest) return null
   const points = Math.max(0, Math.trunc(Number.isFinite(balance) ? balance : 0))
-  const reward = sorted.find((r) => r.costPoints > points) ?? sorted[0]
+  const reward = sorted.find((r) => r.costPoints > points) ?? cheapest
   const goal = reward.costPoints
   const progress = Math.min(points, goal)
   const total = Math.min(goal, MAX_STAMP_SLOTS)
