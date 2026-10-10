@@ -20,7 +20,9 @@ export function OutboxPage() {
 
   return (
     <section className="flex flex-col gap-4">
-      <Link to={base} className="text-sm text-slate-500 hover:underline">← Recuperación</Link>
+      <Link to={base} className="text-sm text-slate-500 hover:underline">
+        ← Recuperación
+      </Link>
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Mensajes listos</h1>
         <p className="text-sm text-slate-600">

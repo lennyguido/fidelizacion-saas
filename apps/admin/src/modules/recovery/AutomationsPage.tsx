@@ -35,13 +35,17 @@ export function AutomationsPage() {
 
   return (
     <section className="flex flex-col gap-4">
-      <Link to={base} className="text-sm text-slate-500 hover:underline">← Recuperación</Link>
+      <Link to={base} className="text-sm text-slate-500 hover:underline">
+        ← Recuperación
+      </Link>
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Automático</h1>
         <p className="text-sm text-slate-600">
           Cada mañana se preparan los mensajes (solo a quienes aceptaron WhatsApp).
         </p>
-        <Link to={`${base}/mensajes`} className="text-sm underline">Ver mensajes listos</Link>
+        <Link to={`${base}/mensajes`} className="text-sm underline">
+          Ver mensajes listos
+        </Link>
       </div>
       <div className="flex flex-wrap gap-2">
         <Button variant="secondary" loading={runNow.isPending} onClick={() => runNow.mutate()}>

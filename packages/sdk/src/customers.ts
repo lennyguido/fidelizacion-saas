@@ -208,9 +208,10 @@ function duplicateAware(error: { code?: string; message?: string }): AppError {
 }
 
 /** Columnas del cumpleaños: nada si no se mandó (no se cambia), null si se borra. */
-function birthdayColumns(
-  birthday: Birthday | null | undefined,
-): { birth_day?: number | null; birth_month?: number | null } {
+function birthdayColumns(birthday: Birthday | null | undefined): {
+  birth_day?: number | null
+  birth_month?: number | null
+} {
   if (birthday === undefined) return {}
   return { birth_day: birthday?.day ?? null, birth_month: birthday?.month ?? null }
 }
