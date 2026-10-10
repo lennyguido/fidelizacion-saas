@@ -103,7 +103,7 @@ select set_eq(
        ('core.list_campaign_recipients(uuid)'),
        ('core.campaign_results(uuid)'),
        ('core.find_campaign_coupon(uuid,text)'),
-       ('core.redeem_campaign_coupon(uuid,text,uuid)'),
+       ('core.record_visit_with_coupon(uuid,text,uuid,bigint)'),
        ('core.dashboard_summary(uuid)'),
        ('loyalty.enroll_customer(uuid)'),
        ('loyalty.leave_program(uuid)'),

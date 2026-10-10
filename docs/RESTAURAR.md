@@ -52,8 +52,9 @@ verde, el procedimiento funciona.
 
 * **Archivos** (logos): están en Storage, no en la base. Volver a subirlos desde
   "Mi negocio" o copiarlos del proyecto viejo si sigue accesible.
-* **Contraseñas de las cuentas sí vienen** (están en `auth.users`, cifradas), pero
-  los links de tarjeta viejos solo siguen andando si se restauró `loyalty.cards`
-  (viene en `data.sql`).
+* **Contraseñas de las cuentas sí vienen** (están en `auth.users`, hasheadas:
+  guardadas de forma que no se pueden leer, solo comprobar), pero los links de
+  tarjeta viejos solo siguen andando si se restauró `loyalty.cards` (viene en
+  `data.sql`).
 * Las tareas programadas (`pg_cron`) vienen en la estructura; revisar en Database →
   Cron que estén activas.

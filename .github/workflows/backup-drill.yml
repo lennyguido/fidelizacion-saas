@@ -21,8 +21,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+      # Versión fija: el simulacro tiene que dar lo mismo cada semana. Subirla a
+      # mano (y ver que el simulacro siga verde) cuando haga falta.
       - uses: supabase/setup-cli@v1
         with:
-          version: latest
+          version: 2.120.0
+      - run: supabase --version
       - run: supabase db start
       - run: scripts/ci-run.sh "backup drill" bash scripts/backup-drill.sh

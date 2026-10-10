@@ -23,6 +23,7 @@ export type AppErrorCode =
   | 'coupon_expired'
   | 'coupon_visit_mismatch'
   | 'customer_inactive'
+  | 'self_redemption'
   | 'auth_invalid_credentials'
   | 'auth_email_not_confirmed'
   | 'auth_user_exists'
@@ -64,6 +65,7 @@ const DOMAIN_CODES = [
   'coupon_expired',
   'coupon_visit_mismatch',
   'customer_inactive',
+  'self_redemption',
   'insufficient_points',
   'reward_unavailable',
   'member_inactive',
@@ -152,8 +154,10 @@ export function errorMessage(error: unknown): string {
     coupon_not_found: 'No existe ese cupón. Revisá las letras.',
     coupon_already_used: 'Este cupón ya se usó.',
     coupon_expired: 'Este cupón está vencido.',
-    coupon_visit_mismatch: 'El cupón es de otro cliente.',
+    coupon_visit_mismatch:
+      'El cupón no corresponde a esta visita (es de otro cliente o está fuera de la fecha de la campaña).',
     customer_inactive: 'Este cliente está archivado.',
+    self_redemption: 'No podés usar un cupón tuyo. Pedile a otra persona del equipo que lo cargue.',
     auth_invalid_credentials: 'Email o contraseña incorrectos.',
     auth_email_not_confirmed: 'Confirmá tu email antes de ingresar. Revisá tu casilla.',
     auth_user_exists: 'Ya existe una cuenta con ese email. Probá ingresar.',

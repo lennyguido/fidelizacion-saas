@@ -715,8 +715,11 @@ isOneToOne: false
         isOneToOne: true
         isSetofReturn: false
       } },
+"record_visit_with_coupon":
+{ Args: { "p_amount_minor"?: number,"p_business_id": string,"p_code": string,"p_location_id"?: string }; Returns: Json
+                           },
 "redeem_campaign_coupon":
-{ Args: { "p_business_id": string,"p_code": string,"p_visit_id"?: string }; Returns: Json
+{ Args: { "p_business_id": string,"p_code": string,"p_visit_id": string }; Returns: Json
                            },
 "refresh_customer_stats":
 { Args: { "p_customer_id": string,"p_is_new_visit"?: boolean,"p_prev_status"?: string,"p_reason": string }; Returns: {

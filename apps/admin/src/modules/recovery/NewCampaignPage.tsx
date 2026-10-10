@@ -144,6 +144,9 @@ export function NewCampaignPage() {
               {'{cupon}'}: un código por cliente; si lo muestra, volvió por la campaña.
             </span>
           </label>
+          {!message.includes('{cupon}') && (
+            <Alert tone="info">Sin {'{cupon}'} en el mensaje, el cliente no ve su código.</Alert>
+          )}
           <TextField
             label="Beneficio (opcional)"
             value={benefit}
