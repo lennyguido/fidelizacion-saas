@@ -42,7 +42,7 @@ Proyecto de **desarrollo**: `fidelizacion-saas`, ref `dqpnqcumlyfifewgzyvh` (ún
 | 22 | 20261010141212 | core_coupons_hardening | aplicada 2026-10-10 ~11:10 (CI verde; el `drop` reemplaza una función, no borra datos; archivo renombrado de `20261010031000`) |
 | 23 | 20261010141302 | loyalty_wallet | aplicada 2026-10-10 ~11:10 (tablas nuevas, solo service role; archivo renombrado de `20261010120000`) |
 | 24 | 20261010141333 | loyalty_wallet_stamps | aplicada 2026-10-10 ~11:10 (archivo renombrado de `20261010160000`) |
-| 25 | 20261011020000 | core_automations | ver abajo (D-031) |
+| 25 | 20261010144420 | core_automations | aplicada 2026-10-10 ~11:45 (D-031; CI verde, no destructiva; pg_cron `core-run-automations` 13:00 UTC; archivo renombrado de `20261011020000`) |
 
 Regla vigente desde 2026-10-09: ninguna migración se aplica sin aprobación explícita del dueño después de revisarla.
 
