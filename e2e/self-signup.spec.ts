@@ -30,7 +30,7 @@ test('template, QR sign-up poster, customer signs up alone and repeated sign-ups
   await expect(page.getByText('Café de regalo').first()).toBeVisible()
 
   // Alta por QR: activar y ver el cartel.
-  await page.getByRole('button', { name: 'Activar' }).click()
+  await page.getByRole('button', { name: 'Activar', exact: true }).click()
   const link = page.getByText(/\/alta\/[A-Z2-9]{10}$/)
   await expect(link).toBeVisible()
   const signupUrl = ((await link.textContent()) ?? '').trim()
@@ -68,6 +68,6 @@ test('template, QR sign-up poster, customer signs up alone and repeated sign-ups
   await page.goto(`${base}/fidelizacion`)
   await expect(page.getByText('Avisos del alta (1)')).toBeVisible()
   await expect(page.getByText('Escribió “Otro Nombre”', { exact: false })).toBeVisible()
-  await page.getByRole('button', { name: 'Listo' }).click()
+  await page.getByRole('button', { name: 'Listo', exact: true }).click()
   await expect(page.getByText('Avisos del alta (1)')).toHaveCount(0)
 })
