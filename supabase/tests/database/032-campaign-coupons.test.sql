@@ -74,7 +74,7 @@ select throws_ok(format($$ select core.find_campaign_coupon(%L, %L) $$, :'biz', 
 select tests.authenticate_as(:'staff');
 select (core.record_visit(:'biz', null, :'cust2')).id as visit2 \gset
 
--- La función de dos pasos ya no es del equipo (20261010031000): reset role la
+-- La función de dos pasos ya no es del equipo (20261010141212): reset role la
 -- prueba como interna, con la sesión del cajero.
 reset role;
 select throws_ok(format($$ select core.redeem_campaign_coupon(%L, %L, %L) $$, :'biz', :'code1', :'visit2'),

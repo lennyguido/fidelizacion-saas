@@ -39,9 +39,9 @@ Proyecto de **desarrollo**: `fidelizacion-saas`, ref `dqpnqcumlyfifewgzyvh` (ún
 | 19 | 20261009222552 | loyalty_hardening | aplicada 2026-10-09 ~19:30 (CI de `main` en verde, no destructiva; archivo renombrado de `20261009191000` a la versión de Supabase) |
 | 20 | 20261009222648 | core_campaigns_hardening | aplicada 2026-10-09 ~19:30 (los `drop` solo reemplazan funciones internas y un índice; no borra datos; archivo renombrado de `20261009191100` a la versión de Supabase) |
 | 21 | 20261009225015 | core_campaign_coupons | aplicada 2026-10-09 ~20:30 (D-026; CI verde, no destructiva: agrega columnas y reemplaza funciones; archivo renombrado de `20261009224000` a la versión de Supabase) |
-| 22 | 20261010031000 | core_coupons_hardening | **en `main`, NO aplicada** (aviso de Supabase sin confirmar, 10/10 madrugada). Hasta aplicarla, el cupón del mostrador falla |
-| 23 | 20261010120000 | loyalty_wallet | **en `main`, NO aplicada** (aviso sin confirmar) |
-| 24 | 20261010160000 | loyalty_wallet_stamps | **en `main`, NO aplicada** (necesita la 23 antes) |
+| 22 | 20261010141212 | core_coupons_hardening | aplicada 2026-10-10 ~11:10 (CI verde; el `drop` reemplaza una función, no borra datos; archivo renombrado de `20261010031000`) |
+| 23 | 20261010141302 | loyalty_wallet | aplicada 2026-10-10 ~11:10 (tablas nuevas, solo service role; archivo renombrado de `20261010120000`) |
+| 24 | 20261010141333 | loyalty_wallet_stamps | aplicada 2026-10-10 ~11:10 (archivo renombrado de `20261010160000`) |
 
 Regla vigente desde 2026-10-09: ninguna migración se aplica sin aprobación explícita del dueño después de revisarla.
 

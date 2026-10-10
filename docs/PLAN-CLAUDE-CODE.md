@@ -32,9 +32,7 @@
 ## Estado de partida
 
 - `main` está en `0b2555d` con CI verde.
-- Migraciones **sin aplicar** en desarrollo: `20261010031000_core_coupons_hardening`, `20261010120000_loyalty_wallet` y `20261010160000_loyalty_wallet_stamps`.
-  - Aplicarlas primero, en ese orden: con `supabase db push` o pegándolas en el SQL Editor.
-  - El cupón en el mostrador falla hasta que estén aplicadas.
+- Migraciones 22–24 (`core_coupons_hardening`, `loyalty_wallet`, `loyalty_wallet_stamps`): **aplicadas** en desarrollo el 2026-10-10 (archivos renombrados a `20261010141212`, `141302` y `141333`).
 - Pendiente de revisión del mentor: migraciones 11–14 (ramas `feat/equipo-y-privacidad` y `feat/proteger-duenos`).
 
 ## Tareas (en este orden)
@@ -231,7 +229,7 @@ Dejar al dueño una lista corta y en español simple:
   - `core.campaign_results` (atribución vs. control), `core.dashboard_summary`;
   - `core.whatsapp_marketing_granted(business, customer)` (consentimiento vigente) y `core.in_open_campaign(business, customer)`;
   - cupones: `core.new_coupon_code`, `core.normalize_coupon_code`, `core.coupon_info`, `core.find_campaign_coupon`.
-- `core.redeem_campaign_coupon` **se borra** en `20261010031000_core_coupons_hardening`. La reemplaza `core.record_visit_with_coupon(uuid,text,uuid,bigint)`: usar esa.
+- `core.redeem_campaign_coupon` **se borra** en `20261010141212_core_coupons_hardening`. La reemplaza `core.record_visit_with_coupon(uuid,text,uuid,bigint)`: usar esa.
 - Frontend de recuperación: `apps/admin/src/modules/recovery/`. Ahí están `RecoveryPage`, `NewCampaignPage`, `CampaignPage`, `RecipientsList`, `CampaignResultsCard`, `CouponCounterPanel`, `previewText.ts` (vista previa del mensaje con variables) y `queries.ts`.
 - pg_cron condicional: copiar el patrón de `20261009014518_core_audit_storage_jobs.sql` (líneas ~150–165). Si no existe pg_cron, solo avisa y sigue, así los tests locales no fallan.
 
