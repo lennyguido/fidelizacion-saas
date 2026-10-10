@@ -78,6 +78,11 @@ Rama `fix/archive-owner-admin-only` (commit `62a7b19`):
 
 Limitación: los tests de punta a punta corren contra un Supabase **local** en CI. El panel todavía **no se probó contra el proyecto de desarrollo remoto**. Eso es lo que falta validar ahora.
 
+## Sábado 10 — conexión con cajas (plan tarea 3)
+
+* Edge Function `sales-ingest` + claves por negocio (solo el hash) + simulador en **Mi negocio → Conexión con la caja**. Cada venta es una visita `pos` deduplicada por comprobante; se identifica al cliente por celular o código de socio. Guía `docs/CAPTURA-AUTOMATICA.md`, D-033. Mercado Pago y Fudo: checkpoint.
+* Pendiente del dueño para usarla de verdad: publicar la Edge Function (`supabase functions deploy sales-ingest`).
+
 ## Sábado 10 — alta por QR (plan tarea 2)
 
 * Rama `feat/alta-por-qr` (base de datos del otro Claude + pantallas): página pública `/alta/<código>` en la app del cliente, plantillas por rubro en Fidelización, cartel imprimible A4/A5 y "Avisos del alta". Guía `docs/ALTA-QR.md`, D-032.

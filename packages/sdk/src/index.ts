@@ -56,6 +56,8 @@ export type {
   SelfSignupSettings,
   SelfSignupStatus,
 } from './selfSignup.ts'
+export * as integrations from './integrations.ts'
+export type { IntegrationKey, SimulatedSale } from './integrations.ts'
 export * as dashboard from './dashboard.ts'
 export type { DashboardSummary } from './dashboard.ts'
 export * as loyalty from './loyalty.ts'
