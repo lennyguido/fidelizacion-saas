@@ -3,6 +3,8 @@ import { Alert, FullPageSpinner } from '@plataforma/ui'
 import { useActiveBusiness } from '../../features/business/ActiveBusinessContext'
 import { ProgramCard } from './ProgramCard'
 import { RewardsCard } from './RewardsCard'
+import { SelfSignupCard } from './SelfSignupCard'
+import { TemplatesCard } from './TemplatesCard'
 import { useProgram, useRewards } from './queries'
 
 export function LoyaltyPage() {
@@ -23,8 +25,10 @@ export function LoyaltyPage() {
           ficha.
         </p>
       </div>
+      {business.role !== 'staff' && <TemplatesCard />}
       <ProgramCard program={program.data} />
       <RewardsCard rewards={rewards.data} />
+      <SelfSignupCard />
     </section>
   )
 }

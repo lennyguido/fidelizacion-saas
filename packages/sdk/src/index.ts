@@ -48,6 +48,14 @@ export {
   type OutboxBlockedReason,
   type OutboxMessage,
 } from './automations.ts'
+export * as selfSignup from './selfSignup.ts'
+export type {
+  SelfSignupInput,
+  SelfSignupNotice,
+  SelfSignupResult,
+  SelfSignupSettings,
+  SelfSignupStatus,
+} from './selfSignup.ts'
 export * as dashboard from './dashboard.ts'
 export type { DashboardSummary } from './dashboard.ts'
 export * as loyalty from './loyalty.ts'
@@ -60,6 +68,7 @@ export type {
   Movement as LoyaltyMovement,
   MovementReason as LoyaltyMovementReason,
   Program as LoyaltyProgram,
+  ProgramTemplate as LoyaltyProgramTemplate,
   ProgramInput as LoyaltyProgramInput,
   ProgramKind as LoyaltyProgramKind,
   ProgramRule as LoyaltyProgramRule,

@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
-import { card } from '@plataforma/sdk'
+import { card, selfSignup } from '@plataforma/sdk'
 import { CardPage } from '@/card/CardPage'
 import { NoCard } from '@/card/NoCard'
 import { forgetToken, readSavedToken, saveToken } from '@/savedToken'
+import { SignupPage } from '@/signup/SignupPage'
 
 function initialToken(): string | null {
   return card.tokenFromHash(window.location.hash) ?? readSavedToken()
@@ -10,6 +11,9 @@ function initialToken(): string | null {
 
 export function App() {
   const [token, setToken] = useState<string | null>(initialToken)
+  const [signupCode, setSignupCode] = useState(() =>
+    selfSignup.codeFromPath(window.location.pathname),
+  )
 
   useEffect(() => {
     if (!token) return
@@ -29,6 +33,18 @@ export function App() {
     return () => window.removeEventListener('hashchange', onHash)
   }, [])
 
+  if (signupCode) {
+    return (
+      <SignupPage
+        code={signupCode}
+        onCreated={(newToken) => {
+          window.history.replaceState(null, '', '/')
+          setSignupCode(null)
+          setToken(newToken)
+        }}
+      />
+    )
+  }
   if (!token) return <NoCard />
   return (
     <CardPage
