@@ -41,6 +41,7 @@ Proyecto de **desarrollo**: `fidelizacion-saas`, ref `dqpnqcumlyfifewgzyvh` (ún
 | 21 | 20261009225015 | core_campaign_coupons | aplicada 2026-10-09 ~20:30 (D-026; CI verde, no destructiva: agrega columnas y reemplaza funciones; archivo renombrado de `20261009224000` a la versión de Supabase) |
 | 22 | 20261010031000 | core_coupons_hardening | **en `main`, NO aplicada** (aviso de Supabase sin confirmar, 10/10 madrugada). Hasta aplicarla, el cupón del mostrador falla |
 | 23 | 20261010120000 | loyalty_wallet | **en `main`, NO aplicada** (aviso sin confirmar) |
+| 24 | 20261010160000 | loyalty_wallet_stamps | **en `main`, NO aplicada** (necesita la 23 antes) |
 
 Regla vigente desde 2026-10-09: ninguna migración se aplica sin aprobación explícita del dueño después de revisarla.
 
@@ -180,6 +181,7 @@ Cómo volver atrás: cada cosa está en su rama; lo único integrado en `main` e
 
 * Revisión de los 19 commits hechos con Claude Code (cupones, simulacro de backup): sin fugas entre negocios; arreglado que un cupón contara sin visita, el doble paso del mostrador, módulo apagado, códigos con azar seguro, auto-canje, script de backup seguro (D-027). Archivos de migraciones 18–21 renombrados a las versiones de desarrollo.
 * **Google Wallet / Apple Wallet** (D-028): Edge Function `wallet`, tablas y cola de avisos, botones en la tarjeta; sin credenciales todavía (pasos en `docs/WALLET.md`).
+* **Tarjeta de sellos** (D-030): la tarjeta web y el Wallet muestran casilleros que se llenan con el logo del negocio.
 * **`docs/OPORTUNIDADES.md`**: 30 oportunidades con evidencia y hoja de ruta de 90 días (D-029).
 
 ## Current blockers

@@ -144,3 +144,7 @@ El cliente guarda su tarjeta en la billetera del teléfono desde la tarjeta por 
 ## D-029 — Prioridades de producto (2026-10-10, propuesta)
 
 Análisis en `docs/OPORTUNIDADES.md`. Mínimo para competir en 2026: Wallet con avisos gratis (canal por defecto; WhatsApp API cuesta por mensaje y va con cupo por plan). Hoja de ruta de 90 días atada al piloto: Wallet → alta del cliente por QR con consentimiento + plantillas por rubro + cartel imprimible → resumen semanal al dueño (detector de pérdidas) → cumpleaños y segunda visita automáticos → "traé un amigo" → pedido de reseña en Google (a todos, sin premio) → prueba técnica de Mercado Pago.
+
+## D-030 — Tarjeta de sellos (2026-10-10, vigente)
+
+La tarjeta se dibuja como cartón de sellos en los programas "Tarjeta de sellos" y en los de puntos cuya recompensa cuesta ≤ 20: casilleros = costo de la próxima recompensa (tope 20, llenado proporcional si cuesta más); el sello lleno muestra el logo del negocio. La regla vive igual en `card.stampSlots()` (SDK) y `wallet/lib/stamps.ts`. En el Wallet, la fila de sellos es una imagen pública `GET /wallet/stamps.png` (solo color y logo, ya públicos por D-024), con caché inmutable; Google la usa como `heroImage` y Apple como `strip.png`. Se dibuja en TypeScript puro: en el Wallet solo se usan logos PNG (con otros formatos, un tilde). Migración `20261010160000_loyalty_wallet_stamps.sql`.
