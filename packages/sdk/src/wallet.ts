@@ -20,7 +20,7 @@ export type WalletErrorCode =
 export class WalletError extends Error {
   readonly code: WalletErrorCode
 
-  constructor(code: WalletErrorCode, message = code) {
+  constructor(code: WalletErrorCode, message: string = code) {
     super(message)
     this.name = 'WalletError'
     this.code = code
