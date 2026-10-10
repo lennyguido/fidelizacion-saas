@@ -35,10 +35,10 @@ Proyecto de **desarrollo**: `fidelizacion-saas`, ref `dqpnqcumlyfifewgzyvh` (ún
 | 15 | 20261009182137 | loyalty_core | aplicada 2026-10-09 15:21 (OK del dueño, D-019; merge a `main`) |
 | 16 | 20261009183337 | loyalty_cards | aplicada 2026-10-09 15:33 (D-019; merge a `main`) |
 | 17 | 20261009184605 | core_campaigns | aplicada 2026-10-09 15:46 (D-019; merge a `main`) |
-| 18 | 20261009191000 | loyalty_hardening | aplicada 2026-10-09 ~19:30 (CI de `main` en verde, no destructiva) |
-| 19 | 20261009191100 | core_campaigns_hardening | aplicada 2026-10-09 ~19:30 (los `drop` solo reemplazan funciones internas y un índice; no borra datos) |
-| 20 | 20261009191200 | core_timezone_check_grant | aplicada 2026-10-09 19:03 (en Supabase figura con versión `20261009220309`) |
-| 21 | 20261009224000 | core_campaign_coupons | aplicada 2026-10-09 ~20:30 (D-026; CI verde, no destructiva: agrega columnas y reemplaza funciones) |
+| 18 | 20261009220309 | core_timezone_check_grant | aplicada 2026-10-09 19:03 (archivo renombrado de `20261009191200` a la versión que figura en Supabase) |
+| 19 | 20261009222552 | loyalty_hardening | aplicada 2026-10-09 ~19:30 (CI de `main` en verde, no destructiva; archivo renombrado de `20261009191000` a la versión de Supabase) |
+| 20 | 20261009222648 | core_campaigns_hardening | aplicada 2026-10-09 ~19:30 (los `drop` solo reemplazan funciones internas y un índice; no borra datos; archivo renombrado de `20261009191100` a la versión de Supabase) |
+| 21 | 20261009225015 | core_campaign_coupons | aplicada 2026-10-09 ~20:30 (D-026; CI verde, no destructiva: agrega columnas y reemplaza funciones; archivo renombrado de `20261009224000` a la versión de Supabase) |
 
 Regla vigente desde 2026-10-09: ninguna migración se aplica sin aprobación explícita del dueño después de revisarla.
 
