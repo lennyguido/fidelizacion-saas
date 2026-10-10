@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
 import { AppError, errorMessage, loyalty, type LoyaltyProgramTemplate } from '@plataforma/sdk'
-import { Alert, Button, Card, Spinner, useToast } from '@plataforma/ui'
+import { Button, Card, Spinner, useToast } from '@plataforma/ui'
 import { useActiveBusiness } from '../../features/business/ActiveBusinessContext'
 import { useInvalidateLoyalty, useTemplates } from './queries'
 
@@ -17,7 +17,7 @@ export function TemplatesCard() {
         </p>
       </div>
       {templates.isPending && <Spinner />}
-      {templates.error && <Alert tone="error">{errorMessage(templates.error)}</Alert>}
+      {templates.error && <p className="text-sm text-slate-500">Todavía no está disponible.</p>}
       <ul className="grid gap-2 sm:grid-cols-2">
         {templates.data?.map((template) => (
           <TemplateButton key={template.kind} template={template} />

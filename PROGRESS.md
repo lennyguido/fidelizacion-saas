@@ -43,6 +43,8 @@ Proyecto de **desarrollo**: `fidelizacion-saas`, ref `dqpnqcumlyfifewgzyvh` (ún
 | 23 | 20261010141302 | loyalty_wallet | aplicada 2026-10-10 ~11:10 (tablas nuevas, solo service role; archivo renombrado de `20261010120000`) |
 | 24 | 20261010141333 | loyalty_wallet_stamps | aplicada 2026-10-10 ~11:10 (archivo renombrado de `20261010160000`) |
 | 25 | 20261010144420 | core_automations | aplicada 2026-10-10 ~11:45 (D-031; CI verde, no destructiva; pg_cron `core-run-automations` 13:00 UTC; archivo renombrado de `20261011020000`) |
+| 26 | 20261011010000 | core_self_signup | **pendiente de revisión del mentor — NO aplicar** (D-032: junto con la 27 agrega la función anon `loyalty.self_signup`) |
+| 27 | 20261011010100 | loyalty_self_signup | **pendiente de revisión del mentor — NO aplicar** (D-032) |
 
 Regla vigente desde 2026-10-09: ninguna migración se aplica sin aprobación explícita del dueño después de revisarla.
 
@@ -75,6 +77,11 @@ Rama `fix/archive-owner-admin-only` (commit `62a7b19`):
 | Punta a punta (Playwright) | CI: `supabase start` + build + `vite preview` + `npx playwright test` (celular y escritorio) | OK: registro → onboarding → panel → login; credenciales incorrectas; mostrador; importación CSV |
 
 Limitación: los tests de punta a punta corren contra un Supabase **local** en CI. El panel todavía **no se probó contra el proyecto de desarrollo remoto**. Eso es lo que falta validar ahora.
+
+## Sábado 10 — alta por QR (plan tarea 2)
+
+* Rama `feat/alta-por-qr` (base de datos del otro Claude + pantallas): página pública `/alta/<código>` en la app del cliente, plantillas por rubro en Fidelización, cartel imprimible A4/A5 y "Avisos del alta". Guía `docs/ALTA-QR.md`, D-032.
+* **Migraciones 26–27 en `main` pero NO aplicadas: esperan la revisión del mentor** (función para personas sin cuenta). Hasta entonces el alta no funciona en desarrollo.
 
 ## Sábado 10 — recuperación automática (plan tarea 1)
 

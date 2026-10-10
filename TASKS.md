@@ -96,6 +96,7 @@ Ver secciones 30–38.
 * [x] Atribución por ventana, por cupón (D-026) y "dinero recuperado" (total + incremental)
 * [x] Tests de atribución y de las fórmulas (`030-campaigns`)
 * [x] Recuperación automática (D-031, plan Claude Code tarea 1): en riesgo, segunda visita y cumpleaños; motor diario con pg_cron, cola `core.outbox` (proveedor manual), pantalla "Automático", bandeja "Mensajes listos", tarjeta en Inicio; tests `044`, `045`
+* [x] Alta por QR + plantillas por rubro + cartel imprimible + avisos del alta (D-032, plan tarea 2). **Migraciones sin aplicar: esperan revisión del mentor** (función anon `loyalty.self_signup`)
 
 ## Fase 6 — Mensajería real
 
