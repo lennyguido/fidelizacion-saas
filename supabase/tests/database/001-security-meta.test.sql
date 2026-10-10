@@ -52,14 +52,16 @@ select is_empty(
 );
 
 -- 4. anon (sin sesión) solo puede ejecutar las funciones públicas previstas:
---    la tarjeta digital del cliente (D-020). Ninguna otra.
+--    la tarjeta digital del cliente (D-020) y el alta por QR (docs/ALTA-QR.md).
+--    Ninguna otra.
 select set_eq(
   $$ select p.oid::regprocedure::text
        from pg_proc p join pg_namespace n on n.oid = p.pronamespace
       where n.nspname in (select name from platform_schemas)
         and has_function_privilege('anon', p.oid, 'execute') $$,
-  $$ values ('loyalty.get_card(text)') $$,
-  'anon can execute only the public card function'
+  $$ values ('loyalty.get_card(text)'),
+            ('loyalty.self_signup(text,text,text,boolean,boolean)') $$,
+  'anon can execute only the public card and self-signup functions'
 );
 
 -- 5. Ninguna función queda ejecutable por PUBLIC (default de Postgres).
@@ -105,6 +107,9 @@ select set_eq(
        ('core.find_campaign_coupon(uuid,text)'),
        ('core.record_visit_with_coupon(uuid,text,uuid,bigint)'),
        ('core.dashboard_summary(uuid)'),
+       ('core.set_self_signup(uuid,boolean)'),
+       ('core.rotate_self_signup_code(uuid)'),
+       ('core.resolve_self_signup_notice(uuid)'),
        ('loyalty.enroll_customer(uuid)'),
        ('loyalty.leave_program(uuid)'),
        ('loyalty.redeem_reward(uuid,uuid,uuid)'),
@@ -112,7 +117,10 @@ select set_eq(
        ('loyalty.adjust_points(uuid,bigint,text)'),
        ('loyalty.issue_card(uuid)'),
        ('loyalty.get_card(text)'),
-       ('loyalty.find_member_by_code(uuid,text)') $$,
+       ('loyalty.find_member_by_code(uuid,text)'),
+       ('loyalty.self_signup(text,text,text,boolean,boolean)'),
+       ('loyalty.list_templates()'),
+       ('loyalty.apply_template(uuid,text,boolean)') $$,
   'authenticated can execute only the intended functions'
 );
 
