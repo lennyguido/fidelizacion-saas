@@ -32,6 +32,8 @@ export interface Program extends ProgramRule {
   maxVisitsPerDay: number
   /** Tope de puntos que puede dar una sola visita. */
   maxPointsPerVisit: number
+  /** Plantilla con la que se armó (solo lectura; la escribe applyTemplate). */
+  template?: string | null
 }
 
 export type ProgramInput = Omit<Program, 'businessId'>
@@ -47,6 +49,7 @@ function toProgram(row: Row<'programs'>): Program {
     minAmountMinor: Number(row.min_amount_minor),
     maxVisitsPerDay: row.max_visits_per_day,
     maxPointsPerVisit: row.max_points_per_visit,
+    template: row.template,
   }
 }
 
@@ -360,4 +363,39 @@ export function describeProgram(
     text += ` (compras desde ${formatAmount(program.minAmountMinor)})`
   }
   return text
+}
+
+// Plantillas por rubro (D-032) -----------------------------------------------------------
+
+export interface ProgramTemplate {
+  kind: string
+  label: string
+  /** Titular sugerido para el cartel, ej. "Sumate al club: tu 9.º café es gratis". */
+  headline: string
+  summary: string
+}
+
+export async function listTemplates(): Promise<ProgramTemplate[]> {
+  const { data, error } = await db().rpc('list_templates')
+  if (error) throw fromPostgrestError(error)
+  return ((data ?? []) as unknown as ProgramTemplate[]).map((t) => ({
+    kind: t.kind,
+    label: t.label,
+    headline: t.headline,
+    summary: t.summary,
+  }))
+}
+
+/** Arma el programa y 2 recompensas. Si ya hay movimientos, pide overwrite. */
+export async function applyTemplate(
+  businessId: string,
+  kind: string,
+  overwrite = false,
+): Promise<void> {
+  const { error } = await db().rpc('apply_template', {
+    p_business_id: businessId,
+    p_kind: kind,
+    p_overwrite: overwrite,
+  })
+  if (error) throw fromPostgrestError(error)
 }

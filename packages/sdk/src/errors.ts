@@ -26,6 +26,7 @@ export type AppErrorCode =
   | 'self_redemption'
   | 'outbox_discarded'
   | 'outbox_already_sent'
+  | 'program_has_activity'
   | 'auth_invalid_credentials'
   | 'auth_email_not_confirmed'
   | 'auth_user_exists'
@@ -70,6 +71,7 @@ const DOMAIN_CODES = [
   'self_redemption',
   'outbox_discarded',
   'outbox_already_sent',
+  'program_has_activity',
   'insufficient_points',
   'reward_unavailable',
   'member_inactive',
@@ -164,6 +166,8 @@ export function errorMessage(error: unknown): string {
     self_redemption: 'No podés usar un cupón tuyo. Pedile a otra persona del equipo que lo cargue.',
     outbox_discarded: 'Este mensaje se descartó.',
     outbox_already_sent: 'Este mensaje ya se mandó.',
+    program_has_activity:
+      'El programa ya tiene puntos o sellos cargados. Confirmá que querés reemplazarlo.',
     auth_invalid_credentials: 'Email o contraseña incorrectos.',
     auth_email_not_confirmed: 'Confirmá tu email antes de ingresar. Revisá tu casilla.',
     auth_user_exists: 'Ya existe una cuenta con ese email. Probá ingresar.',
