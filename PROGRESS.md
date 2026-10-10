@@ -39,9 +39,10 @@ Proyecto de **desarrollo**: `fidelizacion-saas`, ref `dqpnqcumlyfifewgzyvh` (ún
 | 19 | 20261009222552 | loyalty_hardening | aplicada 2026-10-09 ~19:30 (CI de `main` en verde, no destructiva; archivo renombrado de `20261009191000` a la versión de Supabase) |
 | 20 | 20261009222648 | core_campaigns_hardening | aplicada 2026-10-09 ~19:30 (los `drop` solo reemplazan funciones internas y un índice; no borra datos; archivo renombrado de `20261009191100` a la versión de Supabase) |
 | 21 | 20261009225015 | core_campaign_coupons | aplicada 2026-10-09 ~20:30 (D-026; CI verde, no destructiva: agrega columnas y reemplaza funciones; archivo renombrado de `20261009224000` a la versión de Supabase) |
-| 22 | 20261010031000 | core_coupons_hardening | **en `main`, NO aplicada** (aviso de Supabase sin confirmar, 10/10 madrugada). Hasta aplicarla, el cupón del mostrador falla |
-| 23 | 20261010120000 | loyalty_wallet | **en `main`, NO aplicada** (aviso sin confirmar) |
-| 24 | 20261010160000 | loyalty_wallet_stamps | **en `main`, NO aplicada** (necesita la 23 antes) |
+| 22 | 20261010141212 | core_coupons_hardening | aplicada 2026-10-10 ~11:10 (CI verde; el `drop` reemplaza una función, no borra datos; archivo renombrado de `20261010031000`) |
+| 23 | 20261010141302 | loyalty_wallet | aplicada 2026-10-10 ~11:10 (tablas nuevas, solo service role; archivo renombrado de `20261010120000`) |
+| 24 | 20261010141333 | loyalty_wallet_stamps | aplicada 2026-10-10 ~11:10 (archivo renombrado de `20261010160000`) |
+| 25 | 20261010144420 | core_automations | aplicada 2026-10-10 ~11:45 (D-031; CI verde, no destructiva; pg_cron `core-run-automations` 13:00 UTC; archivo renombrado de `20261011020000`) |
 
 Regla vigente desde 2026-10-09: ninguna migración se aplica sin aprobación explícita del dueño después de revisarla.
 
@@ -74,6 +75,12 @@ Rama `fix/archive-owner-admin-only` (commit `62a7b19`):
 | Punta a punta (Playwright) | CI: `supabase start` + build + `vite preview` + `npx playwright test` (celular y escritorio) | OK: registro → onboarding → panel → login; credenciales incorrectas; mostrador; importación CSV |
 
 Limitación: los tests de punta a punta corren contra un Supabase **local** en CI. El panel todavía **no se probó contra el proyecto de desarrollo remoto**. Eso es lo que falta validar ahora.
+
+## Sábado 10 — recuperación automática (plan tarea 1)
+
+* Migraciones 22–24 aplicadas en desarrollo (archivos renombrados a la versión de Supabase).
+* **Recuperación automática (D-031):** tres automatizaciones apagadas por defecto (en riesgo, segunda visita, cumpleaños). Todos los días a las 10 (hora Argentina) el motor prepara los mensajes; el dueño los manda desde **Recuperación → Mensajes listos** con un toque de wa.me. Reusa campañas, grupo de control, cupones y atribución. Cumpleaños (día y mes) en la ficha del cliente. Tarjeta "mensajes listos" en Inicio. Guía: `docs/RECUPERACION-AUTOMATICA.md` (WhatsApp API y avisos de wallet quedan como checkpoint).
+* Tests: `044-automations` (16) y `045-automation-outbox` (20) + unitarios de cumpleaños. CI verde.
 
 ## Viernes 9, ~20:30 — cupones de campaña (Fase 5 completa)
 

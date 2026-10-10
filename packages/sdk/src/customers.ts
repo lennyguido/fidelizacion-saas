@@ -43,10 +43,17 @@ export interface Customer {
   phone: string | null
   email: string | null
   birthdate: string | null
+  /** Cumpleaños sin año (para el saludo automático). */
+  birthday: Birthday | null
   notes: string | null
   status: 'active' | 'archived'
   createdAt: string
   stats: CustomerStats | null
+}
+
+export interface Birthday {
+  day: number
+  month: number
 }
 
 export interface CustomerInput {
@@ -54,6 +61,8 @@ export interface CustomerInput {
   phone: string | null
   email: string | null
   notes: string | null
+  /** Si no se manda, no se cambia. null lo borra. */
+  birthday?: Birthday | null
 }
 
 type SearchRow = FunctionReturns<'search_customers'>[number]
@@ -79,13 +88,15 @@ type CustomerRow = Pick<
   | 'phone'
   | 'email'
   | 'birthdate'
+  | 'birth_day'
+  | 'birth_month'
   | 'notes'
   | 'status'
   | 'created_at'
 > & { stats: StatsRow | StatsRow[] | null }
 
 const CUSTOMER_COLUMNS =
-  'id, business_id, name, phone, email, birthdate, notes, status, created_at, stats:customer_stats(first_visit_at, last_visit_at, visit_count, total_spend_minor, avg_ticket_minor, median_interval_days, expected_next_visit_at, status, risk_score)' as const
+  'id, business_id, name, phone, email, birthdate, birth_day, birth_month, notes, status, created_at, stats:customer_stats(first_visit_at, last_visit_at, visit_count, total_spend_minor, avg_ticket_minor, median_interval_days, expected_next_visit_at, status, risk_score)' as const
 
 function toStats(row: StatsRow): CustomerStats {
   return {
@@ -111,6 +122,10 @@ function toCustomer(row: CustomerRow): Customer {
     phone: row.phone,
     email: row.email,
     birthdate: row.birthdate,
+    birthday:
+      row.birth_day !== null && row.birth_month !== null
+        ? { day: row.birth_day, month: row.birth_month }
+        : null,
     notes: row.notes,
     status: row.status as Customer['status'],
     createdAt: row.created_at,
@@ -192,6 +207,15 @@ function duplicateAware(error: { code?: string; message?: string }): AppError {
   return fromPostgrestError(error)
 }
 
+/** Columnas del cumpleaños: nada si no se mandó (no se cambia), null si se borra. */
+function birthdayColumns(birthday: Birthday | null | undefined): {
+  birth_day?: number | null
+  birth_month?: number | null
+} {
+  if (birthday === undefined) return {}
+  return { birth_day: birthday?.day ?? null, birth_month: birthday?.month ?? null }
+}
+
 export async function create(businessId: string, input: CustomerInput): Promise<Customer> {
   const { data, error } = await getSupabase()
     .from('customers')
@@ -201,6 +225,7 @@ export async function create(businessId: string, input: CustomerInput): Promise<
       phone: input.phone,
       email: input.email?.trim().toLowerCase() || null,
       notes: input.notes?.trim() || null,
+      ...birthdayColumns(input.birthday),
     })
     .select(CUSTOMER_COLUMNS)
     .single()
@@ -216,6 +241,7 @@ export async function update(customerId: string, input: CustomerInput): Promise<
       phone: input.phone,
       email: input.email?.trim().toLowerCase() || null,
       notes: input.notes?.trim() || null,
+      ...birthdayColumns(input.birthday),
     })
     .eq('id', customerId)
     .select(CUSTOMER_COLUMNS)

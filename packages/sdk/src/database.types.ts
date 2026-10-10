@@ -25,6 +25,26 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"automations": {
+                  Row: {
+                    "attribution_days": number,"benefit": string | null,"business_id": string,"control_pct": number,"created_at": string,"days": number,"enabled": boolean,"kind": string,"message": string,"updated_at": string,"updated_by": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "attribution_days"?: number,"benefit"?: string | null,"business_id": string,"control_pct"?: number,"created_at"?: string,"days": number,"enabled"?: boolean,"kind": string,"message": string,"updated_at"?: string,"updated_by"?: string | null
+                  }
+                  Update: {
+                    "attribution_days"?: number,"benefit"?: string | null,"business_id"?: string,"control_pct"?: number,"created_at"?: string,"days"?: number,"enabled"?: boolean,"kind"?: string,"message"?: string,"updated_at"?: string,"updated_by"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "automations_business_id_fkey"
+      columns: ["business_id"]
+isOneToOne: false
+      referencedRelation: "businesses"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"business_modules": {
                   Row: {
                     "business_id": string,"created_at": string,"enabled": boolean,"ends_at": string | null,"limits": NonNullable<Json>,"module_id": string,"starts_at": string,"updated_at": string
@@ -105,14 +125,14 @@ isOneToOne: false
                   ]
                 },"campaigns": {
                   Row: {
-                    "attribution_days": number,"benefit": string | null,"business_id": string,"cancelled_at": string | null,"channel": string,"control_pct": number,"created_at": string,"created_by": string | null,"id": string,"message": string,"module_id": string,"name": string,"recipients_count": number,"segment": NonNullable<Json>,"sent_at": string | null,"status": string,"updated_at": string
+                    "attribution_days": number,"automation_date": string | null,"automation_kind": string | null,"benefit": string | null,"business_id": string,"cancelled_at": string | null,"channel": string,"control_pct": number,"created_at": string,"created_by": string | null,"id": string,"message": string,"module_id": string,"name": string,"recipients_count": number,"segment": NonNullable<Json>,"sent_at": string | null,"status": string,"updated_at": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "attribution_days"?: number,"benefit"?: string | null,"business_id": string,"cancelled_at"?: string | null,"channel"?: string,"control_pct"?: number,"created_at"?: string,"created_by"?: string | null,"id"?: string,"message": string,"module_id": string,"name": string,"recipients_count"?: number,"segment": NonNullable<Json>,"sent_at"?: string | null,"status"?: string,"updated_at"?: string
+                    "attribution_days"?: number,"automation_date"?: string | null,"automation_kind"?: string | null,"benefit"?: string | null,"business_id": string,"cancelled_at"?: string | null,"channel"?: string,"control_pct"?: number,"created_at"?: string,"created_by"?: string | null,"id"?: string,"message": string,"module_id": string,"name": string,"recipients_count"?: number,"segment": NonNullable<Json>,"sent_at"?: string | null,"status"?: string,"updated_at"?: string
                   }
                   Update: {
-                    "attribution_days"?: number,"benefit"?: string | null,"business_id"?: string,"cancelled_at"?: string | null,"channel"?: string,"control_pct"?: number,"created_at"?: string,"created_by"?: string | null,"id"?: string,"message"?: string,"module_id"?: string,"name"?: string,"recipients_count"?: number,"segment"?: NonNullable<Json>,"sent_at"?: string | null,"status"?: string,"updated_at"?: string
+                    "attribution_days"?: number,"automation_date"?: string | null,"automation_kind"?: string | null,"benefit"?: string | null,"business_id"?: string,"cancelled_at"?: string | null,"channel"?: string,"control_pct"?: number,"created_at"?: string,"created_by"?: string | null,"id"?: string,"message"?: string,"module_id"?: string,"name"?: string,"recipients_count"?: number,"segment"?: NonNullable<Json>,"sent_at"?: string | null,"status"?: string,"updated_at"?: string
                   }
                   Relationships: [
                     {
@@ -235,14 +255,14 @@ isOneToOne: false
                   ]
                 },"customers": {
                   Row: {
-                    "anonymized_at": string | null,"birthdate": string | null,"business_id": string,"created_at": string,"created_by": string | null,"email": string | null,"id": string,"name": string,"notes": string | null,"phone": string | null,"source": string,"status": string,"tags": (string)[],"updated_at": string
+                    "anonymized_at": string | null,"birth_day": number | null,"birth_month": number | null,"birthdate": string | null,"business_id": string,"created_at": string,"created_by": string | null,"email": string | null,"id": string,"name": string,"notes": string | null,"phone": string | null,"source": string,"status": string,"tags": (string)[],"updated_at": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "anonymized_at"?: string | null,"birthdate"?: string | null,"business_id": string,"created_at"?: string,"created_by"?: string | null,"email"?: string | null,"id"?: string,"name": string,"notes"?: string | null,"phone"?: string | null,"source"?: string,"status"?: string,"tags"?: (string)[],"updated_at"?: string
+                    "anonymized_at"?: string | null,"birth_day"?: number | null,"birth_month"?: number | null,"birthdate"?: string | null,"business_id": string,"created_at"?: string,"created_by"?: string | null,"email"?: string | null,"id"?: string,"name": string,"notes"?: string | null,"phone"?: string | null,"source"?: string,"status"?: string,"tags"?: (string)[],"updated_at"?: string
                   }
                   Update: {
-                    "anonymized_at"?: string | null,"birthdate"?: string | null,"business_id"?: string,"created_at"?: string,"created_by"?: string | null,"email"?: string | null,"id"?: string,"name"?: string,"notes"?: string | null,"phone"?: string | null,"source"?: string,"status"?: string,"tags"?: (string)[],"updated_at"?: string
+                    "anonymized_at"?: string | null,"birth_day"?: number | null,"birth_month"?: number | null,"birthdate"?: string | null,"business_id"?: string,"created_at"?: string,"created_by"?: string | null,"email"?: string | null,"id"?: string,"name"?: string,"notes"?: string | null,"phone"?: string | null,"source"?: string,"status"?: string,"tags"?: (string)[],"updated_at"?: string
                   }
                   Relationships: [
                     {
@@ -327,6 +347,44 @@ isOneToOne: false
                   Relationships: [
                     
                   ]
+                },"outbox": {
+                  Row: {
+                    "attempts": number,"business_id": string,"campaign_id": string,"channel": string,"created_at": string,"customer_id": string,"error": string | null,"id": string,"message": string,"provider": string,"recipient_id": string,"sent_at": string | null,"sent_by": string | null,"status": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "attempts"?: number,"business_id": string,"campaign_id": string,"channel"?: string,"created_at"?: string,"customer_id": string,"error"?: string | null,"id"?: string,"message": string,"provider"?: string,"recipient_id": string,"sent_at"?: string | null,"sent_by"?: string | null,"status"?: string
+                  }
+                  Update: {
+                    "attempts"?: number,"business_id"?: string,"campaign_id"?: string,"channel"?: string,"created_at"?: string,"customer_id"?: string,"error"?: string | null,"id"?: string,"message"?: string,"provider"?: string,"recipient_id"?: string,"sent_at"?: string | null,"sent_by"?: string | null,"status"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "outbox_business_id_campaign_id_fkey"
+      columns: ["business_id","campaign_id"]
+isOneToOne: false
+      referencedRelation: "campaigns"
+      referencedColumns: ["business_id","id"]
+    },{
+      foreignKeyName: "outbox_business_id_customer_id_fkey"
+      columns: ["business_id","customer_id"]
+isOneToOne: false
+      referencedRelation: "customers"
+      referencedColumns: ["business_id","id"]
+    },{
+      foreignKeyName: "outbox_business_id_fkey"
+      columns: ["business_id"]
+isOneToOne: false
+      referencedRelation: "businesses"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "outbox_business_id_recipient_id_fkey"
+      columns: ["business_id","recipient_id"]
+isOneToOne: false
+      referencedRelation: "campaign_recipients"
+      referencedColumns: ["business_id","id"]
+    }
+                  ]
                 },"plan_modules": {
                   Row: {
                     "limits": NonNullable<Json>,"module_id": string,"plan_id": string
@@ -380,52 +438,6 @@ isOneToOne: false
                   }
                   Relationships: [
                     
-                  ]
-                },"self_signup_settings": {
-                  Row: {
-                    "business_id": string,"code": string,"created_at": string,"enabled": boolean,"updated_at": string
-                  }
-                  ComputedFields: never
-                  Insert: {
-                    "business_id": string,"code": string,"created_at"?: string,"enabled"?: boolean,"updated_at"?: string
-                  }
-                  Update: {
-                    "business_id"?: string,"code"?: string,"created_at"?: string,"enabled"?: boolean,"updated_at"?: string
-                  }
-                  Relationships: [
-                    {
-      foreignKeyName: "self_signup_settings_business_id_fkey"
-      columns: ["business_id"]
-isOneToOne: true
-      referencedRelation: "businesses"
-      referencedColumns: ["id"]
-    }
-                  ]
-                },"self_signups": {
-                  Row: {
-                    "business_id": string,"created_at": string,"customer_id": string,"id": string,"name_given": string,"outcome": string,"resolved_at": string | null,"resolved_by": string | null,"terms_accepted_at": string,"whatsapp_opt_in": boolean
-                  }
-                  ComputedFields: never
-                  Insert: {
-                    "business_id": string,"created_at"?: string,"customer_id": string,"id"?: string,"name_given": string,"outcome": string,"resolved_at"?: string | null,"resolved_by"?: string | null,"terms_accepted_at": string,"whatsapp_opt_in": boolean
-                  }
-                  Update: {
-                    "business_id"?: string,"created_at"?: string,"customer_id"?: string,"id"?: string,"name_given"?: string,"outcome"?: string,"resolved_at"?: string | null,"resolved_by"?: string | null,"terms_accepted_at"?: string,"whatsapp_opt_in"?: boolean
-                  }
-                  Relationships: [
-                    {
-      foreignKeyName: "self_signups_business_id_customer_id_fkey"
-      columns: ["business_id","customer_id"]
-isOneToOne: false
-      referencedRelation: "customers"
-      referencedColumns: ["business_id","id"]
-    },{
-      foreignKeyName: "self_signups_business_id_fkey"
-      columns: ["business_id"]
-isOneToOne: false
-      referencedRelation: "businesses"
-      referencedColumns: ["id"]
-    }
                   ]
                 },"subscriptions": {
                   Row: {
@@ -511,7 +523,18 @@ isOneToOne: false
                 }
           }
           Functions: {
-            "campaign_results":
+            "automation_candidates":
+{ Args: { "p_automation": Omit<Database["core"]['Tables']["automations"]['Row'], Database["core"]['Tables']["automations"]['ComputedFields']>,"p_now": string }; Returns: {
+              "customer_id": string,"first_name": string,"risk_score": number,"status": string
+            }[]
+                           },
+"automation_days_valid":
+{ Args: { "p_days": number,"p_kind": string }; Returns: boolean
+                           },
+"automation_defaults":
+{ Args: { "p_kind": string }; Returns: Json
+                           },
+"campaign_results":
 { Args: { "p_campaign_id": string }; Returns: {
               "contacted_count": number,"control_count": number,"control_rate": number,"control_returned": number,"control_revenue_minor": number,"coupons_redeemed": number,"incremental_customers": number,"incremental_revenue_minor": number,"treatment_count": number,"treatment_rate": number,"treatment_returned": number,"treatment_revenue_minor": number,"window_ends_at": string,"window_open": boolean
             }[]
@@ -519,6 +542,8 @@ isOneToOne: false
 "cancel_campaign":
 { Args: { "p_campaign_id": string }; Returns: {
               "attribution_days": number,
+"automation_date": string | null,
+"automation_kind": string | null,
 "benefit": string | null,
 "business_id": string,
 "cancelled_at": string | null,
@@ -575,6 +600,8 @@ isOneToOne: false
 "create_campaign":
 { Args: { "p_attribution_days"?: number,"p_benefit"?: string,"p_business_id": string,"p_control_pct"?: number,"p_message": string,"p_module_id": string,"p_name": string,"p_segment": Json }; Returns: {
               "attribution_days": number,
+"automation_date": string | null,
+"automation_kind": string | null,
 "benefit": string | null,
 "business_id": string,
 "cancelled_at": string | null,
@@ -601,6 +628,29 @@ isOneToOne: false
 "dashboard_summary":
 { Args: { "p_business_id": string }; Returns: Json
                            },
+"discard_outbox":
+{ Args: { "p_outbox_id": string }; Returns: {
+              "attempts": number,
+"business_id": string,
+"campaign_id": string,
+"channel": string,
+"created_at": string,
+"customer_id": string,
+"error": string | null,
+"id": string,
+"message": string,
+"provider": string,
+"recipient_id": string,
+"sent_at": string | null,
+"sent_by": string | null,
+"status": string
+            }
+                          SetofOptions: {
+        from: "*"
+        to: "outbox"
+        isOneToOne: true
+        isSetofReturn: false
+      } },
 "emit_event":
 { Args: { "p_business_id": string,"p_payload"?: Json,"p_type": string }; Returns: number
                            },
@@ -637,6 +687,8 @@ isOneToOne: false
 "launch_campaign":
 { Args: { "p_campaign_id": string }; Returns: {
               "attribution_days": number,
+"automation_date": string | null,
+"automation_kind": string | null,
 "benefit": string | null,
 "business_id": string,
 "cancelled_at": string | null,
@@ -660,9 +712,19 @@ isOneToOne: false
         isOneToOne: true
         isSetofReturn: false
       } },
+"list_automations":
+{ Args: { "p_business_id": string }; Returns: {
+              "attribution_days": number,"benefit": string,"control_pct": number,"days": number,"enabled": boolean,"kind": string,"message": string,"updated_at": string
+            }[]
+                           },
 "list_campaign_recipients":
 { Args: { "p_campaign_id": string }; Returns: {
               "blocked_reason": string,"contacted_at": string,"coupon_code": string,"coupon_redeemed_at": string,"customer_id": string,"is_control": boolean,"message": string,"name": string,"phone": string,"recipient_id": string,"returned_amount_minor": number,"returned_at": string,"status_at_send": string
+            }[]
+                           },
+"list_outbox":
+{ Args: { "p_business_id": string,"p_status"?: string }; Returns: {
+              "automation_kind": string,"blocked_reason": string,"campaign_id": string,"created_at": string,"customer_id": string,"message": string,"name": string,"outbox_id": string,"phone": string,"sent_at": string,"status": string
             }[]
                            },
 "lock_coupon_for_use":
@@ -690,6 +752,29 @@ isOneToOne: false
 "mark_coupon_used":
 { Args: { "p_recipient": Omit<Database["core"]['Tables']["campaign_recipients"]['Row'], Database["core"]['Tables']["campaign_recipients"]['ComputedFields']>,"p_visit_id": string }; Returns: undefined
                            },
+"mark_outbox_sent":
+{ Args: { "p_outbox_id": string }; Returns: {
+              "attempts": number,
+"business_id": string,
+"campaign_id": string,
+"channel": string,
+"created_at": string,
+"customer_id": string,
+"error": string | null,
+"id": string,
+"message": string,
+"provider": string,
+"recipient_id": string,
+"sent_at": string | null,
+"sent_by": string | null,
+"status": string
+            }
+                          SetofOptions: {
+        from: "*"
+        to: "outbox"
+        isOneToOne: true
+        isSetofReturn: false
+      } },
 "mark_recipient_contacted":
 { Args: { "p_recipient_id": string }; Returns: {
               "business_id": string,
@@ -727,13 +812,7 @@ isOneToOne: false
 "new_coupon_code":
 { Args: { "p_business_id": string }; Returns: string
                            },
-"new_self_signup_code":
-{ Args: Record<PropertyKey, never>; Returns: string
-                           },
 "normalize_coupon_code":
-{ Args: { "p_code": string }; Returns: string
-                           },
-"normalize_self_signup_code":
 { Args: { "p_code": string }; Returns: string
                            },
 "preview_segment":
@@ -824,26 +903,21 @@ isOneToOne: false
 "refresh_statuses":
 { Args: { "p_business_id"?: string }; Returns: number
                            },
+"render_campaign_message":
+{ Args: { "p_benefit": string,"p_business_name": string,"p_coupon": string,"p_first_name": string,"p_message": string }; Returns: string
+                           },
 "require_member":
 { Args: { "p_business_id": string,"p_roles"?: (string)[] }; Returns: undefined
                            },
-"resolve_self_signup_notice":
-{ Args: { "p_notice_id": string }; Returns: undefined
+"run_automation":
+{ Args: { "p_automation": Omit<Database["core"]['Tables']["automations"]['Row'], Database["core"]['Tables']["automations"]['ComputedFields']>,"p_now": string }; Returns: number
                            },
-"rotate_self_signup_code":
-{ Args: { "p_business_id": string }; Returns: {
-              "business_id": string,
-"code": string,
-"created_at": string,
-"enabled": boolean,
-"updated_at": string
-            }
-                          SetofOptions: {
-        from: "*"
-        to: "self_signup_settings"
-        isOneToOne: true
-        isSetofReturn: false
-      } },
+"run_automations":
+{ Args: { "p_now"?: string }; Returns: number
+                           },
+"run_business_automations":
+{ Args: { "p_business_id": string }; Returns: number
+                           },
 "search_customers":
 { Args: { "p_business_id": string,"p_limit"?: number,"p_offset"?: number,"p_query"?: string,"p_status"?: string }; Returns: {
               "email": string,"id": string,"last_visit_at": string,"name": string,"phone": string,"risk_score": number,"status": string,"total_spend_minor": number,"visit_count": number
@@ -854,15 +928,31 @@ isOneToOne: false
               "busy": boolean,"customer_id": string,"first_name": string,"reachable": boolean,"risk_score": number,"status": string
             }[]
                            },
-"self_signup_business":
-{ Args: { "p_code": string }; Returns: string
-                           },
-"self_signup_customer":
-{ Args: { "p_business_id": string,"p_name": string,"p_phone": string,"p_terms_accepted": boolean,"p_whatsapp": boolean }; Returns: Json
-                           },
+"set_automation":
+{ Args: { "p_attribution_days"?: number,"p_benefit"?: string,"p_business_id": string,"p_control_pct"?: number,"p_days": number,"p_enabled": boolean,"p_kind": string,"p_message": string }; Returns: {
+              "attribution_days": number,
+"benefit": string | null,
+"business_id": string,
+"control_pct": number,
+"created_at": string,
+"days": number,
+"enabled": boolean,
+"kind": string,
+"message": string,
+"updated_at": string,
+"updated_by": string | null
+            }
+                          SetofOptions: {
+        from: "*"
+        to: "automations"
+        isOneToOne: true
+        isSetofReturn: false
+      } },
 "set_customer_status":
 { Args: { "p_customer_id": string,"p_status": string }; Returns: {
               "anonymized_at": string | null,
+"birth_day": number | null,
+"birth_month": number | null,
 "birthdate": string | null,
 "business_id": string,
 "created_at": string,
@@ -880,20 +970,6 @@ isOneToOne: false
                           SetofOptions: {
         from: "*"
         to: "customers"
-        isOneToOne: true
-        isSetofReturn: false
-      } },
-"set_self_signup":
-{ Args: { "p_business_id": string,"p_enabled": boolean }; Returns: {
-              "business_id": string,
-"code": string,
-"created_at": string,
-"enabled": boolean,
-"updated_at": string
-            }
-                          SetofOptions: {
-        from: "*"
-        to: "self_signup_settings"
         isOneToOne: true
         isSetofReturn: false
       } },
@@ -1001,9 +1077,9 @@ isOneToOne: false
                   ]
                 },"members": {
                   Row: {
-                    "business_id": string,"card_issued_at": string | null,"created_by": string | null,"customer_id": string,"id": string,"joined_at": string,"left_at": string | null,"lifetime_points": number,"member_code": string,"points_balance": number,"status": string,"updated_at": string,"create_card": string | null
+                    "business_id": string,"card_issued_at": string | null,"created_by": string | null,"customer_id": string,"id": string,"joined_at": string,"left_at": string | null,"lifetime_points": number,"member_code": string,"points_balance": number,"status": string,"updated_at": string
                   }
-                  ComputedFields: "create_card"
+                  ComputedFields: never
                   Insert: {
                     "business_id": string,"card_issued_at"?: string | null,"created_by"?: string | null,"customer_id": string,"id"?: string,"joined_at"?: string,"left_at"?: string | null,"lifetime_points"?: number,"member_code": string,"points_balance"?: number,"status"?: string,"updated_at"?: string
                   }
@@ -1015,14 +1091,14 @@ isOneToOne: false
                   ]
                 },"programs": {
                   Row: {
-                    "amount_step_minor": number | null,"business_id": string,"created_at": string,"enabled": boolean,"kind": string,"max_points_per_visit": number,"max_visits_per_day": number,"min_amount_minor": number,"points_per_amount": number,"points_per_visit": number,"template": string | null,"updated_at": string
+                    "amount_step_minor": number | null,"business_id": string,"created_at": string,"enabled": boolean,"kind": string,"max_points_per_visit": number,"max_visits_per_day": number,"min_amount_minor": number,"points_per_amount": number,"points_per_visit": number,"updated_at": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "amount_step_minor"?: number | null,"business_id": string,"created_at"?: string,"enabled"?: boolean,"kind"?: string,"max_points_per_visit"?: number,"max_visits_per_day"?: number,"min_amount_minor"?: number,"points_per_amount"?: number,"points_per_visit"?: number,"template"?: string | null,"updated_at"?: string
+                    "amount_step_minor"?: number | null,"business_id": string,"created_at"?: string,"enabled"?: boolean,"kind"?: string,"max_points_per_visit"?: number,"max_visits_per_day"?: number,"min_amount_minor"?: number,"points_per_amount"?: number,"points_per_visit"?: number,"updated_at"?: string
                   }
                   Update: {
-                    "amount_step_minor"?: number | null,"business_id"?: string,"created_at"?: string,"enabled"?: boolean,"kind"?: string,"max_points_per_visit"?: number,"max_visits_per_day"?: number,"min_amount_minor"?: number,"points_per_amount"?: number,"points_per_visit"?: number,"template"?: string | null,"updated_at"?: string
+                    "amount_step_minor"?: number | null,"business_id"?: string,"created_at"?: string,"enabled"?: boolean,"kind"?: string,"max_points_per_visit"?: number,"max_visits_per_day"?: number,"min_amount_minor"?: number,"points_per_amount"?: number,"points_per_visit"?: number,"updated_at"?: string
                   }
                   Relationships: [
                     
@@ -1154,9 +1230,6 @@ isOneToOne: false
         isOneToOne: true
         isSetofReturn: false
       } },
-"apply_template":
-{ Args: { "p_business_id": string,"p_kind": string,"p_overwrite"?: boolean }; Returns: Json
-                           },
 "cancel_redemption":
 { Args: { "p_reason": string,"p_redemption_id": string }; Returns: {
               "business_id": string,
@@ -1180,9 +1253,6 @@ isOneToOne: false
         isOneToOne: true
         isSetofReturn: false
       } },
-"create_card":
-{ Args: { "p_member": Omit<Database["loyalty"]['Tables']["members"]['Row'], Database["loyalty"]['Tables']["members"]['ComputedFields']> }; Returns: string
-                           },
 "enroll_customer":
 { Args: { "p_customer_id": string }; Returns: {
               "business_id": string,
@@ -1234,9 +1304,6 @@ isOneToOne: false
         isOneToOne: true
         isSetofReturn: false
       } },
-"list_templates":
-{ Args: Record<PropertyKey, never>; Returns: Json
-                           },
 "new_member_code":
 { Args: { "p_business_id": string }; Returns: string
                            },
@@ -1274,12 +1341,6 @@ isOneToOne: false
       } },
 "require_module":
 { Args: { "p_business_id": string }; Returns: undefined
-                           },
-"self_signup":
-{ Args: { "p_code": string,"p_name": string,"p_phone": string,"p_terms_accepted": boolean,"p_whatsapp"?: boolean }; Returns: Json
-                           },
-"template_catalog":
-{ Args: Record<PropertyKey, never>; Returns: Json
                            },
 "wallet_apple_pass":
 { Args: { "p_auth_token_hash": string,"p_serial": string }; Returns: Json

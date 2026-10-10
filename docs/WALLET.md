@@ -279,11 +279,11 @@ siempre los mismos bytes. A cambio:
   `apple/pass.ts`, `apple/zip.ts`, `lib/text.ts`; tests en `tests/` (`deno test tests/`
   dentro de la carpeta). La firma de Apple (`apple/sign.ts`, node-forge) se carga solo si
   Apple está configurado.
-* Base: `supabase/migrations/20261010120000_loyalty_wallet.sql`. Tablas
+* Base: `supabase/migrations/20261010141302_loyalty_wallet.sql`. Tablas
   `loyalty.wallet_passes`, `loyalty.wallet_devices`, `loyalty.wallet_updates` y funciones
   `loyalty.wallet_*`: **solo service role** (sin permisos para el panel ni la tarjeta).
   Tests: `supabase/tests/database/024-wallet.test.sql`. Tarjeta de sellos:
-  `20261010160000_loyalty_wallet_stamps.sql` (`programKind` y `stampGoal` en
+  `20261010141333_loyalty_wallet_stamps.sql` (`programKind` y `stampGoal` en
   `loyalty.wallet_pass_data`, y `loyalty.wallet_stamp_brand`), tests en
   `025-wallet-stamps.test.sql` y `tests/stamps_test.ts`.
 * Rutas: `GET /wallet/status`, `GET /wallet/stamps.png`, `POST /wallet/google`, `POST /wallet/google/sync`,

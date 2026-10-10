@@ -1,4 +1,4 @@
--- Cupones de campaña: endurecimiento (20261010031000). Visita obligatoria y
+-- Cupones de campaña: endurecimiento (20261010141212). Visita obligatoria y
 -- dentro de la ventana, resultados solo con visitas vigentes, una sola llamada
 -- en el mostrador (reusa la visita recién cargada), módulo deshabilitado,
 -- auto-canje bloqueado y códigos con pgcrypto.
