@@ -32,6 +32,22 @@ export function RecoveryPage() {
           </Link>
         )}
       </div>
+      {canManage && (
+        <div className="flex flex-wrap gap-2">
+          <Link
+            to={`${base}/automatico`}
+            className="rounded-lg px-4 py-2 text-sm font-medium ring-1 ring-inset ring-slate-300 hover:bg-slate-50"
+          >
+            Automático
+          </Link>
+          <Link
+            to={`${base}/mensajes`}
+            className="rounded-lg px-4 py-2 text-sm font-medium ring-1 ring-inset ring-slate-300 hover:bg-slate-50"
+          >
+            Mensajes listos
+          </Link>
+        </div>
+      )}
       <AtRiskList status="AT_RISK" title="En riesgo" />
       <AtRiskList status="INACTIVE" title="Inactivos" />
       {canManage && <CampaignList />}
@@ -89,21 +105,23 @@ function AtRiskRow({ customer }: { customer: CustomerListItem }) {
 
 function CampaignList() {
   const { business } = useActiveBusiness()
-  const list = useCampaigns(business.id)
+  const all = useCampaigns(business.id)
+  // Las automáticas se ven en "Automático".
+  const manual = all.data?.filter((campaign) => campaign.automationKind === null)
   return (
     <Card className="flex flex-col gap-2">
       <h2 className="text-base font-semibold">Campañas</h2>
-      {list.isPending && <Spinner />}
-      {list.error && <Alert tone="error">{errorMessage(list.error)}</Alert>}
-      {list.data && list.data.length === 0 && (
+      {all.isPending && <Spinner />}
+      {all.error && <Alert tone="error">{errorMessage(all.error)}</Alert>}
+      {manual && manual.length === 0 && (
         <EmptyState
           title="Todavía no hiciste campañas"
           description="Elegí a quién escribirle, armá el mensaje y medí cuántos vuelven."
         />
       )}
-      {list.data && list.data.length > 0 && (
+      {manual && manual.length > 0 && (
         <ul className="divide-y divide-slate-100">
-          {list.data.map((campaign) => (
+          {manual.map((campaign) => (
             <li key={campaign.id}>
               <Link
                 to={`/b/${business.slug}/recuperacion/campanas/${campaign.id}`}

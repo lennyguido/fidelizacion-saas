@@ -21,6 +21,8 @@ export interface ModuleManifest {
   customerPanel?: ComponentType<CustomerPanelProps>
   /** Permite encontrar un cliente en el mostrador por un código del módulo (ej. QR de socio). */
   customerCodeLookup?: CustomerCodeLookup
+  /** Tarjeta opcional que el módulo agrega en Inicio (solo la ve el dueño o un admin). */
+  homeCard?: ComponentType
   /** Tarjeta opcional que el módulo agrega en el mostrador (ej. usar un cupón). */
   counterPanel?: ComponentType<CounterPanelProps>
 }

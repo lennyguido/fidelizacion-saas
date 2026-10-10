@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react'
-import { formatPhone, normalizePhone, type CustomerInput } from '@plataforma/sdk'
+import { formatPhone, isValidBirthday, normalizePhone, type CustomerInput } from '@plataforma/sdk'
 import { Alert, Button, TextField } from '@plataforma/ui'
+import { BirthdayField } from './BirthdayField'
 import { emptyCustomerForm, type CustomerFormValues } from './customerFormValues'
 
 interface Props {
@@ -26,7 +27,9 @@ export function CustomerForm({
   const phoneInvalid = values.phone.trim() !== '' && normalizedPhone === null
   const emailInvalid =
     values.email.trim() !== '' && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(values.email.trim())
-  const canSubmit = values.name.trim() !== '' && !phoneInvalid && !emailInvalid
+  const birthday = parseBirthday(values.birthDay, values.birthMonth)
+  const birthdayInvalid = birthday === 'invalid'
+  const canSubmit = values.name.trim() !== '' && !phoneInvalid && !emailInvalid && !birthdayInvalid
 
   function set<K extends keyof CustomerFormValues>(key: K, value: CustomerFormValues[K]) {
     setValues((current) => ({ ...current, [key]: value }))
@@ -40,6 +43,7 @@ export function CustomerForm({
       phone: normalizedPhone,
       email: values.email.trim() || null,
       notes: values.notes.trim() || null,
+      birthday: birthday === 'invalid' ? null : birthday,
     })
   }
 
@@ -77,6 +81,14 @@ export function CustomerForm({
         onChange={(e) => set('email', e.target.value)}
         error={emailInvalid ? 'Revisá el email.' : null}
       />
+      <BirthdayField
+        day={values.birthDay}
+        month={values.birthMonth}
+        error={birthdayInvalid ? 'Elegí día y mes de una fecha que exista.' : null}
+        onChange={(day, month) =>
+          setValues((current) => ({ ...current, birthDay: day, birthMonth: month }))
+        }
+      />
       <TextField
         label="Notas (opcional)"
         maxLength={2000}
@@ -96,4 +108,15 @@ export function CustomerForm({
       </div>
     </form>
   )
+}
+
+/** null si no se cargó nada; 'invalid' si falta uno de los dos o la fecha no existe. */
+function parseBirthday(
+  day: string,
+  month: string,
+): { day: number; month: number } | null | 'invalid' {
+  if (day === '' && month === '') return null
+  const d = Number(day)
+  const m = Number(month)
+  return day !== '' && month !== '' && isValidBirthday(d, m) ? { day: d, month: m } : 'invalid'
 }
