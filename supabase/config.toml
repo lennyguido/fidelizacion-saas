@@ -32,3 +32,9 @@ additional_redirect_urls = ["http://localhost:5173"]
 [auth.email]
 enable_signup = true
 enable_confirmations = false
+
+# Edge Function de Google/Apple Wallet (docs/WALLET.md). Sin verificación de JWT: la
+# tarjeta del cliente no tiene sesión y Apple llama directo; cada ruta se protege con el
+# token de la tarjeta, el del pase (Apple) o WALLET_SYNC_SECRET.
+[functions.wallet]
+verify_jwt = false

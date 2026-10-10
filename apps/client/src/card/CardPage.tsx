@@ -15,6 +15,7 @@ import { Movements } from './Movements'
 import { NoCard } from './NoCard'
 import { Rewards } from './Rewards'
 import { useDocumentBranding } from './useDocumentBranding'
+import { WalletButtons } from './WalletButtons'
 
 export function CardPage({ token, onForget }: { token: string; onForget: () => void }) {
   const query = useQuery({
@@ -36,10 +37,10 @@ export function CardPage({ token, onForget }: { token: string; onForget: () => v
       <NoCard message="Este link ya no funciona (puede que el negocio te haya mandado uno nuevo). Pedí el link actualizado en la caja." />
     )
   }
-  return <CardView card={query.data} onForget={onForget} />
+  return <CardView card={query.data} token={token} onForget={onForget} />
 }
 
-function CardView({ card, onForget }: { card: Card; onForget: () => void }) {
+function CardView({ card, token, onForget }: { card: Card; token: string; onForget: () => void }) {
   const color = card.business.primaryColor
   const brand = color && isValidHexColor(color) ? color : '#0f172a'
   const logo = businesses.logoUrl(card.business.logoPath)
@@ -82,6 +83,8 @@ function CardView({ card, onForget }: { card: Card; onForget: () => void }) {
       <section className="rounded-2xl bg-white p-5 shadow-sm">
         <MemberQr code={card.memberCode} />
       </section>
+
+      <WalletButtons token={token} />
 
       <Rewards card={card} unit={unit} brand={brand} />
       <Movements movements={card.movements} />
