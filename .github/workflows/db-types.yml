@@ -17,9 +17,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+      # Versión fija: "latest" a veces falla por el límite de consultas de GitHub.
       - uses: supabase/setup-cli@v1
         with:
-          version: latest
+          version: 2.120.0
       - run: supabase db start
       - run: supabase gen types typescript --local --schema core,loyalty > packages/sdk/src/database.types.ts
       - name: Commit if changed
