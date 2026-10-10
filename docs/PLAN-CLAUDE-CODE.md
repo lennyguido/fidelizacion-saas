@@ -81,6 +81,8 @@ Hoy el dueño arma las campañas a mano y manda cada wa.me uno por uno. Tiene qu
 
 ### 2. Alta por QR + plantillas + cartel (OPORTUNIDADES #2 y #6)
 
+> **Hecha** (2026-10-10, D-032): en `main`. Migraciones `20261011010000`/`010100` **sin aplicar: esperan al mentor**. Ver `docs/ALTA-QR.md`.
+
 > **Ya empezada:** la rama `feat/alta-por-qr` (commit `37561c8`) tiene la parte de base de datos hecha (migración + tests 042/043 + meta-test). Falta: revisar que el CI esté verde, las pantallas (alta pública, plantillas, cartel, avisos) y el SDK. Continuar sobre esa rama, no empezar de cero.
 
 **Alta por QR:**
