@@ -186,7 +186,7 @@ Hoy el dueño arma las campañas a mano y manda cada wa.me uno por uno. Tiene qu
 
 ### 9. Estilo Apple en todas las vistas (al final)
 
-**Referencia:** el archivo de estilo Apple que pasó el dueño.
+**Referencia:** `docs/ESTILO-APPLE.md` (el archivo completo que pasó el dueño; leerlo entero antes de empezar).
 
 **Colores:**
 - fondo `#f5f5f7`;
