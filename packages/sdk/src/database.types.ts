@@ -439,6 +439,52 @@ isOneToOne: false
                   Relationships: [
                     
                   ]
+                },"self_signup_settings": {
+                  Row: {
+                    "business_id": string,"code": string,"created_at": string,"enabled": boolean,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "business_id": string,"code": string,"created_at"?: string,"enabled"?: boolean,"updated_at"?: string
+                  }
+                  Update: {
+                    "business_id"?: string,"code"?: string,"created_at"?: string,"enabled"?: boolean,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "self_signup_settings_business_id_fkey"
+      columns: ["business_id"]
+isOneToOne: true
+      referencedRelation: "businesses"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"self_signups": {
+                  Row: {
+                    "business_id": string,"created_at": string,"customer_id": string,"id": string,"name_given": string,"outcome": string,"resolved_at": string | null,"resolved_by": string | null,"terms_accepted_at": string,"whatsapp_opt_in": boolean
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "business_id": string,"created_at"?: string,"customer_id": string,"id"?: string,"name_given": string,"outcome": string,"resolved_at"?: string | null,"resolved_by"?: string | null,"terms_accepted_at": string,"whatsapp_opt_in": boolean
+                  }
+                  Update: {
+                    "business_id"?: string,"created_at"?: string,"customer_id"?: string,"id"?: string,"name_given"?: string,"outcome"?: string,"resolved_at"?: string | null,"resolved_by"?: string | null,"terms_accepted_at"?: string,"whatsapp_opt_in"?: boolean
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "self_signups_business_id_customer_id_fkey"
+      columns: ["business_id","customer_id"]
+isOneToOne: false
+      referencedRelation: "customers"
+      referencedColumns: ["business_id","id"]
+    },{
+      foreignKeyName: "self_signups_business_id_fkey"
+      columns: ["business_id"]
+isOneToOne: false
+      referencedRelation: "businesses"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"subscriptions": {
                   Row: {
                     "business_id": string,"created_at": string,"current_period_end": string | null,"id": string,"plan_id": string,"provider": string | null,"provider_ref": string | null,"status": string,"trial_ends_at": string | null,"updated_at": string
@@ -812,7 +858,13 @@ isOneToOne: false
 "new_coupon_code":
 { Args: { "p_business_id": string }; Returns: string
                            },
+"new_self_signup_code":
+{ Args: Record<PropertyKey, never>; Returns: string
+                           },
 "normalize_coupon_code":
+{ Args: { "p_code": string }; Returns: string
+                           },
+"normalize_self_signup_code":
 { Args: { "p_code": string }; Returns: string
                            },
 "preview_segment":
@@ -909,6 +961,23 @@ isOneToOne: false
 "require_member":
 { Args: { "p_business_id": string,"p_roles"?: (string)[] }; Returns: undefined
                            },
+"resolve_self_signup_notice":
+{ Args: { "p_notice_id": string }; Returns: undefined
+                           },
+"rotate_self_signup_code":
+{ Args: { "p_business_id": string }; Returns: {
+              "business_id": string,
+"code": string,
+"created_at": string,
+"enabled": boolean,
+"updated_at": string
+            }
+                          SetofOptions: {
+        from: "*"
+        to: "self_signup_settings"
+        isOneToOne: true
+        isSetofReturn: false
+      } },
 "run_automation":
 { Args: { "p_automation": Omit<Database["core"]['Tables']["automations"]['Row'], Database["core"]['Tables']["automations"]['ComputedFields']>,"p_now": string }; Returns: number
                            },
@@ -927,6 +996,12 @@ isOneToOne: false
 { Args: { "p_business_id": string,"p_segment": Json }; Returns: {
               "busy": boolean,"customer_id": string,"first_name": string,"reachable": boolean,"risk_score": number,"status": string
             }[]
+                           },
+"self_signup_business":
+{ Args: { "p_code": string }; Returns: string
+                           },
+"self_signup_customer":
+{ Args: { "p_business_id": string,"p_name": string,"p_phone": string,"p_terms_accepted": boolean,"p_whatsapp": boolean }; Returns: Json
                            },
 "set_automation":
 { Args: { "p_attribution_days"?: number,"p_benefit"?: string,"p_business_id": string,"p_control_pct"?: number,"p_days": number,"p_enabled": boolean,"p_kind": string,"p_message": string }; Returns: {
@@ -970,6 +1045,20 @@ isOneToOne: false
                           SetofOptions: {
         from: "*"
         to: "customers"
+        isOneToOne: true
+        isSetofReturn: false
+      } },
+"set_self_signup":
+{ Args: { "p_business_id": string,"p_enabled": boolean }; Returns: {
+              "business_id": string,
+"code": string,
+"created_at": string,
+"enabled": boolean,
+"updated_at": string
+            }
+                          SetofOptions: {
+        from: "*"
+        to: "self_signup_settings"
         isOneToOne: true
         isSetofReturn: false
       } },
@@ -1077,9 +1166,9 @@ isOneToOne: false
                   ]
                 },"members": {
                   Row: {
-                    "business_id": string,"card_issued_at": string | null,"created_by": string | null,"customer_id": string,"id": string,"joined_at": string,"left_at": string | null,"lifetime_points": number,"member_code": string,"points_balance": number,"status": string,"updated_at": string
+                    "business_id": string,"card_issued_at": string | null,"created_by": string | null,"customer_id": string,"id": string,"joined_at": string,"left_at": string | null,"lifetime_points": number,"member_code": string,"points_balance": number,"status": string,"updated_at": string,"create_card": string | null
                   }
-                  ComputedFields: never
+                  ComputedFields: "create_card"
                   Insert: {
                     "business_id": string,"card_issued_at"?: string | null,"created_by"?: string | null,"customer_id": string,"id"?: string,"joined_at"?: string,"left_at"?: string | null,"lifetime_points"?: number,"member_code": string,"points_balance"?: number,"status"?: string,"updated_at"?: string
                   }
@@ -1091,14 +1180,14 @@ isOneToOne: false
                   ]
                 },"programs": {
                   Row: {
-                    "amount_step_minor": number | null,"business_id": string,"created_at": string,"enabled": boolean,"kind": string,"max_points_per_visit": number,"max_visits_per_day": number,"min_amount_minor": number,"points_per_amount": number,"points_per_visit": number,"updated_at": string
+                    "amount_step_minor": number | null,"business_id": string,"created_at": string,"enabled": boolean,"kind": string,"max_points_per_visit": number,"max_visits_per_day": number,"min_amount_minor": number,"points_per_amount": number,"points_per_visit": number,"template": string | null,"updated_at": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "amount_step_minor"?: number | null,"business_id": string,"created_at"?: string,"enabled"?: boolean,"kind"?: string,"max_points_per_visit"?: number,"max_visits_per_day"?: number,"min_amount_minor"?: number,"points_per_amount"?: number,"points_per_visit"?: number,"updated_at"?: string
+                    "amount_step_minor"?: number | null,"business_id": string,"created_at"?: string,"enabled"?: boolean,"kind"?: string,"max_points_per_visit"?: number,"max_visits_per_day"?: number,"min_amount_minor"?: number,"points_per_amount"?: number,"points_per_visit"?: number,"template"?: string | null,"updated_at"?: string
                   }
                   Update: {
-                    "amount_step_minor"?: number | null,"business_id"?: string,"created_at"?: string,"enabled"?: boolean,"kind"?: string,"max_points_per_visit"?: number,"max_visits_per_day"?: number,"min_amount_minor"?: number,"points_per_amount"?: number,"points_per_visit"?: number,"updated_at"?: string
+                    "amount_step_minor"?: number | null,"business_id"?: string,"created_at"?: string,"enabled"?: boolean,"kind"?: string,"max_points_per_visit"?: number,"max_visits_per_day"?: number,"min_amount_minor"?: number,"points_per_amount"?: number,"points_per_visit"?: number,"template"?: string | null,"updated_at"?: string
                   }
                   Relationships: [
                     
@@ -1230,6 +1319,9 @@ isOneToOne: false
         isOneToOne: true
         isSetofReturn: false
       } },
+"apply_template":
+{ Args: { "p_business_id": string,"p_kind": string,"p_overwrite"?: boolean }; Returns: Json
+                           },
 "cancel_redemption":
 { Args: { "p_reason": string,"p_redemption_id": string }; Returns: {
               "business_id": string,
@@ -1253,6 +1345,9 @@ isOneToOne: false
         isOneToOne: true
         isSetofReturn: false
       } },
+"create_card":
+{ Args: { "p_member": Omit<Database["loyalty"]['Tables']["members"]['Row'], Database["loyalty"]['Tables']["members"]['ComputedFields']> }; Returns: string
+                           },
 "enroll_customer":
 { Args: { "p_customer_id": string }; Returns: {
               "business_id": string,
@@ -1304,6 +1399,9 @@ isOneToOne: false
         isOneToOne: true
         isSetofReturn: false
       } },
+"list_templates":
+{ Args: Record<PropertyKey, never>; Returns: Json
+                           },
 "new_member_code":
 { Args: { "p_business_id": string }; Returns: string
                            },
@@ -1341,6 +1439,12 @@ isOneToOne: false
       } },
 "require_module":
 { Args: { "p_business_id": string }; Returns: undefined
+                           },
+"self_signup":
+{ Args: { "p_code": string,"p_name": string,"p_phone": string,"p_terms_accepted": boolean,"p_whatsapp"?: boolean }; Returns: Json
+                           },
+"template_catalog":
+{ Args: Record<PropertyKey, never>; Returns: Json
                            },
 "wallet_apple_pass":
 { Args: { "p_auth_token_hash": string,"p_serial": string }; Returns: Json
