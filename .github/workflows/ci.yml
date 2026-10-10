@@ -69,6 +69,15 @@ jobs:
             echo "::error title=deno test::${msg}"
             exit 1
           }
+      - name: sales-ingest (deno check + deno test)
+        working-directory: supabase/functions/sales-ingest
+        run: |
+          set -o pipefail
+          { deno check index.ts tests/*.ts && deno test tests/; } 2>&1 | tee out.txt || {
+            msg="$(grep -E 'FAILED|error|Error|TS[0-9]+|=>|Actual|Expected' out.txt | head -40 | sed ':a;N;$!ba;s/\n/%0A/g')"
+            echo "::error title=sales-ingest::${msg}"
+            exit 1
+          }
 
   database:
     name: Database (migrations + pgTAP)

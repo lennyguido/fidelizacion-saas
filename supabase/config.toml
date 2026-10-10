@@ -38,3 +38,6 @@ enable_confirmations = false
 # token de la tarjeta, el del pase (Apple) o WALLET_SYNC_SECRET.
 [functions.wallet]
 verify_jwt = false
+
+[functions.sales-ingest]
+verify_jwt = false
