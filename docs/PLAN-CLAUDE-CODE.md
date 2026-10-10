@@ -39,6 +39,8 @@
 
 ### 1. Recuperación automática (lo más importante del producto)
 
+> **Hecha** (2026-10-10, D-031): en `main` y aplicada en desarrollo (migración `20261010144420_core_automations`). Ver `docs/RECUPERACION-AUTOMATICA.md`.
+
 Hoy el dueño arma las campañas a mano y manda cada wa.me uno por uno. Tiene que pasar solo.
 
 **Configuración por negocio:** dueño o admin, apagada por defecto.
