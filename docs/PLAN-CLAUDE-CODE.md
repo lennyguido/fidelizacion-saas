@@ -216,3 +216,117 @@ Dejar al dueño una lista corta y en español simple:
 - qué quedó hecho;
 - qué migraciones esperan al mentor;
 - qué cuentas tiene que abrir él: Google Wallet, Apple Developer, Cloudflare, WhatsApp Business y Mercado Pago.
+
+---
+
+## Anexo A — Lo que ya se investigó del código (para no volver a leerlo todo)
+
+**Campañas y recuperación (core):**
+- Las funciones existentes viven en `20261009184605_core_campaigns.sql`, `20261009222648_core_campaigns_hardening.sql` y `20261009225015_core_campaign_coupons.sql`:
+  - `core.validate_segment`, `core.segment_members`, `core.preview_segment`;
+  - `core.create_campaign`, `core.launch_campaign` (sortea el grupo de control y genera los cupones), `core.cancel_campaign`;
+  - `core.mark_recipient_contacted` (lo que hoy marca el wa.me como mandado), `core.list_campaign_recipients`;
+  - `core.campaign_results` (atribución vs. control), `core.dashboard_summary`;
+  - `core.whatsapp_marketing_granted(business, customer)` (consentimiento vigente) y `core.in_open_campaign(business, customer)`;
+  - cupones: `core.new_coupon_code`, `core.normalize_coupon_code`, `core.coupon_info`, `core.find_campaign_coupon`.
+- `core.redeem_campaign_coupon` **se borra** en `20261010031000_core_coupons_hardening`. La reemplaza `core.record_visit_with_coupon(uuid,text,uuid,bigint)`: usar esa.
+- Frontend de recuperación: `apps/admin/src/modules/recovery/`. Ahí están `RecoveryPage`, `NewCampaignPage`, `CampaignPage`, `RecipientsList`, `CampaignResultsCard`, `CouponCounterPanel`, `previewText.ts` (vista previa del mensaje con variables) y `queries.ts`.
+- pg_cron condicional: copiar el patrón de `20261009014518_core_audit_storage_jobs.sql` (líneas ~150–165). Si no existe pg_cron, solo avisa y sigue, así los tests locales no fallan.
+
+**Piezas reutilizables:**
+- Escáner de QR del mostrador: `apps/admin/src/features/counter/QrScanner.tsx`, `qrSupport.ts` y `apps/admin/src/modules/useCustomerCodeMatch.ts`.
+- Paneles enchufables: `apps/admin/src/modules/CounterModulePanels.tsx` (mostrador) y `CustomerModulePanels.tsx` (ficha del cliente); se registran en `modules/registry.ts`.
+- Tarjeta del cliente: `apps/client/src/card/` (`CardPage`, `StampCard`, `Rewards`, `Movements`, `MemberQr`, `WalletButtons`, `useDocumentBranding`).
+- Link guardado en el celular: `apps/client/src/savedToken.ts`.
+- Archivos de la app instalable: `apps/client/public/manifest.webmanifest`, `sw.js` y `_headers`. El service worker **nunca** cachea respuestas de Supabase (D-024).
+- Helpers del SDK: `packages/sdk/src/csv.ts` (CSV), `phone.ts` (normalizar celulares), `money.ts` (centavos), `dates.ts` (zona horaria), `errors.ts` (mensajes de error amigables) y `branding.ts` (logo y colores).
+- `loyalty.get_card(text)` es hoy la **única** función anon y el meta-test lo controla. Para mostrar algo nuevo en la tarjeta, mantener su firma.
+- Puntos: el trigger `loyalty.handle_core_event` sobre `core.events` es el que acredita (D-018). Visitas antedatadas más de 30 minutos o importadas no dan puntos, y hay topes `max_points_per_visit` y `max_visits_per_day` (D-022). Un premio "por primera visita" (referidos) va en ese mismo handler.
+
+## Anexo B — Cómo probar sin gastar de más
+
+- **Tests de base local:**
+  - Arrancar Postgres con `service postgresql start`.
+  - Correr `su postgres -c "PGUSER=postgres bash scripts/db-test-local.sh"`. Con `TEST_DB=<nombre>` usa otra base, útil si corren dos cosas a la vez.
+  - En Codespaces: `supabase test db`.
+- **Formato:** `npx prettier --write <archivos>` antes de commitear, porque el CI corre `format:check`.
+- **ESLint (react-refresh):**
+  - un `.tsx` solo exporta componentes; los helpers van a un `.ts` aparte;
+  - TypeScript usa `noUncheckedIndexedAccess`, así que hay que chequear `undefined` al leer `array[i]`.
+- **Bots del CI:**
+  - "DB types" regenera `packages/sdk/src/database.types.ts` cuando cambian migraciones; "Lockfile" actualiza `package-lock.json`.
+  - Sus commits **no disparan el CI**: después hacer `git pull --rebase`, luego `git commit --allow-empty -m "chore: trigger ci"`, y push.
+  - Si el código usa funciones nuevas, el typecheck falla hasta que el bot regenera los tipos. Es normal.
+- **Ver errores del CI sin bajar logs:**
+  - `gh run list --branch <rama>`;
+  - `gh run view <id> --json jobs`;
+  - `gh api repos/lennyguido/fidelizacion-saas/check-runs/<job_id>/annotations`.
+- **e2e:**
+  - Playwright levanta el admin en el puerto 4173 y el cliente en el 4174.
+  - Login y alta comparten etiquetas de campos: esperar la URL `/signup` antes de llenar.
+- **Supabase por MCP:** `apply_migration` puede volver "cancelled" si la migración tiene DROP, DELETE o REVOKE ALL, porque pide una confirmación. En ese caso aplicarla con `supabase db push` o pegarla en el SQL Editor.
+- **Datos de PostgREST:** `business_id` no tiene permiso de UPDATE por columna, así que usar update-o-insert y no `upsert`.
+- **Usar un solo agente por vez.** Lanzar muchos en paralelo agota los créditos en minutos.
+
+## Anexo C — Números reservados (para que las ramas no choquen)
+
+| Tarea | Rama | Migración | Tests DB |
+|---|---|---|---|
+| 1 Recuperación automática | `feat/recuperacion-automatica` | `20261011020000` | `044-`, `045-` |
+| 2 Alta por QR | `feat/alta-por-qr` | `20261011010000` (+`010100`) | `042-`, `043-` |
+| 3 Conexión con cajas | `feat/conexion-cajas` | `20261011000000` | `040-`, `041-` |
+| 4 Instalar + CSV | `feat/instalar-y-exportar` | `20261011030000` | `048-` |
+| 5 Resumen de los lunes | `feat/resumen-semanal` | `20261011035000` | `050-` |
+| 6 Referidos + reseñas | `feat/referidos-y-resenas` | `20261011040000` (+`040100`) | `046-`, `047-` |
+| 7 Canje desde el celular | `feat/canje-desde-celular` | `20261011050000` | `026-` |
+| 8 Mostrador inteligente | `feat/mostrador-inteligente` | `20261011060000` | `049-` |
+
+> Si se hacen en orden y de a una, se puede usar la hora real como timestamp. Lo único que importa es que cada migración nueva tenga un número **mayor** que la última aplicada.
+
+## Anexo D — Detalles por tarea que ya se pensaron
+
+**1. Recuperación automática**
+- Si el motor arma "una campaña automática por automatización y por día", el grupo de control, los cupones y la atribución funcionan sin código nuevo.
+- Plantilla del mensaje con `{nombre}`, `{negocio}` y `{cupon}`, reutilizando `previewText.ts`.
+- Estados de `core.outbox`: `queued`, `sent`, `failed` y `manual`. Proveedores: `manual`; más adelante `whatsapp_cloud` y `wallet_push`.
+- No hacer todavía el "aviso de puntos por vencer": el dueño tiene que decidir la regla de vencimiento.
+
+**2. Alta por QR**
+- Límite sugerido: 30 altas por hora por negocio.
+- El consentimiento se guarda con fecha y fuente `self_signup` (Ley 25.326).
+- Si se pide el cumpleaños en el formulario, usar las columnas que crea la tarea 1. Por eso conviene hacer la 1 antes.
+- Textos por rubro, por ejemplo:
+  - cafetería: "8 cafés y el 9.º va de regalo";
+  - barbería: "5 cortes y el 6.º gratis";
+  - heladería: "cada 6 cuartos, uno de regalo".
+
+**3. Conexión con cajas**
+- Muchos locales chicos solo tienen controladora fiscal o QR de Mercado Pago, sin API. Por eso **Mercado Pago es la integración clave en Argentina**.
+- Antes de prometerla, hacer la prueba técnica: ¿llegan avisos de los cobros con el QR de siempre o solo de las órdenes creadas por la API?
+- Fudo: API solo en el plan Pro, tokens que vencen cada 24 h y sin webhooks (hay que consultar cada pocos minutos).
+- Las ventas sin cliente identificado cuentan igual para el detector de semanas flojas.
+- **Se descartó** que el cliente o el cajero escaneen el QR del ticket fiscal: el dueño prefiere integrarse con la caja.
+
+**4. Instalar en inicio**
+- En iPhone no existe `beforeinstallprompt`.
+- Detectar Safari: con CriOS o FxiOS en el user agent, decir "abrilo en Safari".
+- Para saber si ya está instalada: `matchMedia('(display-mode: standalone)')` o `navigator.standalone`.
+- Recordar el "Ahora no" en localStorage, siempre dentro de try/catch.
+
+**6. Referidos y reseñas**
+- Referidos:
+  - el código de invitación es distinto del link secreto y del código de socio;
+  - se bloquean el auto-referido y los ciclos;
+  - el amigo tiene que ser un cliente sin visitas.
+- Reseñas:
+  - links válidos de Google: `g.page`, `google.com`, `maps.app.goo.gl` y `search.google.com`;
+  - la encuesta solo aparece si hubo una visita en las últimas 48 h, una vez por visita, con límite de intentos.
+
+**7. Canje desde el celular**
+- Código de 6 caracteres sin letras ambiguas, único entre los pedidos vivos del negocio.
+- Un solo pedido vivo por tarjeta: uno nuevo reemplaza al anterior.
+- Mientras hay un pedido vivo, la tarjeta consulta cada pocos segundos (TanStack Query) para mostrar "¡Canjeado!".
+
+**8. Mostrador inteligente**
+- Si no existe el concepto de "visita sin identificar", el ranking del equipo muestra visitas registradas y clientes dados de alta por persona.
+- Staff ve el ranking sin números de los demás.
