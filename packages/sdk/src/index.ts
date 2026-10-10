@@ -15,11 +15,13 @@ export * as customers from './customers.ts'
 export {
   CUSTOMER_STATUSES,
   type Customer,
+  type Birthday,
   type CustomerInput,
   type CustomerListItem,
   type CustomerStats,
   type CustomerStatus,
 } from './customers.ts'
+export { formatBirthday, isValidBirthday, MONTH_NAMES } from './birthday.ts'
 export * as visits from './visits.ts'
 export * as campaigns from './campaigns.ts'
 export type {
@@ -36,6 +38,16 @@ export type {
   Segment,
   SegmentPreview,
 } from './campaigns.ts'
+export * as automations from './automations.ts'
+export {
+  AUTOMATION_DAYS,
+  AUTOMATION_KINDS,
+  type Automation,
+  type AutomationInput,
+  type AutomationKind,
+  type OutboxBlockedReason,
+  type OutboxMessage,
+} from './automations.ts'
 export * as dashboard from './dashboard.ts'
 export type { DashboardSummary } from './dashboard.ts'
 export * as loyalty from './loyalty.ts'

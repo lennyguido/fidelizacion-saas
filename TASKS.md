@@ -95,6 +95,7 @@ Ver secciones 30–38.
 * [x] Envío MVP sin API de WhatsApp: el dueño envía desde su WhatsApp con links `wa.me` armados por el sistema (sin costo ni aprobación de Meta); solo a clientes con consentimiento
 * [x] Atribución por ventana, por cupón (D-026) y "dinero recuperado" (total + incremental)
 * [x] Tests de atribución y de las fórmulas (`030-campaigns`)
+* [x] Recuperación automática (D-031, plan Claude Code tarea 1): en riesgo, segunda visita y cumpleaños; motor diario con pg_cron, cola `core.outbox` (proveedor manual), pantalla "Automático", bandeja "Mensajes listos", tarjeta en Inicio; tests `044`, `045`
 
 ## Fase 6 — Mensajería real
 

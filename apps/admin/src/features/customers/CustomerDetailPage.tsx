@@ -4,6 +4,7 @@ import { useMutation } from '@tanstack/react-query'
 import {
   customers,
   errorMessage,
+  formatBirthday,
   formatMoney,
   formatPhone,
   visits,
@@ -125,6 +126,8 @@ function CustomerHeader({ customer }: { customer: Customer }) {
             phone: customer.phone ?? '',
             email: customer.email ?? '',
             notes: customer.notes ?? '',
+            birthDay: customer.birthday ? String(customer.birthday.day) : '',
+            birthMonth: customer.birthday ? String(customer.birthday.month) : '',
           }}
           submitLabel="Guardar"
           submitting={update.isPending}
@@ -148,6 +151,9 @@ function CustomerHeader({ customer }: { customer: Customer }) {
             {[formatPhone(customer.phone), customer.email].filter(Boolean).join(' · ') ||
               'Sin datos de contacto'}
           </p>
+          {customer.birthday && (
+            <p className="text-sm text-slate-500">Cumple el {formatBirthday(customer.birthday)}</p>
+          )}
           {customer.notes && <p className="mt-1 text-sm text-slate-600">{customer.notes}</p>}
         </div>
         {customer.stats && <StatusBadge status={customer.stats.status} />}

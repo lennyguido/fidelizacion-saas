@@ -37,6 +37,8 @@ export interface Campaign {
   recipientsCount: number
   createdAt: string
   sentAt: string | null
+  /** Si la armó la recuperación automática (D-031): qué automatización. */
+  automationKind: 'at_risk' | 'second_visit' | 'birthday' | null
 }
 
 export interface CampaignInput {
@@ -63,6 +65,7 @@ function toCampaign(row: Tables<'campaigns'>): Campaign {
     recipientsCount: row.recipients_count,
     createdAt: row.created_at,
     sentAt: row.sent_at,
+    automationKind: (row.automation_kind as Campaign['automationKind']) ?? null,
   }
 }
 

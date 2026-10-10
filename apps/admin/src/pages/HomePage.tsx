@@ -5,6 +5,7 @@ import { Alert, Card, Spinner } from '@plataforma/ui'
 import { useActiveBusiness } from '../features/business/ActiveBusinessContext'
 import { useCustomerCounts } from '../features/customers/queries'
 import { statusInfo } from '../features/customers/status'
+import { HomeModuleCards } from '../modules/HomeModuleCards'
 import { MonthSummaryCard } from './MonthSummaryCard'
 
 const roleLabels = { owner: 'Dueño', admin: 'Administrador', staff: 'Empleado' } as const
@@ -31,6 +32,8 @@ export function HomePage() {
       <VisitsCard />
 
       {business.role !== 'staff' && <MonthSummaryCard />}
+
+      <HomeModuleCards />
 
       <Card>
         <h2 className="mb-4 text-base font-semibold">Tus clientes</h2>

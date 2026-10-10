@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { campaigns, type Segment } from '@plataforma/sdk'
+import { automations, campaigns, type Segment } from '@plataforma/sdk'
 import { useActiveBusiness } from '../../features/business/ActiveBusinessContext'
 
 export const RECOVERY_MODULE = 'recovery'
@@ -67,5 +67,27 @@ export function useCouponLookup(code: string) {
     queryKey: [...recoveryKeys.all(business.id), 'coupon', normalized] as const,
     queryFn: () => campaigns.findCoupon(business.id, normalized),
     enabled: campaigns.looksLikeCouponCode(normalized),
+  })
+}
+
+export function useAutomations(businessId: string) {
+  return useQuery({
+    queryKey: [...recoveryKeys.all(businessId), 'automations'] as const,
+    queryFn: () => automations.list(businessId),
+  })
+}
+
+/** Mensajes que la recuperación automática dejó listos para mandar. */
+export function useReadyMessages(businessId: string) {
+  return useQuery({
+    queryKey: [...recoveryKeys.all(businessId), 'outbox'] as const,
+    queryFn: () => automations.listReady(businessId),
+  })
+}
+
+export function useReadyMessagesCount(businessId: string) {
+  return useQuery({
+    queryKey: [...recoveryKeys.all(businessId), 'outbox', 'count'] as const,
+    queryFn: () => automations.countReady(businessId),
   })
 }
