@@ -1,6 +1,6 @@
 -- =============================================================================
 -- LOYALTY · Alta por QR (tarjeta para el cliente que se anota solo). docs/ALTA-QR.md
--- Las plantillas por rubro están en 20261010160000_loyalty_templates.sql.
+-- Las plantillas por rubro están en 20261010184152_loyalty_templates.sql.
 --
 -- ⚠ REQUIERE REVISIÓN DEL MENTOR ANTES DE APLICAR: loyalty.self_signup es la
 --   segunda función ejecutable SIN SESIÓN de la plataforma (la primera es
