@@ -619,6 +619,31 @@ isOneToOne: false
               "blocked_reason": string,"contacted_at": string,"coupon_code": string,"coupon_redeemed_at": string,"customer_id": string,"is_control": boolean,"message": string,"name": string,"phone": string,"recipient_id": string,"returned_amount_minor": number,"returned_at": string,"status_at_send": string
             }[]
                            },
+"lock_coupon_for_use":
+{ Args: { "p_business_id": string,"p_code": string }; Returns: {
+              "business_id": string,
+"campaign_id": string,
+"contacted_at": string | null,
+"coupon_code": string | null,
+"coupon_redeemed_at": string | null,
+"coupon_redeemed_by": string | null,
+"coupon_visit_id": string | null,
+"customer_id": string,
+"id": string,
+"is_control": boolean,
+"message": string | null,
+"risk_score_at_send": number,
+"status_at_send": string
+            }
+                          SetofOptions: {
+        from: "*"
+        to: "campaign_recipients"
+        isOneToOne: true
+        isSetofReturn: false
+      } },
+"mark_coupon_used":
+{ Args: { "p_recipient": Omit<Database["core"]['Tables']["campaign_recipients"]['Row'], Database["core"]['Tables']["campaign_recipients"]['ComputedFields']>,"p_visit_id": string }; Returns: undefined
+                           },
 "mark_recipient_contacted":
 { Args: { "p_recipient_id": string }; Returns: {
               "business_id": string,
