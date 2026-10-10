@@ -81,6 +81,8 @@ Hoy el dueño arma las campañas a mano y manda cada wa.me uno por uno. Tiene qu
 
 ### 2. Alta por QR + plantillas + cartel (OPORTUNIDADES #2 y #6)
 
+> **Ya empezada:** la rama `feat/alta-por-qr` (commit `37561c8`) tiene la parte de base de datos hecha (migración + tests 042/043 + meta-test). Falta: revisar que el CI esté verde, las pantallas (alta pública, plantillas, cartel, avisos) y el SDK. Continuar sobre esa rama, no empezar de cero.
+
 **Alta por QR:**
 - Ruta pública en la app cliente: `/alta/<codigo-publico-del-negocio>`.
 - El cliente carga nombre y celular, más dos casillas separadas sin tildar: términos (obligatoria) y WhatsApp (opcional).
