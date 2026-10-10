@@ -50,7 +50,11 @@ export function CashRegisterCard() {
         </Alert>
       )}
       <div className="flex items-end gap-2">
-        <TextField label="Nombre de la clave" value={name} onChange={(e) => setName(e.target.value)} />
+        <TextField
+          label="Nombre de la clave"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
         <Button
           loading={create.isPending}
           disabled={name.trim() === ''}
@@ -64,7 +68,11 @@ export function CashRegisterCard() {
       {keys.data && keys.data.length > 0 && (
         <ul className="divide-y divide-slate-100">
           {keys.data.map((key) => (
-            <KeyRow key={key.id} item={key} onChanged={() => queryClient.invalidateQueries({ queryKey })} />
+            <KeyRow
+              key={key.id}
+              item={key}
+              onChanged={() => queryClient.invalidateQueries({ queryKey })}
+            />
           ))}
         </ul>
       )}

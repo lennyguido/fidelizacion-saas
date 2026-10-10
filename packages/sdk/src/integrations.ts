@@ -68,7 +68,11 @@ export async function simulateSale(
     p_phone: phone ?? undefined,
   })
   if (error) throw fromPostgrestError(error)
-  const result = (data ?? {}) as { status?: SimulatedSale['status']; identified?: boolean; message?: string }
+  const result = (data ?? {}) as {
+    status?: SimulatedSale['status']
+    identified?: boolean
+    message?: string
+  }
   return {
     status: result.status ?? 'invalid',
     identified: result.identified ?? false,
