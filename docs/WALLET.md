@@ -221,7 +221,59 @@ Fuentes: [Create wallet identifiers and certificates](https://developer.apple.co
 [WWDR intermediate certificates](https://developer.apple.com/help/account/certificates/wwdr-intermediate-certificates),
 [Adding a web service to update passes](https://developer.apple.com/documentation/walletpasses/adding-a-web-service-to-update-passes).
 
-## 8. Para programadores
+## 8. Tarjeta de sellos
+
+Como las tarjetas de cartón del café: una fila de casilleros que se van llenando con el
+**logo del negocio** en cada visita. Se ve así en los tres lugares:
+
+* **Tarjeta por link** (el navegador del cliente): casilleros en filas de 5, el último
+  sello "cae" con una animación corta (no se anima si el teléfono pide "reducir
+  movimiento"), y los textos "Te faltan X sellos para …" y "Recompensas listas: N".
+* **Google Wallet**: la fila de sellos es la imagen grande del pase (`heroImage`).
+* **Apple Wallet**: la fila de sellos va en la franja del medio (`strip.png` y
+  `strip@2x.png`); el saldo pasa arriba, al lado del logo, para no taparla.
+
+Cuándo aparece: siempre en los programas **"Tarjeta de sellos"** (se elige en
+Fidelización → "Cómo se muestra") y también en los de **puntos** cuando la recompensa
+cuesta 20 puntos o menos. Sin recompensas activas no hay casilleros (no hay meta).
+
+Cuántos casilleros: tantos como cuesta la **próxima recompensa** que todavía no le
+alcanza. Si ya le alcanzan todas, la tarjeta apunta a la más barata y se muestra llena.
+Como mucho se dibujan **20**; si la recompensa cuesta más, se llenan en proporción (por
+ejemplo, 15 de 30 sellos = 10 de 20 casilleros). La cuenta la hacen
+`card.stampSlots()` (SDK, tarjeta por link) y `lib/stamps.ts` (wallet), con la misma
+regla.
+
+### La imagen de sellos
+
+`GET /wallet/stamps.png?b=<id del negocio>&n=<llenos>&t=<total>&v=<versión de la marca>`
+
+* Es pública (Google la tiene que poder bajar) y no lleva datos del cliente: solo el
+  color y el logo del negocio, que ya son públicos (D-024). Responde 404 si el negocio
+  no tiene el módulo de fidelización y 400 si los números no cierran (`t` entre 1 y 20,
+  `n` entre 0 y `t`).
+* `v` es una huella corta del logo y el color: si el negocio los cambia, cambia la URL y
+  Google baja la imagen nueva. Por eso la imagen se guarda en caché "para siempre"
+  (`immutable`). Con una `v` vieja, o si el logo no se pudo bajar, se sirve igual pero
+  con caché de 5 minutos.
+* Cada vez que cambia el saldo, el sync (sección 6) manda a Google la URL nueva junto con
+  los puntos, así que la imagen se actualiza sola.
+
+**Cómo se dibuja (limitación):** la imagen se arma dentro de la Edge Function con código
+propio en TypeScript (`lib/stampImage.ts` y `lib/png.ts`), sin librerías nativas ni
+WASM: no hay que instalar nada ni bajar archivos al arrancar, y la misma tarjeta da
+siempre los mismos bytes. A cambio:
+
+* El logo se usa solo si es **PNG** (como ya pasaba con Apple). Con un logo JPG, WebP o
+  SVG, los casilleros llenos muestran un **tilde** (✓) en vez del logo. Recomendación al
+  dueño: subir el logo en PNG.
+* PNG entrelazados, muy grandes (más de 4096 px de lado o 4 millones de píxeles) o de
+  más de 1 MB también caen en el tilde.
+* No se dibujan textos en la imagen: los textos van en los campos del pase.
+* Si un programa deja de ser de sellos, Google conserva la última imagen hasta que se
+  vuelva a guardar el pase.
+
+## 9. Para programadores
 
 * Código: `supabase/functions/wallet/` (Deno). Lógica pura en `google/objects.ts`,
   `apple/pass.ts`, `apple/zip.ts`, `lib/text.ts`; tests en `tests/` (`deno test tests/`
@@ -230,8 +282,11 @@ Fuentes: [Create wallet identifiers and certificates](https://developer.apple.co
 * Base: `supabase/migrations/20261010120000_loyalty_wallet.sql`. Tablas
   `loyalty.wallet_passes`, `loyalty.wallet_devices`, `loyalty.wallet_updates` y funciones
   `loyalty.wallet_*`: **solo service role** (sin permisos para el panel ni la tarjeta).
-  Tests: `supabase/tests/database/024-wallet.test.sql`.
-* Rutas: `GET /wallet/status`, `POST /wallet/google`, `POST /wallet/google/sync`,
+  Tests: `supabase/tests/database/024-wallet.test.sql`. Tarjeta de sellos:
+  `20261010160000_loyalty_wallet_stamps.sql` (`programKind` y `stampGoal` en
+  `loyalty.wallet_pass_data`, y `loyalty.wallet_stamp_brand`), tests en
+  `025-wallet-stamps.test.sql` y `tests/stamps_test.ts`.
+* Rutas: `GET /wallet/status`, `GET /wallet/stamps.png`, `POST /wallet/google`, `POST /wallet/google/sync`,
   `POST /wallet/apple`, `GET /wallet/apple/download/:serial?auth=…`,
   `POST /wallet/apple/sync`, y el web service de PassKit bajo `/wallet/apple/v1/…`.
 * Frontend: `packages/sdk/src/wallet.ts` y `apps/client/src/card/WalletButtons.tsx`.

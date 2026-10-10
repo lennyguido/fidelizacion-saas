@@ -20,6 +20,9 @@ export interface PassData {
   memberCode: string
   pointsBalance: number
   unit: 'puntos' | 'sellos'
+  programKind: 'points' | 'stamps'
+  /** Costo de la recompensa a la que apunta la tarjeta de sellos (null sin recompensas). */
+  stampGoal: number | null
   nextReward: { name: string; costPoints: number } | null
   rewardsAvailable: number
 }
@@ -46,6 +49,11 @@ export function toPassData(raw: unknown): PassData | null {
     memberCode: String(r.memberCode ?? ''),
     pointsBalance: Number(r.pointsBalance ?? 0),
     unit: r.unit === 'sellos' ? 'sellos' : 'puntos',
+    programKind: r.programKind === 'stamps' || r.unit === 'sellos' ? 'stamps' : 'points',
+    stampGoal:
+      r.stampGoal === null || r.stampGoal === undefined || !Number.isFinite(Number(r.stampGoal))
+        ? null
+        : Number(r.stampGoal),
     nextReward:
       next && typeof next.name === 'string'
         ? { name: next.name, costPoints: Number(next.costPoints) }

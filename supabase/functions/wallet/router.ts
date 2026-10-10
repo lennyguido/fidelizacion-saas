@@ -5,6 +5,8 @@ import { createRpc, type Rpc } from './lib/db.ts'
 import { corsHeaders, fail, json, safeEqual } from './lib/http.ts'
 import { createGoogleApi, type GoogleApi } from './google/api.ts'
 import { handleGoogleSave, handleGoogleSync } from './google/handlers.ts'
+import { stampImageBase } from './lib/stamps.ts'
+import { handleStampImage } from './stamps/handler.ts'
 import {
   handleAppleDownload,
   handleAppleIssue,
@@ -54,11 +56,26 @@ export function createHandler(deps: HandlerDeps): (req: Request) => Promise<Resp
 
     if (area === 'status' && req.method === 'GET') return json(status)
 
+    if (area === 'stamps.png' && rest.length === 0) {
+      if (req.method !== 'GET') return fail('method_not_allowed', 405)
+      if (!rpc || !config.supabaseUrl) return fail('not_configured', 501)
+      return await handleStampImage(url, {
+        supabaseUrl: config.supabaseUrl,
+        rpc,
+        fetch: fetchFn,
+        log,
+      })
+    }
+
     if (area === 'google') {
       if (!status.google || !rpc || !config.google || !config.supabaseUrl) {
         return fail('not_configured', 501)
       }
-      googleApi ??= createGoogleApi(config.google, { fetch: fetchFn, now })
+      googleApi ??= createGoogleApi(config.google, {
+        fetch: fetchFn,
+        now,
+        stampImageBase: stampImageBase(config.supabaseUrl),
+      })
       const googleDeps = {
         config: { ...config, google: config.google, supabaseUrl: config.supabaseUrl },
         rpc,

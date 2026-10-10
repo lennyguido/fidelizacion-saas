@@ -40,7 +40,7 @@ export * as dashboard from './dashboard.ts'
 export type { DashboardSummary } from './dashboard.ts'
 export * as loyalty from './loyalty.ts'
 export * as card from './card.ts'
-export type { Card, CardMovement, CardReward } from './card.ts'
+export type { Card, CardMovement, CardReward, StampSlots } from './card.ts'
 export * as wallet from './wallet.ts'
 export type { WalletErrorCode, WalletProvider, WalletStatus } from './wallet.ts'
 export type {
