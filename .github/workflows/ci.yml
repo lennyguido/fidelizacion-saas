@@ -39,6 +39,37 @@ jobs:
           VITE_CLIENT_APP_URL: https://tarjeta-ci.pages.dev
         run: scripts/ci-run.sh "deploy check" scripts/check-deploy-build.sh
 
+  edge-functions:
+    name: Edge Functions (deno check + deno test)
+    runs-on: ubuntu-latest
+    env:
+      NO_COLOR: '1'
+    defaults:
+      run:
+        working-directory: supabase/functions/wallet
+    steps:
+      - uses: actions/checkout@v5
+      - uses: denoland/setup-deno@v2
+        with:
+          # Misma serie 2.x que usa el Edge Runtime de Supabase.
+          deno-version: v2.1.4
+      - name: deno check
+        run: |
+          set -o pipefail
+          deno check index.ts apple/sign.ts tests/*.ts 2>&1 | tee check.txt || {
+            msg="$(grep -E 'error|ERROR|TS[0-9]+|at file' check.txt | head -40 | sed ':a;N;$!ba;s/\n/%0A/g')"
+            echo "::error title=deno check::${msg}"
+            exit 1
+          }
+      - name: deno test
+        run: |
+          set -o pipefail
+          deno test tests/ 2>&1 | tee test.txt || {
+            msg="$(grep -E 'FAILED|error|Error|=>|Actual|Expected' test.txt | head -40 | sed ':a;N;$!ba;s/\n/%0A/g')"
+            echo "::error title=deno test::${msg}"
+            exit 1
+          }
+
   database:
     name: Database (migrations + pgTAP)
     runs-on: ubuntu-latest

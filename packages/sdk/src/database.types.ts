@@ -978,6 +978,66 @@ isOneToOne: false
                   Relationships: [
                     
                   ]
+                },"wallet_devices": {
+                  Row: {
+                    "business_id": string,"created_at": string,"device_library_id": string,"pass_id": string,"push_token": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "business_id": string,"created_at"?: string,"device_library_id": string,"pass_id": string,"push_token": string
+                  }
+                  Update: {
+                    "business_id"?: string,"created_at"?: string,"device_library_id"?: string,"pass_id"?: string,"push_token"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "wallet_devices_business_id_pass_id_fkey"
+      columns: ["business_id","pass_id"]
+isOneToOne: false
+      referencedRelation: "wallet_passes"
+      referencedColumns: ["business_id","id"]
+    }
+                  ]
+                },"wallet_passes": {
+                  Row: {
+                    "auth_token_hash": string | null,"business_id": string,"created_at": string,"id": string,"last_pushed_at": string | null,"member_id": string,"object_id": string,"provider": string,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "auth_token_hash"?: string | null,"business_id": string,"created_at"?: string,"id"?: string,"last_pushed_at"?: string | null,"member_id": string,"object_id"?: string,"provider": string,"updated_at"?: string
+                  }
+                  Update: {
+                    "auth_token_hash"?: string | null,"business_id"?: string,"created_at"?: string,"id"?: string,"last_pushed_at"?: string | null,"member_id"?: string,"object_id"?: string,"provider"?: string,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "wallet_passes_business_id_member_id_fkey"
+      columns: ["business_id","member_id"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["business_id","id"]
+    }
+                  ]
+                },"wallet_updates": {
+                  Row: {
+                    "attempts": number,"business_id": string,"created_at": string,"id": number,"last_error": string | null,"next_attempt_at": string,"pass_id": string,"processed_at": string | null,"revision": number,"status": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "attempts"?: number,"business_id": string,"created_at"?: string,"id"?: never,"last_error"?: string | null,"next_attempt_at"?: string,"pass_id": string,"processed_at"?: string | null,"revision"?: number,"status"?: string
+                  }
+                  Update: {
+                    "attempts"?: number,"business_id"?: string,"created_at"?: string,"id"?: never,"last_error"?: string | null,"next_attempt_at"?: string,"pass_id"?: string,"processed_at"?: string | null,"revision"?: number,"status"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "wallet_updates_business_id_pass_id_fkey"
+      columns: ["business_id","pass_id"]
+isOneToOne: false
+      referencedRelation: "wallet_passes"
+      referencedColumns: ["business_id","id"]
+    }
+                  ]
                 }
           }
           Views: {
@@ -1116,6 +1176,33 @@ isOneToOne: false
       } },
 "require_module":
 { Args: { "p_business_id": string }; Returns: undefined
+                           },
+"wallet_apple_pass":
+{ Args: { "p_auth_token_hash": string,"p_serial": string }; Returns: Json
+                           },
+"wallet_apple_push_tokens":
+{ Args: { "p_pass_id": string }; Returns: Json
+                           },
+"wallet_apple_register":
+{ Args: { "p_auth_token_hash": string,"p_device_id": string,"p_push_token": string,"p_serial": string }; Returns: string
+                           },
+"wallet_apple_serials":
+{ Args: { "p_device_id": string,"p_since"?: string }; Returns: Json
+                           },
+"wallet_apple_unregister":
+{ Args: { "p_auth_token_hash": string,"p_device_id": string,"p_serial": string }; Returns: string
+                           },
+"wallet_claim_updates":
+{ Args: { "p_limit"?: number,"p_provider": string }; Returns: Json
+                           },
+"wallet_finish_update":
+{ Args: { "p_error"?: string,"p_revision": number,"p_update_id": number }; Returns: string
+                           },
+"wallet_issue_pass":
+{ Args: { "p_auth_token_hash"?: string,"p_card_token": string,"p_provider": string }; Returns: Json
+                           },
+"wallet_pass_data":
+{ Args: { "p_pass_id": string }; Returns: Json
                            }
           }
           Enums: {

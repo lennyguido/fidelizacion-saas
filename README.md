@@ -31,6 +31,7 @@ El producto permite a los negocios:
 * `docs/ARCHITECTURE.md` — arquitectura de la plataforma (núcleo + módulos).
 * `docs/DEPLOY.md` — publicar el panel y la tarjeta gratis (Cloudflare Pages) y pasar a producción.
 * `docs/CHECKLIST-PRODUCCION.md` — lista antes del primer cliente real (quién hace cada cosa).
+* `docs/WALLET.md` — tarjeta en Google Wallet (y Apple Wallet más adelante): cuentas, secrets y publicación.
 
 ## Estructura
 
