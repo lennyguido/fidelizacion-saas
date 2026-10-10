@@ -14,6 +14,7 @@ describe('fromPostgrestError', () => {
     [{ code: '42501', message: 'module_disabled' }, 'module_disabled'],
     [{ code: '22023', message: 'coupon_already_used' }, 'coupon_already_used'],
     [{ code: 'P0002', message: 'coupon_not_found' }, 'coupon_not_found'],
+    [{ code: '42501', message: 'self_redemption' }, 'self_redemption'],
     [{ code: 'XX000', message: 'boom' }, 'unknown'],
   ])('%j → %s', (error, code) => {
     expect(fromPostgrestError(error).code).toBe(code)

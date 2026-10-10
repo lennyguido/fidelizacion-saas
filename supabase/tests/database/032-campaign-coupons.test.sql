@@ -72,15 +72,19 @@ select throws_ok(format($$ select core.find_campaign_coupon(%L, %L) $$, :'biz', 
 
 -- Usar -------------------------------------------------------------------------------
 select tests.authenticate_as(:'staff');
-select (core.record_visit(:'biz', null, :'cust1', 500000)).id as visit1 \gset
 select (core.record_visit(:'biz', null, :'cust2')).id as visit2 \gset
 
+-- La función de dos pasos ya no es del equipo (20261010031000): reset role la
+-- prueba como interna, con la sesión del cajero.
+reset role;
 select throws_ok(format($$ select core.redeem_campaign_coupon(%L, %L, %L) $$, :'biz', :'code1', :'visit2'),
   '22023', 'coupon_visit_mismatch', 'the visit must belong to the coupon''s customer');
-select is(
-  core.redeem_campaign_coupon(:'biz', :'code1', :'visit1') ->> 'status', 'used',
-  'staff redeems the coupon with the customer''s visit');
-select throws_ok(format($$ select core.redeem_campaign_coupon(%L, %L) $$, :'biz', :'code1'),
+select tests.authenticate_as(:'staff');
+select core.record_visit_with_coupon(:'biz', :'code1', null, 500000) as used1 \gset
+select is(:'used1'::jsonb ->> 'status', 'used',
+  'staff records the visit and redeems the coupon in one call');
+select :'used1'::jsonb ->> 'visitId' as visit1 \gset
+select throws_ok(format($$ select core.record_visit_with_coupon(%L, %L) $$, :'biz', :'code1'),
   '22023', 'coupon_already_used', 'a coupon can be used only once');
 
 reset role;
@@ -107,14 +111,14 @@ update core.campaigns set sent_at = now() - interval '30 days' where id = :'camp
 select tests.authenticate_as(:'staff');
 select is(core.find_campaign_coupon(:'biz', :'code2') ->> 'status', 'expired',
   'after the window the coupon shows as expired');
-select throws_ok(format($$ select core.redeem_campaign_coupon(%L, %L) $$, :'biz', :'code2'),
+select throws_ok(format($$ select core.record_visit_with_coupon(%L, %L) $$, :'biz', :'code2'),
   '22023', 'coupon_expired', 'an expired coupon cannot be used');
 
 reset role;
 update core.campaigns set sent_at = now() - interval '1 day' where id = :'camp';
 update core.customers set status = 'archived' where id = :'cust3';
 select tests.authenticate_as(:'staff');
-select throws_ok(format($$ select core.redeem_campaign_coupon(%L, %L) $$, :'biz', :'code3'),
+select throws_ok(format($$ select core.record_visit_with_coupon(%L, %L) $$, :'biz', :'code3'),
   '22023', 'customer_inactive', 'an archived customer''s coupon cannot be used');
 
 select * from finish();

@@ -269,17 +269,31 @@ export async function findCoupon(businessId: string, code: string): Promise<Coup
   return (data as Coupon | null) ?? null
 }
 
-/** Usa el cupón (una sola vez), atado a la visita en la que lo trajo. */
-export async function redeemCoupon(
-  businessId: string,
-  code: string,
-  visitId: string | null,
-): Promise<Coupon> {
-  const { data, error } = await getSupabase().rpc('redeem_campaign_coupon', {
-    p_business_id: businessId,
-    p_code: code,
-    p_visit_id: visitId ?? undefined,
+export interface CouponVisitInput {
+  businessId: string
+  code: string
+  locationId?: string | null
+  amountMinor?: number | null
+}
+
+export interface CouponRedemption extends Coupon {
+  /** Visita a la que quedó atado el cupón. */
+  visitId: string
+  /** true si el cliente ya tenía una visita de hace un momento y se usó esa (el monto no cambia). */
+  visitReused: boolean
+}
+
+/**
+ * Mostrador: registra la visita y usa el cupón en una sola operación de la base.
+ * Si la visita del cliente ya se cargó hace un momento, se reusa esa.
+ */
+export async function recordVisitWithCoupon(input: CouponVisitInput): Promise<CouponRedemption> {
+  const { data, error } = await getSupabase().rpc('record_visit_with_coupon', {
+    p_business_id: input.businessId,
+    p_code: input.code,
+    p_location_id: input.locationId ?? undefined,
+    p_amount_minor: input.amountMinor ?? undefined,
   })
   if (error) throw fromPostgrestError(error)
-  return data as unknown as Coupon
+  return data as unknown as CouponRedemption
 }

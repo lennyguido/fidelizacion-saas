@@ -1,13 +1,6 @@
 import { useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
-import {
-  AppError,
-  campaigns,
-  errorMessage,
-  visits,
-  type Coupon,
-  type CouponStatus,
-} from '@plataforma/sdk'
+import { campaigns, errorMessage, type Coupon, type CouponStatus } from '@plataforma/sdk'
 import { Alert, Button, Card, Spinner, TextField, useToast } from '@plataforma/ui'
 import { useActiveBusiness } from '../../features/business/ActiveBusinessContext'
 import { formatDateTime } from '../../lib/format'
@@ -15,8 +8,9 @@ import type { CounterPanelProps } from '../types'
 import { useCouponLookup, useInvalidateCampaigns } from './queries'
 
 /**
- * Mostrador: el cliente muestra el cupón de una campaña. Se valida, se registra
- * la visita (con el monto escrito arriba) y el cupón queda usado (D-026).
+ * Mostrador: el cliente muestra el cupón de una campaña. Se valida y, en una
+ * sola llamada a la base, se registra la visita (con el monto escrito arriba, o
+ * se reusa la que se cargó hace un momento) y el cupón queda usado (D-026).
  */
 export function CouponCounterPanel({
   amountMinor,
@@ -109,26 +103,18 @@ function CouponDetails({
   const invalidateCampaigns = useInvalidateCampaigns(business.id)
 
   const use = useMutation({
-    mutationFn: async () => {
-      let visitId: string | null = null
-      try {
-        const visit = await visits.record({
-          businessId: business.id,
-          customerId: coupon.customerId,
-          amountMinor,
-        })
-        visitId = visit.id
-      } catch (err) {
-        // Si la visita ya se cargó hace un momento (+1), el cupón se usa igual.
-        if (!(err instanceof AppError && err.code === 'duplicate_visit')) throw err
-      }
-      return campaigns.redeemCoupon(business.id, coupon.code, visitId)
-    },
-    onSuccess: async () => {
-      toast.show(
-        `Cupón usado: ${coupon.customerName}${coupon.benefit ? ` · ${coupon.benefit}` : ''}`,
-        'success',
-      )
+    mutationFn: () =>
+      campaigns.recordVisitWithCoupon({
+        businessId: business.id,
+        code: coupon.code,
+        amountMinor,
+      }),
+    onSuccess: async (result) => {
+      const benefit = result.benefit ? ` · ${result.benefit}` : ''
+      const reused = result.visitReused
+        ? ' (la visita ya estaba cargada: el monto no se cambió)'
+        : ''
+      toast.show(`Cupón usado: ${result.customerName}${benefit}${reused}`, 'success')
       onUsed()
       await invalidateCampaigns()
     },

@@ -8,8 +8,26 @@
 # 4. Compara cuántas filas hay en las tablas importantes antes y después.
 set -euo pipefail
 
+# Mueve carpetas del repo y hace `supabase db reset`: solo en CI, nunca en una
+# computadora con trabajo sin guardar.
+if [[ "${CI:-}" != "true" ]]; then
+  echo "backup-drill.sh solo corre en CI (CI=true). No lo ejecutes a mano." >&2
+  exit 1
+fi
+
 DB_URL="postgresql://postgres:postgres@127.0.0.1:54322/postgres"
 OUT="$(mktemp -d)"
+
+# Si algo falla mientras las migraciones o el seed están afuera, se devuelven.
+restore_repo() {
+  if [[ -d "$OUT/migrations" && ! -e supabase/migrations ]]; then
+    mv "$OUT/migrations" supabase/migrations
+  fi
+  if [[ -f "$OUT/seed.sql" && ! -e supabase/seed.sql ]]; then
+    mv "$OUT/seed.sql" supabase/seed.sql
+  fi
+}
+trap restore_repo EXIT
 
 counts() {
   psql "$DB_URL" -At -v ON_ERROR_STOP=1 -c "
@@ -43,8 +61,7 @@ supabase stop --no-backup
 mv supabase/migrations "$OUT/migrations"
 mv supabase/seed.sql "$OUT/seed.sql"
 supabase db start
-mv "$OUT/migrations" supabase/migrations
-mv "$OUT/seed.sql" supabase/seed.sql
+restore_repo
 
 echo "== Restauración (docs/RESTAURAR.md)"
 # roles.sql no se restaura: el proyecto no crea roles propios y el nuevo ya trae

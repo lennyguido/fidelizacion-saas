@@ -124,6 +124,12 @@ campaña?") y toca "Usar cupón y registrar visita".
 
 * Un cupón se usa **una sola vez**, solo **dentro de la ventana** de la campaña y
   solo si el cliente sigue activo.
+* Un cupón usado siempre queda **atado a una visita** de ese cliente. Si la visita
+  ya se había cargado hace un momento (el "+1" del mostrador), se usa esa misma
+  y no se carga otra.
+* Nadie del equipo puede usar un cupón de un cliente que es su propia cuenta.
+* Si el negocio deja de tener el módulo de recuperación, los cupones no se pueden
+  buscar ni usar.
 * Los resultados muestran **cuántos cupones se usaron**. Si después se anula la
   visita, ese cupón deja de contar.
 * El cupón confirma que **esa persona** volvió por el mensaje. Igual, los números
