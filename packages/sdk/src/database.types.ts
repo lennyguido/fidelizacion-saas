@@ -293,6 +293,32 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"integration_keys": {
+                  Row: {
+                    "business_id": string,"created_at": string,"created_by": string | null,"id": string,"key_hash": string,"key_prefix": string,"last_used_at": string | null,"location_id": string | null,"name": string,"revoked_at": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "business_id": string,"created_at"?: string,"created_by"?: string | null,"id"?: string,"key_hash": string,"key_prefix": string,"last_used_at"?: string | null,"location_id"?: string | null,"name": string,"revoked_at"?: string | null
+                  }
+                  Update: {
+                    "business_id"?: string,"created_at"?: string,"created_by"?: string | null,"id"?: string,"key_hash"?: string,"key_prefix"?: string,"last_used_at"?: string | null,"location_id"?: string | null,"name"?: string,"revoked_at"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "integration_keys_business_id_fkey"
+      columns: ["business_id"]
+isOneToOne: false
+      referencedRelation: "businesses"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "integration_keys_business_id_location_id_fkey"
+      columns: ["business_id","location_id"]
+isOneToOne: false
+      referencedRelation: "locations"
+      referencedColumns: ["business_id","id"]
+    }
+                  ]
                 },"locations": {
                   Row: {
                     "active": boolean,"address": string | null,"business_id": string,"created_at": string,"id": string,"name": string,"timezone": string | null,"updated_at": string
@@ -671,6 +697,9 @@ isOneToOne: false
         isOneToOne: true
         isSetofReturn: false
       } },
+"create_integration_key":
+{ Args: { "p_business_id": string,"p_location_id"?: string,"p_name": string }; Returns: Json
+                           },
 "dashboard_summary":
 { Args: { "p_business_id": string }; Returns: Json
                            },
@@ -715,6 +744,31 @@ isOneToOne: false
 "in_open_campaign":
 { Args: { "p_business_id": string,"p_customer_id": string }; Returns: boolean
                            },
+"ingest_sale":
+{ Args: { "p_amount_minor"?: number,"p_customer_id"?: string,"p_key_hash": string,"p_occurred_at"?: string,"p_phone"?: string,"p_receipt": string }; Returns: Json
+                           },
+"ingest_sale_for":
+{ Args: { "p_amount_minor": number,"p_business_id": string,"p_customer_id": string,"p_location_id": string,"p_occurred_at": string,"p_phone": string,"p_receipt": string }; Returns: Json
+                           },
+"integration_key_for":
+{ Args: { "p_key_hash": string }; Returns: {
+              "business_id": string,
+"created_at": string,
+"created_by": string | null,
+"id": string,
+"key_hash": string,
+"key_prefix": string,
+"last_used_at": string | null,
+"location_id": string | null,
+"name": string,
+"revoked_at": string | null
+            }
+                          SetofOptions: {
+        from: "*"
+        to: "integration_keys"
+        isOneToOne: true
+        isSetofReturn: false
+      } },
 "is_member":
 { Args: { "p_business_id": string }; Returns: boolean
                            },
@@ -964,6 +1018,9 @@ isOneToOne: false
 "resolve_self_signup_notice":
 { Args: { "p_notice_id": string }; Returns: undefined
                            },
+"revoke_integration_key":
+{ Args: { "p_key_id": string }; Returns: undefined
+                           },
 "rotate_self_signup_code":
 { Args: { "p_business_id": string }; Returns: {
               "business_id": string,
@@ -1062,6 +1119,9 @@ isOneToOne: false
         isOneToOne: true
         isSetofReturn: false
       } },
+"simulate_sale":
+{ Args: { "p_amount_minor": number,"p_business_id": string,"p_phone"?: string }; Returns: Json
+                           },
 "status_settings":
 { Args: { "p_settings": Json }; Returns: Json
                            },
@@ -1374,6 +1434,9 @@ isOneToOne: false
                            },
 "get_card":
 { Args: { "p_token": string }; Returns: Json
+                           },
+"integration_member_customer":
+{ Args: { "p_code": string,"p_key_hash": string }; Returns: string
                            },
 "issue_card":
 { Args: { "p_member_id": string }; Returns: string
