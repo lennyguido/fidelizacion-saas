@@ -1486,6 +1486,9 @@ isOneToOne: false
 "create_card":
 { Args: { "p_member": Omit<Database["loyalty"]['Tables']["members"]['Row'], Database["loyalty"]['Tables']["members"]['ComputedFields']> }; Returns: string
                            },
+"confirm_redemption_request":
+{ Args: { "p_request_id": string }; Returns: Database["loyalty"]["Tables"]["redemptions"]["Row"]
+                           },
 "enroll_customer":
 { Args: { "p_customer_id": string }; Returns: {
               "business_id": string,
@@ -1511,6 +1514,9 @@ isOneToOne: false
 "export_ledger":
 { Args: { "p_business_id": string,"p_from": string,"p_to": string }; Returns: Json
                            },
+"find_redemption_request":
+{ Args: { "p_business_id": string,"p_code": string }; Returns: Json
+                           },
 "find_member_by_code":
 { Args: { "p_business_id": string,"p_code": string }; Returns: string
                            },
@@ -1519,6 +1525,9 @@ isOneToOne: false
                            },
 "integration_member_customer":
 { Args: { "p_code": string,"p_key_hash": string }; Returns: string
+                           },
+"get_redemption_request":
+{ Args: { "p_request_id": string,"p_token": string }; Returns: Json
                            },
 "issue_card":
 { Args: { "p_member_id": string }; Returns: string
@@ -1590,6 +1599,9 @@ isOneToOne: false
 { Args: { "p_business_id": string }; Returns: {
               "member_id": string,"name": string,"pending": number,"rewarded": number
             }[]
+                           },
+"request_redemption":
+{ Args: { "p_reward_id": string,"p_token": string }; Returns: Json
                            },
 "require_module":
 { Args: { "p_business_id": string }; Returns: undefined

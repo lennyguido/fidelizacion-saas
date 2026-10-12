@@ -5,12 +5,17 @@ export function Rewards({
   unit,
   brand,
   showProgress = true,
+  onRedeem,
+  redeeming = false,
 }: {
   card: Card
   unit: string
   brand: string
   /** false cuando la tarjeta de sellos ya muestra cuánto falta. */
   showProgress?: boolean
+  /** Canje desde el celular (D-037): se ofrece en los premios que ya le alcanzan. */
+  onRedeem?: (rewardId: string) => void
+  redeeming?: boolean
 }) {
   if (card.rewards.length === 0) return null
   const next = showProgress ? cardApi.nextReward(card) : null
@@ -49,13 +54,24 @@ export function Rewards({
                   <p className="text-sm text-slate-500">{reward.description}</p>
                 )}
               </div>
-              <span
-                className={
-                  ready ? 'text-sm font-semibold text-green-700' : 'text-sm text-slate-500'
-                }
-              >
-                {ready ? '¡Ya podés canjearla!' : `${reward.costPoints} ${unit}`}
-              </span>
+              {ready && onRedeem ? (
+                <button
+                  type="button"
+                  disabled={redeeming}
+                  onClick={() => onRedeem(reward.id)}
+                  className="shrink-0 rounded-full bg-green-700 px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
+                >
+                  Canjear
+                </button>
+              ) : (
+                <span
+                  className={
+                    ready ? 'text-sm font-semibold text-green-700' : 'text-sm text-slate-500'
+                  }
+                >
+                  {ready ? '¡Ya podés canjearla!' : `${reward.costPoints} ${unit}`}
+                </span>
+              )}
             </li>
           )
         })}

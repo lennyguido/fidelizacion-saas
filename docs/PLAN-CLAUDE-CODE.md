@@ -179,6 +179,8 @@ Hoy el dueño arma las campañas a mano y manda cada wa.me uno por uno. Tiene qu
 
 ### 7. Canje desde el celular (#10)
 
+> **Hecha** (2026-10-11, D-037): en `main`. La migración `20261013000000` **espera al mentor** (funciones anon).
+
 - El cliente elige el premio y aparece un código + QR que vence en 5 minutos.
 - El cajero lo escanea o lo tipea y confirma; ahí se descuenta con el canje que ya existe.
 - Funciones:

@@ -14,11 +14,13 @@ import { InstallButton } from '@/install/InstallButton'
 import { FeedbackSurvey } from './FeedbackSurvey'
 import { InviteFriend } from './InviteFriend'
 import { MemberQr } from './MemberQr'
+import { MobileRedeem } from './MobileRedeem'
 import { Movements } from './Movements'
 import { NoCard } from './NoCard'
 import { Rewards } from './Rewards'
 import { StampCard } from './StampCard'
 import { useDocumentBranding } from './useDocumentBranding'
+import { useMobileRedeem } from './useMobileRedeem'
 import { WalletButtons } from './WalletButtons'
 
 export function CardPage({ token, onForget }: { token: string; onForget: () => void }) {
@@ -53,6 +55,7 @@ function CardView({ card, token, onForget }: { card: Card; token: string; onForg
   const money = (minor: number) => formatMoney(minor, card.business.currency)
   const slots = cardApi.stampSlots(card.pointsBalance, card.rewards)
   const stamps = cardApi.showsStamps(card.program?.kind, slots) ? slots : null
+  const redeem = useMobileRedeem(token)
 
   return (
     <main className="mx-auto flex min-h-dvh max-w-md flex-col gap-4 p-4 pb-10">
@@ -97,7 +100,22 @@ function CardView({ card, token, onForget }: { card: Card; token: string; onForg
       <WalletButtons token={token} />
       <InstallButton token={token} />
 
-      <Rewards card={card} unit={unit} brand={brand} showProgress={!stamps} />
+      {redeem.active && (
+        <MobileRedeem token={token} request={redeem.active} onClose={redeem.close} />
+      )}
+      {redeem.error && (
+        <p role="alert" className="text-center text-sm text-red-600">
+          {redeem.error}
+        </p>
+      )}
+      <Rewards
+        card={card}
+        unit={unit}
+        brand={brand}
+        showProgress={!stamps}
+        onRedeem={redeem.start}
+        redeeming={redeem.pending}
+      />
       {card.referral && (
         <InviteFriend referral={card.referral} businessName={card.business.name} unit={unit} />
       )}
