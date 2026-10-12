@@ -1173,14 +1173,18 @@ isOneToOne: false
 "status_settings":
 { Args: { "p_settings": Json }; Returns: Json
                            },
-"validate_segment":
-{ Args: { "p_segment": Json }; Returns: undefined
-                           },
 "team_week_stats":
-{ Args: { "p_business_id": string }; Returns: { "email": string,"is_me": boolean,"new_customers": number | null,"role": string,"user_id": string,"visits": number | null }[]
+{ Args: { "p_business_id": string }; Returns: {
+              "email": string,"is_me": boolean,"new_customers": number,"role": string,"user_id": string,"visits": number
+            }[]
                            },
 "top_customers":
-{ Args: { "p_business_id": string }; Returns: { "customer_id": string,"last_visit_at": string,"name": string,"spend_minor": number | null,"visits": number }[]
+{ Args: { "p_business_id": string }; Returns: {
+              "customer_id": string,"last_visit_at": string,"name": string,"spend_minor": number,"visits": number
+            }[]
+                           },
+"validate_segment":
+{ Args: { "p_segment": Json }; Returns: undefined
                            },
 "void_visit":
 { Args: { "p_reason": string,"p_visit_id": string }; Returns: {
