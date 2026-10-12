@@ -51,9 +51,9 @@ export const PLANS: Plan[] = [
     features: [
       'Hasta 5 sucursales · 20.000 clientes',
       'Equipo sin límite',
-      'Recuperación automática por sucursal',
+      'Todo lo del plan Local',
       'Conexión con tu caja',
-      'Estadísticas por local',
+      'Las ventas entran solas, sin escanear',
       'Cuenta asignada',
     ],
   },
