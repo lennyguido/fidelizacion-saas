@@ -200,6 +200,8 @@ Hoy el dueño arma las campañas a mano y manda cada wa.me uno por uno. Tiene qu
 
 ### 9. Estilo Apple en todas las vistas (al final)
 
+> **Hecha** (2026-10-11, D-039): tokens en `packages/ui/src/theme.css`; capturas en el artefacto `capturas` del CI.
+
 **Referencia:** `docs/ESTILO-APPLE.md` (el archivo completo que pasó el dueño; leerlo entero antes de empezar).
 
 **Colores:**

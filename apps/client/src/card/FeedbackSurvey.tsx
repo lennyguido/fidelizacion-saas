@@ -16,7 +16,7 @@ export function FeedbackSurvey({ token, visitId }: { token: string; visitId: str
 
   if (send.isSuccess) {
     return (
-      <section className="flex flex-col gap-2 rounded-2xl bg-white p-5 text-center shadow-sm">
+      <section className="flex flex-col gap-2 rounded-2xl bg-white p-5 text-center">
         <p className="font-semibold">¡Gracias por contarnos!</p>
         {send.data.reviewUrl && (
           <>
@@ -27,7 +27,7 @@ export function FeedbackSurvey({ token, visitId }: { token: string; visitId: str
               href={send.data.reviewUrl}
               target="_blank"
               rel="noreferrer"
-              className="self-center rounded-full bg-slate-900 px-5 py-2.5 text-sm font-medium text-white"
+              className="self-center rounded-full bg-action px-5 py-2.5 text-sm font-medium text-white"
             >
               Opinar en Google
             </a>
@@ -45,10 +45,7 @@ export function FeedbackSurvey({ token, visitId }: { token: string; visitId: str
   }
 
   return (
-    <section
-      className="flex flex-col gap-3 rounded-2xl bg-white p-5 shadow-sm"
-      data-testid="survey"
-    >
+    <section className="flex flex-col gap-3 rounded-2xl bg-white p-5" data-testid="survey">
       <h2 className="font-semibold">¿Cómo te atendimos hoy?</h2>
       <div className="flex justify-center gap-2" role="radiogroup" aria-label="Tu nota">
         {[1, 2, 3, 4, 5].map((value) => (
@@ -79,7 +76,7 @@ export function FeedbackSurvey({ token, visitId }: { token: string; visitId: str
             type="button"
             disabled={send.isPending}
             onClick={() => send.mutate()}
-            className="self-center rounded-full bg-slate-900 px-5 py-2.5 text-sm font-medium text-white disabled:opacity-60"
+            className="self-center rounded-full bg-action px-5 py-2.5 text-sm font-medium text-white disabled:opacity-60"
           >
             {send.isPending ? 'Enviando…' : 'Enviar'}
           </button>

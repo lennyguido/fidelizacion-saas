@@ -24,11 +24,9 @@ export function TextField({ label, error, hint, className, ...rest }: TextFieldP
         aria-invalid={error ? true : undefined}
         aria-describedby={describedBy || undefined}
         className={cn(
-          'h-11 rounded-lg border bg-white px-3 text-base text-slate-900 shadow-sm',
+          'h-11 rounded-xl border bg-white px-3 text-[17px] text-slate-900',
           'placeholder:text-slate-400 focus:outline-2 focus:outline-offset-0',
-          error
-            ? 'border-red-400 focus:outline-red-500'
-            : 'border-slate-300 focus:outline-slate-900',
+          error ? 'border-red-400 focus:outline-red-500' : 'border-slate-300 focus:outline-action',
         )}
         {...rest}
       />

@@ -26,7 +26,7 @@ export function InviteFriend({
         href={`https://wa.me/?text=${encodeURIComponent(text)}`}
         target="_blank"
         rel="noreferrer"
-        className="self-center rounded-full bg-green-600 px-5 py-2.5 text-sm font-medium text-white"
+        className="self-center rounded-full bg-action px-5 py-2.5 text-sm font-medium text-white"
       >
         Invitar por WhatsApp
       </a>

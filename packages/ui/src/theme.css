@@ -1,0 +1,33 @@
+/*
+ * Estilo Apple (docs/ESTILO-APPLE.md, plan tarea 9, D-039). Tokens compartidos por
+ * el panel y la tarjeta. Se importa después de Tailwind en cada app.
+ *
+ * En vez de reescribir cada pantalla, se redefinen los grises de Tailwind con la
+ * paleta del estilo (fondo #f5f5f7, texto #1d1d1f, secundario #707070, líneas
+ * #d6d6d6) y se apagan las sombras. El único color de acción es `action`
+ * (#0071e3, botones llenos); los links usan `link` (#0066cc).
+ */
+@theme {
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
+
+  --color-action: #0071e3;
+  --color-action-hover: #0077ed;
+  --color-link: #0066cc;
+
+  --color-slate-50: #f5f5f7;
+  --color-slate-100: #ededf0;
+  --color-slate-200: #d6d6d6;
+  --color-slate-300: #d6d6d6;
+  --color-slate-400: #858585;
+  --color-slate-500: #707070;
+  --color-slate-600: #707070;
+  --color-slate-700: #505050;
+  --color-slate-800: #333333;
+  --color-slate-900: #1d1d1f;
+
+  --shadow-xs: none;
+  --shadow-sm: none;
+  --shadow: none;
+  --shadow-md: none;
+  --shadow-lg: none;
+}

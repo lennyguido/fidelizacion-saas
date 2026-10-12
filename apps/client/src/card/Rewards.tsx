@@ -67,7 +67,7 @@ export function Rewards({
                     type="button"
                     disabled={redeeming}
                     onClick={() => onRedeem(reward.id)}
-                    className="rounded-full bg-green-700 px-4 py-1.5 text-sm font-medium text-white disabled:opacity-60"
+                    className="rounded-full bg-action px-4 py-1.5 text-sm font-medium text-white disabled:opacity-60"
                   >
                     Canjear desde el celular
                   </button>

@@ -94,7 +94,7 @@ function MessageRow({ item }: { item: OutboxMessage }) {
             target="_blank"
             rel="noreferrer"
             onClick={() => sent.mutate()}
-            className="shrink-0 rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-500"
+            className="shrink-0 rounded-full bg-action px-4 py-2 text-sm font-medium text-white hover:bg-action-hover"
           >
             WhatsApp
           </a>

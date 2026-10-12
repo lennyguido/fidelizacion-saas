@@ -136,3 +136,10 @@ jobs:
           npm run preview -w @plataforma/client -- --port 4174 --strictPort > preview-client.log 2>&1 &
           npx --yes wait-on http://localhost:4173 http://localhost:4174 --timeout 60000
       - run: scripts/ci-run.sh e2e npx playwright test
+      # Capturas de las pantallas principales (e2e/screenshots.spec.ts) para revisar el diseño.
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: capturas
+          path: test-results/capturas/
+          if-no-files-found: ignore
