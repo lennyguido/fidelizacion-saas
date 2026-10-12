@@ -8,7 +8,7 @@ Plan de Claude Code (`docs/PLAN-CLAUDE-CODE.md`): **tareas 1 a 9 hechas** (2026-
 
 ## Current task — lo que falta (del dueño o del mentor)
 
-1. **Revisión del mentor** (funciones para personas sin cuenta): migraciones 11–14 (equipo y dueños), 26–27 (alta por QR), 33 (encuesta y código en la tarjeta) y 34 (canje desde el celular). Detalle en `docs/REVISION-PENDIENTE.md`.
+1. **Aplicar las migraciones 33 y 34** (encuesta y canje desde el celular), en ese orden, desde el SQL Editor de Supabase o habilitando el permiso de Claude Code.
 2. **Prueba visual** del dueño, incluido el botón "Poner en mi pantalla de inicio" en un iPhone real (`docs/PWA.md`).
 3. **Cuentas que tiene que abrir el dueño** (checkpoint): Google Wallet, Apple Developer, Cloudflare (publicar), WhatsApp Business (mensajes automáticos), Mercado Pago (cobros), un proveedor de mail (resumen de los lunes por mail) y publicar la Edge Function `sales-ingest`.
 
@@ -43,15 +43,15 @@ Proyecto de **desarrollo**: `fidelizacion-saas`, ref `dqpnqcumlyfifewgzyvh` (ún
 | 23 | 20261010141302 | loyalty_wallet | aplicada 2026-10-10 ~11:10 (tablas nuevas, solo service role; archivo renombrado de `20261010120000`) |
 | 24 | 20261010141333 | loyalty_wallet_stamps | aplicada 2026-10-10 ~11:10 (archivo renombrado de `20261010160000`) |
 | 25 | 20261010144420 | core_automations | aplicada 2026-10-10 ~11:45 (D-031; CI verde, no destructiva; pg_cron `core-run-automations` 13:00 UTC; archivo renombrado de `20261011020000`) |
-| 26 | 20261011010000 | core_self_signup | **pendiente de revisión del mentor — NO aplicar** (D-032: junto con la 27 agrega la función anon `loyalty.self_signup`) |
-| 27 | 20261011010100 | loyalty_self_signup | **pendiente de revisión del mentor — NO aplicar** (D-032; solo el alta: las plantillas pasaron a la 29) |
+| 26 | 20261012032103 | core_self_signup | aplicada 2026-10-12 (pedido del dueño: aplicar sin esperar al mentor; archivo renombrado de `20261011010000`) |
+| 27 | 20261012032132 | loyalty_self_signup | aplicada 2026-10-12 (pedido del dueño; archivo renombrado de `20261011010100`) |
 | 28 | 20261010154103 | core_sales_ingest | aplicada 2026-10-10 ~12:40 (D-033; CI verde, no destructiva, sin funciones para anon; archivo renombrado de `20261011000000`) |
 | 29 | 20261010184152 | loyalty_templates | aplicada 2026-10-10 ~15:40 (plantillas separadas de la 27: no tienen nada para anon; CI verde) |
 | 30 | 20261012005618 | core_data_export | aplicada 2026-10-11 ~21:56 (D-034; CI verde, no destructiva: solo funciones nuevas; archivo renombrado de `20261011030000`) |
 | 31 | 20261012010243 | core_weekly_digest | aplicada 2026-10-11 ~22:02 (D-035; CI verde, no destructiva: solo funciones nuevas; archivo renombrado de `20261012010000`) |
 | 32 | 20261012020000 | loyalty_referrals_core_feedback | aplicada 2026-10-12 por el dueño desde el SQL Editor (verificado: tablas, columnas y funciones presentes). **No figura en el historial de migraciones de Supabase**: si algún día se usa `supabase db push`, marcarla antes como aplicada con `supabase migration repair --status applied 20261012020000`. |
-| 33 | 20261012235900 | loyalty_card_referral_feedback | **pendiente de revisión del mentor — NO aplicar** (D-036: encuesta anon `loyalty.submit_feedback` y cambios en `get_card`) |
-| 34 | 20261013000000 | loyalty_redemption_requests | **pendiente de revisión del mentor — NO aplicar** (D-037: funciones anon `request_redemption` y `get_redemption_request`) |
+| 33 | 20261012235900 | loyalty_card_referral_feedback | **pendiente**: el dueño pidió aplicarla; Claude Code no tiene permiso para hacerlo solo (aplicar desde el SQL Editor o habilitar el permiso) |
+| 34 | 20261013000000 | loyalty_redemption_requests | **pendiente**: igual que la 33 (aplicar después de la 33) |
 | 35 | 20261012014657 | core_smart_counter | aplicada 2026-10-11 ~22:47 (D-038; CI verde, solo funciones nuevas; archivo renombrado de `20261013010000`) |
 
 Regla vigente desde 2026-10-09: ninguna migración se aplica sin aprobación explícita del dueño después de revisarla.

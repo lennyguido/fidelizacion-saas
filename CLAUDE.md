@@ -15,7 +15,7 @@ El dueño está aprendiendo a programar. Al hablarle:
 * usar palabras simples y ejemplos de la vida diaria;
 * explicar cada término técnico la primera vez que aparece (o evitarlo);
 * decir qué se hizo y qué tiene que hacer él, en pasos cortos y numerados;
-* **Desde 2026-10-11 (criterio del mentor):** no se aplica ninguna migración nueva en Supabase ni se hace un cambio destructivo sin aprobación. Se escribe la migración, se prueba en el CI y se pide el OK antes de aplicarla. Esto reemplaza la regla del 2026-10-09 (aplicar en desarrollo sin preguntar).
+* **Desde 2026-10-12 (decisión del dueño):** las migraciones se aplican en el proyecto de **desarrollo** sin preguntar, cuando el CI está en verde, incluidas las que tienen funciones para personas sin cuenta. Se explican en `PROGRESS.md`. Se sigue preguntando lo de la lista "Checkpoint humano" (producción, borrar datos, pagos, WhatsApp real, dominios).
 * **Prioridad: terminar el MVP** y avanzar por `TASKS.md`. Por módulo: protecciones básicas, correr las pruebas relevantes una vez y corregir fallos reales. Si el CI pasa y no hay un riesgo crítico conocido, la tarea se da por terminada. Si aparece un riesgo crítico, se explica en pocas líneas y se frena solo ese cambio. No repetir auditorías, no volver a revisar tareas aprobadas, no agregar pruebas redundantes.
 * trabajar de corrido la lista de tareas y dejar la prueba visual del dueño para el final.
 
