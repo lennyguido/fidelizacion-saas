@@ -736,6 +736,9 @@ isOneToOne: false
 "create_integration_key":
 { Args: { "p_business_id": string,"p_location_id"?: string,"p_name": string }; Returns: Json
                            },
+"customer_snapshot":
+{ Args: { "p_customer_id": string }; Returns: Json
+                           },
 "dashboard_summary":
 { Args: { "p_business_id": string }; Returns: Json
                            },
@@ -1172,6 +1175,12 @@ isOneToOne: false
                            },
 "validate_segment":
 { Args: { "p_segment": Json }; Returns: undefined
+                           },
+"team_week_stats":
+{ Args: { "p_business_id": string }; Returns: { "email": string,"is_me": boolean,"new_customers": number | null,"role": string,"user_id": string,"visits": number | null }[]
+                           },
+"top_customers":
+{ Args: { "p_business_id": string }; Returns: { "customer_id": string,"last_visit_at": string,"name": string,"spend_minor": number | null,"visits": number }[]
                            },
 "void_visit":
 { Args: { "p_reason": string,"p_visit_id": string }; Returns: {

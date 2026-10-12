@@ -190,6 +190,8 @@ Hoy el dueño arma las campañas a mano y manda cada wa.me uno por uno. Tiene qu
 
 ### 8. Mostrador inteligente (#15, #19, #14)
 
+> **Hecha** (2026-10-11, D-038): en `main`; la migración `core_smart_counter` se aplica en desarrollo.
+
 - **Al encontrar al cliente:** "Ana · hace 2 años · visita 50 · viene cada ~9 días", más una nota corta. Con `core.customer_snapshot`.
 - **Ranking del equipo de la semana:** `core.team_week_stats`.
 - **Valor del cliente en pesos:** solo con los montos cargados; si no hay, no inventar.
