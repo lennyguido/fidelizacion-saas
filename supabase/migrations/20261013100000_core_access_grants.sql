@@ -54,9 +54,6 @@ create index access_grants_business_idx on core.access_grants (business_id) wher
 create index access_grants_created_by_idx on core.access_grants (created_by) where created_by is not null;
 create index access_grants_used_by_idx on core.access_grants (used_by) where used_by is not null;
 
-create trigger access_grants_audit after insert or update on core.access_grants
-  for each row execute function core.audit_row();
-
 alter table core.access_grants enable row level security;
 grant select on core.access_grants to authenticated;
 create policy access_grants_select on core.access_grants for select to authenticated
