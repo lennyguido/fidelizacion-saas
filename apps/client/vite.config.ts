@@ -1,5 +1,6 @@
 import { fileURLToPath, URL } from 'node:url'
 import tailwindcss from '@tailwindcss/vite'
+import basicSsl from '@vitejs/plugin-basic-ssl'
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 
@@ -10,7 +11,9 @@ import { defineConfig } from 'vite'
 // de la tarjeta en Cloudflare Pages tiene sus propias variables (docs/DEPLOY.md); el CI
 // lo comprueba con scripts/check-deploy-build.sh.
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  // DEV_HTTPS=1 (npm run dev:celular): https con un certificado propio, para probar
+  // la cámara y la instalación desde el celular en el WiFi de la casa.
+  plugins: [react(), tailwindcss(), ...(process.env.DEV_HTTPS === '1' ? [basicSsl()] : [])],
   envDir: '../admin',
   resolve: {
     alias: {

@@ -12,6 +12,7 @@
   "scripts": {
     "dev": "npm run dev -w @plataforma/admin",
     "dev:client": "npm run dev -w @plataforma/client",
+    "dev:celular": "node scripts/dev-celular.mjs",
     "build": "npm run build --workspaces --if-present",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "lint": "eslint .",

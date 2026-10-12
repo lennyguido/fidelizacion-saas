@@ -74,3 +74,11 @@ Para probarlo en un iPhone real:
 1. Abrir el link de una tarjeta en Safari.
 2. Tocar "Poner en mi pantalla de inicio" y seguir los 2 pasos.
 3. Abrir el ícono nuevo: tiene que aparecer la tarjeta (no la pantalla "No encontramos tu tarjeta").
+
+## Probar desde el celular (cámara e instalación)
+
+El celular solo deja usar la cámara e instalar la app en direcciones `https://`. Para probar en el WiFi de la casa:
+
+1. Correr `npm run dev:celular` (prende el panel y la tarjeta con un certificado propio).
+2. Abrir en el celular la dirección que muestra (por ejemplo `https://192.168.1.9:5173`).
+3. El celular avisa que la conexión "no es privada" (el certificado es casero): tocar **Avanzado → Continuar** (o "Ver detalles → visitar este sitio" en iPhone). Hacerlo una vez en el puerto 5173 y otra en el 5174.
