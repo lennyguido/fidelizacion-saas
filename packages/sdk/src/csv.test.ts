@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { detectDelimiter, parseCsv, toCsv } from './csv.ts'
+import { detectDelimiter, neutralizeFormula, parseCsv, toCsv } from './csv.ts'
 
 describe('parseCsv', () => {
   it('parses Excel-style semicolon files with BOM', () => {
@@ -26,6 +26,17 @@ describe('parseCsv', () => {
       ['a', 'b'],
       ['1', '2'],
     ])
+  })
+
+  it('neutralizes cells that Excel would run as formulas', () => {
+    expect(neutralizeFormula('=HYPERLINK("http://x")')).toBe(`'=HYPERLINK("http://x")`)
+    expect(neutralizeFormula('@SUM(A1)')).toBe("'@SUM(A1)")
+    expect(neutralizeFormula('+cmd|calc')).toBe("'+cmd|calc")
+    expect(neutralizeFormula('-2+3+cmd')).toBe("'-2+3+cmd")
+    expect(neutralizeFormula('+5491122334455')).toBe('+5491122334455')
+    expect(neutralizeFormula('-150')).toBe('-150')
+    expect(neutralizeFormula('Ana')).toBe('Ana')
+    expect(parseCsv(toCsv([['=1+1']]))).toEqual([["'=1+1"]])
   })
 
   it('round-trips through toCsv', () => {

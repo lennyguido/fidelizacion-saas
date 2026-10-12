@@ -52,3 +52,25 @@ self.addEventListener('activate', (event) => {
   )
 })
 ```
+
+## Botón "Poner en mi pantalla de inicio" (tarjeta del cliente)
+
+Está en `apps/client/src/install/` (D-034).
+
+| Teléfono | Qué ve el cliente |
+|---|---|
+| Android (Chrome, Edge, Samsung) | El botón abre el aviso del navegador para instalar. |
+| iPhone / iPad con Safari | Una hoja con 2 pasos: Compartir → Agregar a inicio. |
+| iPhone con Chrome, Firefox, etc. | "Abrí la tarjeta en Safari" (Apple solo deja instalar desde Safari). |
+| Computadora, o ya instalada | No aparece nada. |
+
+"Ahora no" lo esconde para siempre en ese teléfono (se guarda en el navegador).
+
+**iPhone y el link secreto:** la app instalada en iPhone no ve lo que guardó Safari. Por eso,
+mientras se muestran los pasos, el link secreto de la tarjeta vuelve a la barra de
+direcciones: el ícono queda guardado con ese link y abre la tarjeta directo.
+Para probarlo en un iPhone real:
+
+1. Abrir el link de una tarjeta en Safari.
+2. Tocar "Poner en mi pantalla de inicio" y seguir los 2 pasos.
+3. Abrir el ícono nuevo: tiene que aparecer la tarjeta (no la pantalla "No encontramos tu tarjeta").

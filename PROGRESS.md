@@ -47,6 +47,7 @@ Proyecto de **desarrollo**: `fidelizacion-saas`, ref `dqpnqcumlyfifewgzyvh` (ún
 | 27 | 20261011010100 | loyalty_self_signup | **pendiente de revisión del mentor — NO aplicar** (D-032; solo el alta: las plantillas pasaron a la 29) |
 | 28 | 20261010154103 | core_sales_ingest | aplicada 2026-10-10 ~12:40 (D-033; CI verde, no destructiva, sin funciones para anon; archivo renombrado de `20261011000000`) |
 | 29 | 20261010184152 | loyalty_templates | aplicada 2026-10-10 ~15:40 (plantillas separadas de la 27: no tienen nada para anon; CI verde) |
+| 30 | 20261011030000 | core_data_export | **pendiente de aplicar** (D-034; solo funciones nuevas, no destructiva) |
 
 Regla vigente desde 2026-10-09: ninguna migración se aplica sin aprobación explícita del dueño después de revisarla.
 
@@ -79,6 +80,12 @@ Rama `fix/archive-owner-admin-only` (commit `62a7b19`):
 | Punta a punta (Playwright) | CI: `supabase start` + build + `vite preview` + `npx playwright test` (celular y escritorio) | OK: registro → onboarding → panel → login; credenciales incorrectas; mostrador; importación CSV |
 
 Limitación: los tests de punta a punta corren contra un Supabase **local** en CI. El panel todavía **no se probó contra el proyecto de desarrollo remoto**. Eso es lo que falta validar ahora.
+
+## Domingo 11 — instalar la tarjeta y exportar datos (plan tarea 4)
+
+* **Botón "Poner en mi pantalla de inicio"** en la tarjeta del cliente: Android con el aviso del navegador; iPhone con los 2 pasos de Safari (o "abrilo en Safari"); se esconde si ya está instalada o con "Ahora no". Detalle en `docs/PWA.md`. Falta probarlo en un iPhone real.
+* **"Tus clientes son tuyos":** en **Mi negocio** se descargan todos los clientes y las visitas entre dos fechas; en **Fidelización**, los movimientos de puntos. Solo dueño o admin; queda registrado quién descargó. D-034.
+* Tests: `048-data-export` (18), unitarios de CSV, fechas, exportación y detección del teléfono; e2e `export.spec.ts`.
 
 ## Sábado 10 — conexión con cajas (plan tarea 3)
 

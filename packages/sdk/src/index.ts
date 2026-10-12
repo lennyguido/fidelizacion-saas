@@ -78,9 +78,10 @@ export type {
   Reward as LoyaltyReward,
 } from './loyalty.ts'
 export type { Visit, VisitCounts } from './visits.ts'
-export { startOfDayInTimeZone } from './dates.ts'
+export { localDateInTimeZone, startOfDayInTimeZone } from './dates.ts'
 export { formatMoney, parseAmountToMinor } from './money.ts'
-export { detectDelimiter, parseCsv, toCsv } from './csv.ts'
+export { detectDelimiter, neutralizeFormula, parseCsv, toCsv } from './csv.ts'
+export * as dataExport from './dataExport.ts'
 export {
   IMPORT_TEMPLATE,
   buildImportRows,

@@ -639,6 +639,9 @@ isOneToOne: false
         isOneToOne: true
         isSetofReturn: false
       } },
+"check_export_range":
+{ Args: { "p_from": string,"p_to": string }; Returns: undefined
+                           },
 "compute_customer_status":
 { Args: { "p_first_visit_at": string,"p_is_new_visit": boolean,"p_last_visit_at": string,"p_median_interval": number,"p_now": string,"p_prev_changed_at": string,"p_prev_status": string,"p_settings": Json,"p_visit_count": number }; Returns: Record<string, unknown>
                            },
@@ -728,6 +731,12 @@ isOneToOne: false
       } },
 "emit_event":
 { Args: { "p_business_id": string,"p_payload"?: Json,"p_type": string }; Returns: number
+                           },
+"export_customers":
+{ Args: { "p_business_id": string }; Returns: Json
+                           },
+"export_visits":
+{ Args: { "p_business_id": string,"p_from": string,"p_to": string }; Returns: Json
                            },
 "find_campaign_coupon":
 { Args: { "p_business_id": string,"p_code": string }; Returns: Json
@@ -1429,6 +1438,9 @@ isOneToOne: false
         isOneToOne: true
         isSetofReturn: false
       } },
+"export_ledger":
+{ Args: { "p_business_id": string,"p_from": string,"p_to": string }; Returns: Json
+                           },
 "find_member_by_code":
 { Args: { "p_business_id": string,"p_code": string }; Returns: string
                            },

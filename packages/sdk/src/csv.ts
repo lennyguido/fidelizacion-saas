@@ -69,9 +69,26 @@ export function parseCsv(input: string, delimiter = detectDelimiter(input)): str
   return rows.filter((r) => r.some((cell) => cell.trim() !== ''))
 }
 
-/** Genera un CSV (separador ';' para que Excel en castellano lo abra bien). */
+/**
+ * Evita que Excel ejecute una celda como fórmula ("inyección CSV"): si empieza con
+ * =, @, tab o retorno, o con + / - y no es un número o teléfono, se le antepone '.
+ */
+export function neutralizeFormula(value: string): string {
+  const risky =
+    /^[=@\t\r]/.test(value) || (/^[+-]/.test(value) && !/^[+-][\d\s().,-]*$/.test(value))
+  return risky ? `'${value}` : value
+}
+
+/**
+ * Genera un CSV (separador ';' para que Excel en castellano lo abra bien). Las celdas
+ * que parecen fórmulas se neutralizan (neutralizeFormula).
+ */
 export function toCsv(rows: string[][], delimiter = ';'): string {
-  const escape = (value: string) =>
-    /["\n\r]/.test(value) || value.includes(delimiter) ? `"${value.replace(/"/g, '""')}"` : value
+  const escape = (raw: string) => {
+    const value = neutralizeFormula(raw)
+    return /["\n\r]/.test(value) || value.includes(delimiter)
+      ? `"${value.replace(/"/g, '""')}"`
+      : value
+  }
   return BOM + rows.map((row) => row.map(escape).join(delimiter)).join('\r\n') + '\r\n'
 }

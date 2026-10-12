@@ -10,6 +10,7 @@ import {
   type Card,
 } from '@plataforma/sdk'
 import { Spinner } from '@plataforma/ui'
+import { InstallButton } from '@/install/InstallButton'
 import { MemberQr } from './MemberQr'
 import { Movements } from './Movements'
 import { NoCard } from './NoCard'
@@ -90,6 +91,7 @@ function CardView({ card, token, onForget }: { card: Card; token: string; onForg
       </section>
 
       <WalletButtons token={token} />
+      <InstallButton token={token} />
 
       <Rewards card={card} unit={unit} brand={brand} showProgress={!stamps} />
       <Movements movements={card.movements} />

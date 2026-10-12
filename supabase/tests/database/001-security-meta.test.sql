@@ -119,6 +119,8 @@ select set_eq(
        ('core.list_outbox(uuid,text)'),
        ('core.mark_outbox_sent(uuid)'),
        ('core.discard_outbox(uuid)'),
+       ('core.export_customers(uuid)'),
+       ('core.export_visits(uuid,date,date)'),
        ('loyalty.enroll_customer(uuid)'),
        ('loyalty.leave_program(uuid)'),
        ('loyalty.redeem_reward(uuid,uuid,uuid)'),
@@ -129,7 +131,8 @@ select set_eq(
        ('loyalty.find_member_by_code(uuid,text)'),
        ('loyalty.self_signup(text,text,text,boolean,boolean)'),
        ('loyalty.list_templates()'),
-       ('loyalty.apply_template(uuid,text,boolean)') $$,
+       ('loyalty.apply_template(uuid,text,boolean)'),
+       ('loyalty.export_ledger(uuid,date,date)') $$,
   'authenticated can execute only the intended functions'
 );
 
