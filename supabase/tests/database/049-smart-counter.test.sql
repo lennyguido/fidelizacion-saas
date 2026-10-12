@@ -13,7 +13,7 @@ select tests.create_business('otro-smart', :'other') as other_biz \gset
 select tests.add_member(:'biz', :'staff', 'staff');
 
 insert into core.customers (business_id, name, notes, created_at)
-values (:'biz', 'Ana Habitual', 'Toma el café sin azúcar y pide la mesa de la ventana siempre que viene', now() - interval '2 years');
+values (:'biz', 'Ana Habitual', 'Toma el café sin azúcar, pide la mesa de la ventana siempre que viene y le gusta charlar del barrio', now() - interval '2 years');
 select id as ana from core.customers where name = 'Ana Habitual' \gset
 select tests.create_customer(:'biz', 'Beto Nuevo') as beto \gset
 select tests.backfill_visits(:'ana', array[2, 11, 20, 29, 38], 150000);

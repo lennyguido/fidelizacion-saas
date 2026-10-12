@@ -100,7 +100,7 @@ jobs:
         run: |
           set -o pipefail
           supabase test db 2>&1 | tee test-output.txt || {
-            msg="$(grep -E 'not ok|Failed|ERROR|Looks like|Dubious|psql:|Result|#' test-output.txt | head -60 | sed ':a;N;$!ba;s/\n/%0A/g')"
+            msg="$(grep -E 'not ok|Failed|ERROR|Looks like|Dubious|psql:|Result|#' test-output.txt | grep -vE 'NOTICE|WARNING' | head -60 | sed ':a;N;$!ba;s/\n/%0A/g')"
             echo "::error title=supabase test db::${msg}"
             exit 1
           }
