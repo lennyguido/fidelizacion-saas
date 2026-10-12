@@ -810,6 +810,31 @@ isOneToOne: false
         isOneToOne: true
         isSetofReturn: false
       } },
+"create_demo_business":
+{ Args: { "p_name": string }; Returns: {
+              "address": string | null,
+"created_at": string,
+"currency": string,
+"email": string | null,
+"google_review_url": string | null,
+"id": string,
+"logo_path": string | null,
+"name": string,
+"phone": string | null,
+"primary_color": string | null,
+"secondary_color": string | null,
+"settings": NonNullable<Json>,
+"slug": string,
+"status": string,
+"timezone": string,
+"updated_at": string
+            }
+                          SetofOptions: {
+        from: "*"
+        to: "businesses"
+        isOneToOne: true
+        isSetofReturn: false
+      } },
 "create_integration_key":
 { Args: { "p_business_id": string,"p_location_id"?: string,"p_name": string }; Returns: Json
                            },
@@ -1796,6 +1821,9 @@ isOneToOne: false
                            },
 "reward_referral":
 { Args: { "p_friend": Omit<Database["loyalty"]['Tables']["members"]['Row'], Database["loyalty"]['Tables']["members"]['ComputedFields']>,"p_visit_id": string }; Returns: undefined
+                           },
+"seed_demo":
+{ Args: { "p_business_id": string,"p_kind": string }; Returns: undefined
                            },
 "self_signup":
 { Args: { "p_code": string,"p_name": string,"p_phone": string,"p_terms_accepted": boolean,"p_whatsapp"?: boolean }; Returns: Json
