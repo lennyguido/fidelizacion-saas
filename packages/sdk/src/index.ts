@@ -59,6 +59,8 @@ export type {
 export * as integrations from './integrations.ts'
 export type { IntegrationKey, SimulatedSale } from './integrations.ts'
 export * as dashboard from './dashboard.ts'
+export * as weeklyDigest from './weeklyDigest.ts'
+export type { WeeklyDigest } from './weeklyDigest.ts'
 export type { DashboardSummary } from './dashboard.ts'
 export * as loyalty from './loyalty.ts'
 export * as card from './card.ts'

@@ -1161,6 +1161,12 @@ isOneToOne: false
         isOneToOne: true
         isSetofReturn: false
       } },
+"weekly_digest":
+{ Args: { "p_business_id": string }; Returns: Json
+                           },
+"weekly_digest_at":
+{ Args: { "p_business_id": string,"p_now": string }; Returns: Json
+                           },
 "whatsapp_marketing_granted":
 { Args: { "p_business_id": string,"p_customer_id": string }; Returns: boolean
                            }

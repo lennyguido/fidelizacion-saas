@@ -121,6 +121,7 @@ select set_eq(
        ('core.discard_outbox(uuid)'),
        ('core.export_customers(uuid)'),
        ('core.export_visits(uuid,date,date)'),
+       ('core.weekly_digest(uuid)'),
        ('loyalty.enroll_customer(uuid)'),
        ('loyalty.leave_program(uuid)'),
        ('loyalty.redeem_reward(uuid,uuid,uuid)'),
