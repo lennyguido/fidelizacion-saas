@@ -339,3 +339,30 @@ Una dirección como `club.tunegocio.com.ar` es un checkpoint (cuesta plata y toc
 * Brevo, conectar con Supabase: https://developers.brevo.com/docs/supabase-smtp-integration
 * Brevo, plan gratis: https://www.brevo.com/free-smtp-server
 * Resend, precios: https://resend.com/pricing
+
+---
+
+# Parte E — Con el dominio del dueño: neriva.net (decidido el 2026-10-12)
+
+El dominio `neriva.net` está en **GoDaddy** (sus DNS son `ns59/ns60.domaincontrol.com`) y la
+tienda online sigue en Vercel: no se toca. Solo se agregan dos subdominios:
+
+| App | Proyecto de Cloudflare Pages | Dirección |
+|---|---|---|
+| Tarjeta del cliente | `fidelizacion-tarjeta` | `https://tarjeta.neriva.net` |
+| Panel del negocio | `fidelizacion-panel` | `https://panel.neriva.net` |
+
+Por ahora apuntan a la base de **desarrollo** (piloto / demo). Antes de clientes reales: Parte D.
+
+1. Crear los dos proyectos como en los Pasos 3 y 4. En el panel, `VITE_CLIENT_APP_URL` =
+   `https://tarjeta.neriva.net`.
+2. En cada proyecto: **Custom domains → Set up a custom domain** → escribir el subdominio.
+   Cloudflare muestra un registro **CNAME** (por ejemplo `tarjeta` → `fidelizacion-tarjeta.pages.dev`).
+3. En **GoDaddy → Mis productos → neriva.net → DNS → Agregar registro**: tipo **CNAME**,
+   nombre `tarjeta`, valor `fidelizacion-tarjeta.pages.dev`, TTL 1 hora. Lo mismo con `panel`.
+   No borrar ni cambiar los registros que ya existen (son los de la tienda).
+4. Esperar a que Cloudflare diga **Active** en Custom domains (de minutos a un par de horas).
+5. Supabase → Authentication → URL Configuration: **Site URL** `https://panel.neriva.net` y en
+   **Redirect URLs** agregar `https://panel.neriva.net/**`.
+6. Si en Cloudflare existe un proyecto "Worker" llamado `fidelizacion-saas` (aparece como
+   "Workers Builds" en rojo en GitHub), borrarlo: es un intento anterior y no se usa.
