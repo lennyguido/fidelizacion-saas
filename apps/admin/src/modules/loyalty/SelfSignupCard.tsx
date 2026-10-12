@@ -3,6 +3,8 @@ import { useMutation } from '@tanstack/react-query'
 import { errorMessage, selfSignup, type SelfSignupNotice } from '@plataforma/sdk'
 import { Button, Card, Spinner, useToast } from '@plataforma/ui'
 import { useActiveBusiness } from '../../features/business/ActiveBusinessContext'
+import { PlanUpsell } from '../../features/business/PlanUpsell'
+import { usePlan } from '../../features/business/usePlan'
 import { formatDateTime } from '../../lib/format'
 import { useInvalidateLoyalty, useSelfSignupSettings, useSignupNotices } from './queries'
 import { signupUrl } from './signupUrl'
@@ -13,6 +15,7 @@ export function SelfSignupCard() {
   const toast = useToast()
   const invalidate = useInvalidateLoyalty(business.id)
   const settings = useSelfSignupSettings(business.id)
+  const plan = usePlan()
   const canManage = business.role !== 'staff'
   const enabled = settings.data?.enabled ?? false
 
@@ -52,6 +55,7 @@ export function SelfSignupCard() {
       </div>
       {settings.isPending && <Spinner />}
       {settings.error && <p className="text-sm text-slate-500">Todavía no está disponible.</p>}
+      {plan.data && !plan.data.features.selfSignup && <PlanUpsell plans="Local y Cadena" />}
       {settings.data && enabled && (
         <div className="flex flex-col gap-2 rounded-lg bg-slate-50 p-3 text-sm">
           <p className="break-all text-slate-600">{signupUrl(settings.data.code)}</p>

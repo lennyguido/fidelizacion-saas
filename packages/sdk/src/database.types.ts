@@ -497,14 +497,14 @@ isOneToOne: false
                   ]
                 },"plans": {
                   Row: {
-                    "active": boolean,"created_at": string,"id": string,"name": string
+                    "active": boolean,"created_at": string,"features": NonNullable<Json>,"id": string,"name": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "active"?: boolean,"created_at"?: string,"id": string,"name": string
+                    "active"?: boolean,"created_at"?: string,"features"?: NonNullable<Json>,"id": string,"name": string
                   }
                   Update: {
-                    "active"?: boolean,"created_at"?: string,"id"?: string,"name"?: string
+                    "active"?: boolean,"created_at"?: string,"features"?: NonNullable<Json>,"id"?: string,"name"?: string
                   }
                   Relationships: [
                     
@@ -678,6 +678,20 @@ isOneToOne: false
 "automation_defaults":
 { Args: { "p_kind": string }; Returns: Json
                            },
+"business_plan":
+{ Args: { "p_business_id": string }; Returns: {
+              "active": boolean,
+"created_at": string,
+"features": NonNullable<Json>,
+"id": string,
+"name": string
+            }
+                          SetofOptions: {
+        from: "*"
+        to: "plans"
+        isOneToOne: true
+        isSetofReturn: false
+      } },
 "business_stats":
 { Args: { "p_business_id": string,"p_days"?: number }; Returns: Json
                            },
@@ -839,6 +853,9 @@ isOneToOne: false
                            },
 "find_campaign_coupon":
 { Args: { "p_business_id": string,"p_code": string }; Returns: Json
+                           },
+"has_feature":
+{ Args: { "p_business_id": string,"p_feature": string }; Returns: boolean
                            },
 "has_module":
 { Args: { "p_business_id": string,"p_module": string }; Returns: boolean
@@ -1020,6 +1037,9 @@ isOneToOne: false
 "my_customer_ids":
 { Args: Record<PropertyKey, never>; Returns: string[]
                            },
+"my_plan":
+{ Args: { "p_business_id": string }; Returns: Json
+                           },
 "new_coupon_code":
 { Args: { "p_business_id": string }; Returns: string
                            },
@@ -1031,6 +1051,9 @@ isOneToOne: false
                            },
 "normalize_self_signup_code":
 { Args: { "p_code": string }; Returns: string
+                           },
+"plan_limit":
+{ Args: { "p_business_id": string,"p_limit": string }; Returns: number
                            },
 "preview_segment":
 { Args: { "p_business_id": string,"p_segment": Json }; Returns: {
@@ -1125,6 +1148,9 @@ isOneToOne: false
                            },
 "render_campaign_message":
 { Args: { "p_benefit": string,"p_business_name": string,"p_coupon": string,"p_first_name": string,"p_message": string }; Returns: string
+                           },
+"require_feature":
+{ Args: { "p_business_id": string,"p_feature": string }; Returns: undefined
                            },
 "require_member":
 { Args: { "p_business_id": string,"p_roles"?: (string)[] }; Returns: undefined

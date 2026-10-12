@@ -11,6 +11,7 @@ export {
 export type { Business, MemberRole, MyBusiness } from './types.ts'
 export * as auth from './auth.ts'
 export * as businesses from './businesses.ts'
+export type { PlanInfo } from './businesses.ts'
 export * as customers from './customers.ts'
 export {
   CUSTOMER_STATUSES,

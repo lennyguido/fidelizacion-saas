@@ -133,3 +133,48 @@ export async function myAccess(): Promise<string | null> {
   if (error) throw fromPostgrestError(error)
   return data ?? null
 }
+
+/** Funciones y límites del plan del negocio (D-044). Límites null = sin tope. */
+export interface PlanInfo {
+  planId: string
+  name: string
+  features: {
+    automations: boolean
+    selfSignup: boolean
+    cashRegister: boolean
+    maxCustomers: number | null
+    maxStaff: number | null
+    maxLocations: number | null
+  }
+  usage: { customers: number; staff: number; locations: number }
+}
+
+export async function myPlan(businessId: string): Promise<PlanInfo> {
+  const { data, error } = await getSupabase().rpc('my_plan', { p_business_id: businessId })
+  if (error) throw fromPostgrestError(error)
+  const raw = (data ?? {}) as {
+    planId?: string
+    name?: string
+    features?: Record<string, unknown>
+    usage?: Record<string, number>
+  }
+  const f = raw.features ?? {}
+  const limit = (value: unknown) => (typeof value === 'number' ? value : null)
+  return {
+    planId: raw.planId ?? 'pilot',
+    name: raw.name ?? 'Piloto',
+    features: {
+      automations: f.automations === true,
+      selfSignup: f.self_signup === true,
+      cashRegister: f.cash_register === true,
+      maxCustomers: limit(f.max_customers),
+      maxStaff: limit(f.max_staff),
+      maxLocations: limit(f.max_locations),
+    },
+    usage: {
+      customers: raw.usage?.customers ?? 0,
+      staff: raw.usage?.staff ?? 0,
+      locations: raw.usage?.locations ?? 0,
+    },
+  }
+}
