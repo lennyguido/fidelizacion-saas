@@ -130,6 +130,8 @@ Hoy el dueño arma las campañas a mano y manda cada wa.me uno por uno. Tiene qu
 
 ### 4. Botón "Poner en mi pantalla de inicio" + exportar CSV
 
+> **Hecha** (2026-10-11, D-034): en `main` y aplicada en desarrollo (migración `20261012005618_core_data_export`). Falta probar el botón en un iPhone real.
+
 **Botón en la tarjeta del cliente:**
 - Android: `beforeinstallprompt`.
 - iPhone en Safari: hoja con 2 pasos ilustrados (Compartir → Agregar a inicio). En iPhone con otro navegador: "abrilo en Safari".

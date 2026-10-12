@@ -47,7 +47,7 @@ Proyecto de **desarrollo**: `fidelizacion-saas`, ref `dqpnqcumlyfifewgzyvh` (ún
 | 27 | 20261011010100 | loyalty_self_signup | **pendiente de revisión del mentor — NO aplicar** (D-032; solo el alta: las plantillas pasaron a la 29) |
 | 28 | 20261010154103 | core_sales_ingest | aplicada 2026-10-10 ~12:40 (D-033; CI verde, no destructiva, sin funciones para anon; archivo renombrado de `20261011000000`) |
 | 29 | 20261010184152 | loyalty_templates | aplicada 2026-10-10 ~15:40 (plantillas separadas de la 27: no tienen nada para anon; CI verde) |
-| 30 | 20261011030000 | core_data_export | **pendiente de aplicar** (D-034; solo funciones nuevas, no destructiva) |
+| 30 | 20261012005618 | core_data_export | aplicada 2026-10-11 ~21:56 (D-034; CI verde, no destructiva: solo funciones nuevas; archivo renombrado de `20261011030000`) |
 
 Regla vigente desde 2026-10-09: ninguna migración se aplica sin aprobación explícita del dueño después de revisarla.
 
