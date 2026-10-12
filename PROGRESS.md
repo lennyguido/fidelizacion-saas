@@ -8,10 +8,9 @@ Plan de Claude Code (`docs/PLAN-CLAUDE-CODE.md`): **tareas 1 a 9 hechas** (2026-
 
 ## Current task — lo que falta (del dueño o del mentor)
 
-1. **Aplicar la migración 32** (`loyalty_referrals_core_feedback`, "Traé un amigo" y opiniones): Supabase pidió confirmación y quedó rechazada. No borra datos. Hasta aplicarla, esas pantallas muestran errores en desarrollo.
-2. **Revisión del mentor** (funciones para personas sin cuenta): migraciones 11–14 (equipo y dueños), 26–27 (alta por QR), 33 (encuesta y código en la tarjeta) y 34 (canje desde el celular). Detalle en `docs/REVISION-PENDIENTE.md`.
-3. **Prueba visual** del dueño, incluido el botón "Poner en mi pantalla de inicio" en un iPhone real (`docs/PWA.md`).
-4. **Cuentas que tiene que abrir el dueño** (checkpoint): Google Wallet, Apple Developer, Cloudflare (publicar), WhatsApp Business (mensajes automáticos), Mercado Pago (cobros), un proveedor de mail (resumen de los lunes por mail) y publicar la Edge Function `sales-ingest`.
+1. **Revisión del mentor** (funciones para personas sin cuenta): migraciones 11–14 (equipo y dueños), 26–27 (alta por QR), 33 (encuesta y código en la tarjeta) y 34 (canje desde el celular). Detalle en `docs/REVISION-PENDIENTE.md`.
+2. **Prueba visual** del dueño, incluido el botón "Poner en mi pantalla de inicio" en un iPhone real (`docs/PWA.md`).
+3. **Cuentas que tiene que abrir el dueño** (checkpoint): Google Wallet, Apple Developer, Cloudflare (publicar), WhatsApp Business (mensajes automáticos), Mercado Pago (cobros), un proveedor de mail (resumen de los lunes por mail) y publicar la Edge Function `sales-ingest`.
 
 ## Migraciones
 
@@ -50,7 +49,7 @@ Proyecto de **desarrollo**: `fidelizacion-saas`, ref `dqpnqcumlyfifewgzyvh` (ún
 | 29 | 20261010184152 | loyalty_templates | aplicada 2026-10-10 ~15:40 (plantillas separadas de la 27: no tienen nada para anon; CI verde) |
 | 30 | 20261012005618 | core_data_export | aplicada 2026-10-11 ~21:56 (D-034; CI verde, no destructiva: solo funciones nuevas; archivo renombrado de `20261011030000`) |
 | 31 | 20261012010243 | core_weekly_digest | aplicada 2026-10-11 ~22:02 (D-035; CI verde, no destructiva: solo funciones nuevas; archivo renombrado de `20261012010000`) |
-| 32 | 20261012020000 | loyalty_referrals_core_feedback | **pendiente de aplicar — necesita el OK del dueño** (D-036; no borra datos: columnas, tablas y funciones nuevas; el `drop constraint` solo amplía los motivos del libro de puntos. El 2026-10-11 Supabase pidió confirmación y quedó rechazada) |
+| 32 | 20261012020000 | loyalty_referrals_core_feedback | aplicada 2026-10-12 por el dueño desde el SQL Editor (verificado: tablas, columnas y funciones presentes). **No figura en el historial de migraciones de Supabase**: si algún día se usa `supabase db push`, marcarla antes como aplicada con `supabase migration repair --status applied 20261012020000`. |
 | 33 | 20261012235900 | loyalty_card_referral_feedback | **pendiente de revisión del mentor — NO aplicar** (D-036: encuesta anon `loyalty.submit_feedback` y cambios en `get_card`) |
 | 34 | 20261013000000 | loyalty_redemption_requests | **pendiente de revisión del mentor — NO aplicar** (D-037: funciones anon `request_redemption` y `get_redemption_request`) |
 | 35 | 20261012014657 | core_smart_counter | aplicada 2026-10-11 ~22:47 (D-038; CI verde, solo funciones nuevas; archivo renombrado de `20261013010000`) |
