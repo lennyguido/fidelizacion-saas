@@ -3,6 +3,7 @@ import { dashboard, errorMessage, formatMoney } from '@plataforma/sdk'
 import { Alert, Card, Spinner } from '@plataforma/ui'
 import { useActiveBusiness } from '../features/business/ActiveBusinessContext'
 import { formatDateTime } from '../lib/format'
+import { ShareMonthButton } from './ShareMonthButton'
 
 /** Resumen del mes para dueño/admin: comparado con el mismo período del mes pasado. */
 export function MonthSummaryCard() {
@@ -81,6 +82,9 @@ export function MonthSummaryCard() {
           </ul>
         </div>
       )}
+      <div>
+        <ShareMonthButton data={data} />
+      </div>
     </Card>
   )
 }

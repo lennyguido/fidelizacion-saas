@@ -8,6 +8,8 @@ import { statusInfo } from '../features/customers/status'
 import { HomeModuleCards } from '../modules/HomeModuleCards'
 import { FeedbackCard } from './FeedbackCard'
 import { MonthSummaryCard } from './MonthSummaryCard'
+import { TeamWeekCard } from './TeamWeekCard'
+import { TopCustomersCard } from './TopCustomersCard'
 import { WeeklyDigestCard } from './WeeklyDigestCard'
 
 const roleLabels = { owner: 'Dueño', admin: 'Administrador', staff: 'Empleado' } as const
@@ -38,6 +40,10 @@ export function HomePage() {
       {business.role !== 'staff' && <MonthSummaryCard />}
 
       {business.role !== 'staff' && <FeedbackCard />}
+
+      {business.role !== 'staff' && <TopCustomersCard />}
+
+      <TeamWeekCard />
 
       <HomeModuleCards />
 

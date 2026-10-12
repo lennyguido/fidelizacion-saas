@@ -52,6 +52,7 @@ Proyecto de **desarrollo**: `fidelizacion-saas`, ref `dqpnqcumlyfifewgzyvh` (ún
 | 32 | 20261012020000 | loyalty_referrals_core_feedback | **pendiente de aplicar — necesita el OK del dueño** (D-036; no borra datos: columnas, tablas y funciones nuevas; el `drop constraint` solo amplía los motivos del libro de puntos. El 2026-10-11 Supabase pidió confirmación y quedó rechazada) |
 | 33 | 20261012235900 | loyalty_card_referral_feedback | **pendiente de revisión del mentor — NO aplicar** (D-036: encuesta anon `loyalty.submit_feedback` y cambios en `get_card`) |
 | 34 | 20261013000000 | loyalty_redemption_requests | **pendiente de revisión del mentor — NO aplicar** (D-037: funciones anon `request_redemption` y `get_redemption_request`) |
+| 35 | 20261013010000 | core_smart_counter | **pendiente de aplicar** (D-038; solo funciones nuevas, no destructiva, nada para anon) |
 
 Regla vigente desde 2026-10-09: ninguna migración se aplica sin aprobación explícita del dueño después de revisarla.
 
@@ -84,6 +85,12 @@ Rama `fix/archive-owner-admin-only` (commit `62a7b19`):
 | Punta a punta (Playwright) | CI: `supabase start` + build + `vite preview` + `npx playwright test` (celular y escritorio) | OK: registro → onboarding → panel → login; credenciales incorrectas; mostrador; importación CSV |
 
 Limitación: los tests de punta a punta corren contra un Supabase **local** en CI. El panel todavía **no se probó contra el proyecto de desarrollo remoto**. Eso es lo que falta validar ahora.
+
+## Domingo 11 — mostrador inteligente (plan tarea 8)
+
+* **Mostrador:** al encontrar al cliente se ve "hace 2 años · visita 50 · viene cada ~9 días", la nota corta y, para dueño/admin, cuánto gastó (solo si hay montos cargados).
+* **Inicio:** "El equipo esta semana" (visitas y clientes nuevos por persona; un empleado ve el orden y solo sus números), "Tus mejores clientes" (top 10 de 90 días) y "Compartir como imagen" en el resumen del mes. D-038.
+* Tests: `049-smart-counter` (14) y unitarios.
 
 ## Domingo 11 — canje desde el celular (plan tarea 7)
 

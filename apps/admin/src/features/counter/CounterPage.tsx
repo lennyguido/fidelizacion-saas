@@ -14,6 +14,7 @@ import { Alert, Button, Card, Spinner, TextField, useToast } from '@plataforma/u
 import { CounterModulePanels } from '../../modules/CounterModulePanels'
 import { useCustomerCodeMatch } from '../../modules/useCustomerCodeMatch'
 import { useActiveBusiness } from '../business/ActiveBusinessContext'
+import { CustomerSnapshot } from './CustomerSnapshot'
 import { QrScanner } from './QrScanner'
 import { canScanQr } from './qrSupport'
 import { StatusBadge } from '../customers/StatusBadge'
@@ -109,6 +110,7 @@ export function CounterPage() {
           <div className="min-w-0">
             <p className="text-xs font-medium text-slate-500">Socio encontrado por código</p>
             <p className="truncate font-medium">{codeMatch.data.name}</p>
+            <CustomerSnapshot customerId={codeMatch.data.id} />
           </div>
           <Button
             size="lg"
@@ -191,6 +193,9 @@ function Results({ items, loading, error, searching, disabled, onPick, onCreate 
               <StatusBadge status={customer.status} />
               {formatPhone(customer.phone)} · {formatDaysAgo(customer.lastVisitAt)}
             </p>
+            {searching && (items?.length ?? 0) <= 3 && (
+              <CustomerSnapshot customerId={customer.id} />
+            )}
           </div>
           <Button
             size="lg"
