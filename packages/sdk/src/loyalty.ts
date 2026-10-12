@@ -261,6 +261,8 @@ export type MovementReason =
   | 'redemption'
   | 'redemption_cancelled'
   | 'adjustment'
+  | 'referral'
+  | 'referral_voided'
 
 export interface Movement {
   id: number

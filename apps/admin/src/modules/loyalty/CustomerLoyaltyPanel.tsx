@@ -15,6 +15,7 @@ import { useActiveBusiness } from '../../features/business/ActiveBusinessContext
 import { clientAppUrl, whatsappLink } from '../../lib/clientAppUrl'
 import { formatDateTime } from '../../lib/format'
 import type { CustomerPanelProps } from '../types'
+import { MemberReferral } from './MemberReferral'
 import {
   useInvalidateLoyalty,
   useMember,
@@ -125,6 +126,7 @@ function MemberView({
       )}
       <RedeemList member={member} onRedeemed={setLastCode} />
       <DigitalCard member={member} customerName={customerName} phone={phone} />
+      <MemberReferral member={member} />
       <RecentActivity member={member} canManage={canManage} />
       {canManage && <AdjustPointsForm member={member} />}
       <LeaveProgram member={member} />
@@ -210,6 +212,8 @@ const reasonLabels: Record<LoyaltyMovementReason, string> = {
   redemption: 'Canje',
   redemption_cancelled: 'Canje cancelado',
   adjustment: 'Ajuste',
+  referral: 'Invitación',
+  referral_voided: 'Invitación anulada',
 }
 
 function RecentActivity({ member, canManage }: { member: LoyaltyMember; canManage: boolean }) {

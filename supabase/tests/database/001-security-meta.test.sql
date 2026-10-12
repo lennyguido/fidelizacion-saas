@@ -52,7 +52,8 @@ select is_empty(
 );
 
 -- 4. anon (sin sesión) solo puede ejecutar las funciones públicas previstas:
---    la tarjeta digital del cliente (D-020) y el alta por QR (docs/ALTA-QR.md).
+--    la tarjeta digital del cliente (D-020), el alta por QR (docs/ALTA-QR.md) y la
+--    encuesta de la tarjeta (D-036).
 --    Ninguna otra.
 select set_eq(
   $$ select p.oid::regprocedure::text
@@ -60,8 +61,9 @@ select set_eq(
       where n.nspname in (select name from platform_schemas)
         and has_function_privilege('anon', p.oid, 'execute') $$,
   $$ values ('loyalty.get_card(text)'),
-            ('loyalty.self_signup(text,text,text,boolean,boolean)') $$,
-  'anon can execute only the public card and self-signup functions'
+            ('loyalty.self_signup(text,text,text,boolean,boolean)'),
+            ('loyalty.submit_feedback(text,uuid,integer,text)') $$,
+  'anon can execute only the public card, self-signup and feedback functions'
 );
 
 -- 5. Ninguna función queda ejecutable por PUBLIC (default de Postgres).
@@ -133,7 +135,9 @@ select set_eq(
        ('loyalty.self_signup(text,text,text,boolean,boolean)'),
        ('loyalty.list_templates()'),
        ('loyalty.apply_template(uuid,text,boolean)'),
-       ('loyalty.export_ledger(uuid,date,date)') $$,
+       ('loyalty.export_ledger(uuid,date,date)'),
+       ('loyalty.set_referrer(uuid,text)'),
+       ('loyalty.referral_ranking(uuid)') $$,
   'authenticated can execute only the intended functions'
 );
 

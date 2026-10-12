@@ -69,6 +69,8 @@ const LEDGER_REASON_LABELS: Record<string, string> = {
   redemption: 'Canje',
   redemption_cancelled: 'Canje anulado',
   adjustment: 'Ajuste',
+  referral: 'Invitación',
+  referral_voided: 'Invitación anulada',
 }
 
 const CUSTOMER_COLUMNS: Column[] = [

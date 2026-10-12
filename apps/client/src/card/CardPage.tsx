@@ -11,6 +11,8 @@ import {
 } from '@plataforma/sdk'
 import { Spinner } from '@plataforma/ui'
 import { InstallButton } from '@/install/InstallButton'
+import { FeedbackSurvey } from './FeedbackSurvey'
+import { InviteFriend } from './InviteFriend'
 import { MemberQr } from './MemberQr'
 import { Movements } from './Movements'
 import { NoCard } from './NoCard'
@@ -84,6 +86,8 @@ function CardView({ card, token, onForget }: { card: Card; token: string; onForg
         )}
       </header>
 
+      {card.feedbackVisitId && <FeedbackSurvey token={token} visitId={card.feedbackVisitId} />}
+
       {stamps && <StampCard slots={stamps} unit={unit} brand={brand} logo={logo} />}
 
       <section className="rounded-2xl bg-white p-5 shadow-sm">
@@ -94,6 +98,9 @@ function CardView({ card, token, onForget }: { card: Card; token: string; onForg
       <InstallButton token={token} />
 
       <Rewards card={card} unit={unit} brand={brand} showProgress={!stamps} />
+      {card.referral && (
+        <InviteFriend referral={card.referral} businessName={card.business.name} unit={unit} />
+      )}
       <Movements movements={card.movements} />
 
       <button

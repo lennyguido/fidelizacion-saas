@@ -33,6 +33,18 @@ export interface Card {
   program: ProgramRule | null
   rewards: CardReward[]
   movements: CardMovement[]
+  /** "Traé un amigo": null si el negocio no lo usa. */
+  referral: CardReferral | null
+  /** Visita reciente que todavía no tiene opinión (encuesta "¿Cómo te atendimos?"). */
+  feedbackVisitId: string | null
+  /** Link de reseñas de Google del negocio. */
+  reviewUrl: string | null
+}
+
+export interface CardReferral {
+  code: string
+  referrerPoints: number
+  friendPoints: number
 }
 
 interface RawCard {
@@ -57,6 +69,10 @@ interface RawCard {
   } | null
   rewards: CardReward[]
   movements: CardMovement[]
+  // Las tres siguientes llegan con la migración de la encuesta (D-036); antes, no vienen.
+  referral?: CardReferral | null
+  feedback?: { visitId: string } | null
+  reviewUrl?: string | null
 }
 
 /** Los links tienen el código después de "#", así no viaja a ningún servidor. */
@@ -91,7 +107,40 @@ export async function getCard(token: string): Promise<Card | null> {
       : null,
     rewards: raw.rewards,
     movements: raw.movements.map((m) => ({ ...m, delta: Number(m.delta) })),
+    referral: raw.referral ?? null,
+    feedbackVisitId: raw.feedback?.visitId ?? null,
+    reviewUrl: raw.reviewUrl ?? null,
   }
+}
+
+/**
+ * Opinión del cliente sobre su visita (1 a 5). Devuelve el link de reseñas de
+ * Google, que se le ofrece a todos sin importar la nota (Google prohíbe filtrar).
+ */
+export async function submitFeedback(
+  token: string,
+  visitId: string,
+  rating: number,
+  comment: string,
+): Promise<{ reviewUrl: string | null }> {
+  const { data, error } = await getSupabase()
+    .schema('loyalty')
+    .rpc('submit_feedback', {
+      p_token: token,
+      p_visit_id: visitId,
+      p_rating: rating,
+      ...(comment.trim() ? { p_comment: comment.trim() } : {}),
+    })
+  if (error) throw fromPostgrestError(error)
+  const result = data as { reviewUrl?: string | null } | null
+  return { reviewUrl: result?.reviewUrl ?? null }
+}
+
+/** Texto para compartir la invitación por WhatsApp. */
+export function referralShareText(businessName: string, referral: CardReferral): string {
+  const gift =
+    referral.friendPoints > 0 ? ` y te regalan ${referral.friendPoints} en tu primera visita` : ''
+  return `Te invito a sumarte al club de ${businessName}${gift}. En la caja decí mi código: ${referral.code}`
 }
 
 /** La próxima recompensa que todavía no le alcanza (para mostrar el progreso). */

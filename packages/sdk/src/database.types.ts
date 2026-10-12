@@ -73,14 +73,14 @@ isOneToOne: false
                   ]
                 },"businesses": {
                   Row: {
-                    "address": string | null,"created_at": string,"currency": string,"email": string | null,"id": string,"logo_path": string | null,"name": string,"phone": string | null,"primary_color": string | null,"secondary_color": string | null,"settings": NonNullable<Json>,"slug": string,"status": string,"timezone": string,"updated_at": string
+                    "address": string | null,"created_at": string,"currency": string,"email": string | null,"google_review_url": string | null,"id": string,"logo_path": string | null,"name": string,"phone": string | null,"primary_color": string | null,"secondary_color": string | null,"settings": NonNullable<Json>,"slug": string,"status": string,"timezone": string,"updated_at": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "address"?: string | null,"created_at"?: string,"currency"?: string,"email"?: string | null,"id"?: string,"logo_path"?: string | null,"name": string,"phone"?: string | null,"primary_color"?: string | null,"secondary_color"?: string | null,"settings"?: NonNullable<Json>,"slug": string,"status"?: string,"timezone"?: string,"updated_at"?: string
+                    "address"?: string | null,"created_at"?: string,"currency"?: string,"email"?: string | null,"google_review_url"?: string | null,"id"?: string,"logo_path"?: string | null,"name": string,"phone"?: string | null,"primary_color"?: string | null,"secondary_color"?: string | null,"settings"?: NonNullable<Json>,"slug": string,"status"?: string,"timezone"?: string,"updated_at"?: string
                   }
                   Update: {
-                    "address"?: string | null,"created_at"?: string,"currency"?: string,"email"?: string | null,"id"?: string,"logo_path"?: string | null,"name"?: string,"phone"?: string | null,"primary_color"?: string | null,"secondary_color"?: string | null,"settings"?: NonNullable<Json>,"slug"?: string,"status"?: string,"timezone"?: string,"updated_at"?: string
+                    "address"?: string | null,"created_at"?: string,"currency"?: string,"email"?: string | null,"google_review_url"?: string | null,"id"?: string,"logo_path"?: string | null,"name"?: string,"phone"?: string | null,"primary_color"?: string | null,"secondary_color"?: string | null,"settings"?: NonNullable<Json>,"slug"?: string,"status"?: string,"timezone"?: string,"updated_at"?: string
                   }
                   Relationships: [
                     
@@ -291,6 +291,38 @@ isOneToOne: false
 isOneToOne: false
       referencedRelation: "businesses"
       referencedColumns: ["id"]
+    }
+                  ]
+                },"feedback": {
+                  Row: {
+                    "business_id": string,"comment": string | null,"created_at": string,"customer_id": string,"id": string,"rating": number,"visit_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "business_id": string,"comment"?: string | null,"created_at"?: string,"customer_id": string,"id"?: string,"rating": number,"visit_id": string
+                  }
+                  Update: {
+                    "business_id"?: string,"comment"?: string | null,"created_at"?: string,"customer_id"?: string,"id"?: string,"rating"?: number,"visit_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "feedback_business_id_customer_id_fkey"
+      columns: ["business_id","customer_id"]
+isOneToOne: false
+      referencedRelation: "customers"
+      referencedColumns: ["business_id","id"]
+    },{
+      foreignKeyName: "feedback_business_id_fkey"
+      columns: ["business_id"]
+isOneToOne: false
+      referencedRelation: "businesses"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "feedback_business_id_visit_id_fkey"
+      columns: ["business_id","visit_id"]
+isOneToOne: true
+      referencedRelation: "visits"
+      referencedColumns: ["business_id","id"]
     }
                   ]
                 },"integration_keys": {
@@ -654,6 +686,7 @@ isOneToOne: false
 "created_at": string,
 "currency": string,
 "email": string | null,
+"google_review_url": string | null,
 "id": string,
 "logo_path": string | null,
 "name": string,
@@ -937,6 +970,9 @@ isOneToOne: false
                            },
 "raise_forbidden":
 { Args: { "p_message"?: string }; Returns: undefined
+                           },
+"record_feedback":
+{ Args: { "p_business_id": string,"p_comment": string,"p_customer_id": string,"p_rating": number,"p_visit_id": string }; Returns: Json
                            },
 "record_visit":
 { Args: { "p_amount_minor"?: number,"p_business_id": string,"p_customer_id"?: string,"p_location_id"?: string,"p_notes"?: string,"p_occurred_at"?: string,"p_source"?: string,"p_source_ref"?: string }; Returns: {
@@ -1241,28 +1277,28 @@ isOneToOne: false
                   ]
                 },"members": {
                   Row: {
-                    "business_id": string,"card_issued_at": string | null,"created_by": string | null,"customer_id": string,"id": string,"joined_at": string,"left_at": string | null,"lifetime_points": number,"member_code": string,"points_balance": number,"status": string,"updated_at": string,"create_card": string | null
+                    "business_id": string,"card_issued_at": string | null,"created_by": string | null,"customer_id": string,"id": string,"joined_at": string,"left_at": string | null,"lifetime_points": number,"member_code": string,"points_balance": number,"referral_code": string,"status": string,"updated_at": string,"create_card": string | null
                   }
                   ComputedFields: "create_card"
                   Insert: {
-                    "business_id": string,"card_issued_at"?: string | null,"created_by"?: string | null,"customer_id": string,"id"?: string,"joined_at"?: string,"left_at"?: string | null,"lifetime_points"?: number,"member_code": string,"points_balance"?: number,"status"?: string,"updated_at"?: string
+                    "business_id": string,"card_issued_at"?: string | null,"created_by"?: string | null,"customer_id": string,"id"?: string,"joined_at"?: string,"left_at"?: string | null,"lifetime_points"?: number,"member_code": string,"points_balance"?: number,"referral_code": string,"status"?: string,"updated_at"?: string
                   }
                   Update: {
-                    "business_id"?: string,"card_issued_at"?: string | null,"created_by"?: string | null,"customer_id"?: string,"id"?: string,"joined_at"?: string,"left_at"?: string | null,"lifetime_points"?: number,"member_code"?: string,"points_balance"?: number,"status"?: string,"updated_at"?: string
+                    "business_id"?: string,"card_issued_at"?: string | null,"created_by"?: string | null,"customer_id"?: string,"id"?: string,"joined_at"?: string,"left_at"?: string | null,"lifetime_points"?: number,"member_code"?: string,"points_balance"?: number,"referral_code"?: string,"status"?: string,"updated_at"?: string
                   }
                   Relationships: [
                     
                   ]
                 },"programs": {
                   Row: {
-                    "amount_step_minor": number | null,"business_id": string,"created_at": string,"enabled": boolean,"kind": string,"max_points_per_visit": number,"max_visits_per_day": number,"min_amount_minor": number,"points_per_amount": number,"points_per_visit": number,"template": string | null,"updated_at": string
+                    "amount_step_minor": number | null,"business_id": string,"created_at": string,"enabled": boolean,"kind": string,"max_points_per_visit": number,"max_visits_per_day": number,"min_amount_minor": number,"points_per_amount": number,"points_per_visit": number,"referral_enabled": boolean,"referral_points_friend": number,"referral_points_referrer": number,"template": string | null,"updated_at": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "amount_step_minor"?: number | null,"business_id": string,"created_at"?: string,"enabled"?: boolean,"kind"?: string,"max_points_per_visit"?: number,"max_visits_per_day"?: number,"min_amount_minor"?: number,"points_per_amount"?: number,"points_per_visit"?: number,"template"?: string | null,"updated_at"?: string
+                    "amount_step_minor"?: number | null,"business_id": string,"created_at"?: string,"enabled"?: boolean,"kind"?: string,"max_points_per_visit"?: number,"max_visits_per_day"?: number,"min_amount_minor"?: number,"points_per_amount"?: number,"points_per_visit"?: number,"referral_enabled"?: boolean,"referral_points_friend"?: number,"referral_points_referrer"?: number,"template"?: string | null,"updated_at"?: string
                   }
                   Update: {
-                    "amount_step_minor"?: number | null,"business_id"?: string,"created_at"?: string,"enabled"?: boolean,"kind"?: string,"max_points_per_visit"?: number,"max_visits_per_day"?: number,"min_amount_minor"?: number,"points_per_amount"?: number,"points_per_visit"?: number,"template"?: string | null,"updated_at"?: string
+                    "amount_step_minor"?: number | null,"business_id"?: string,"created_at"?: string,"enabled"?: boolean,"kind"?: string,"max_points_per_visit"?: number,"max_visits_per_day"?: number,"min_amount_minor"?: number,"points_per_amount"?: number,"points_per_visit"?: number,"referral_enabled"?: boolean,"referral_points_friend"?: number,"referral_points_referrer"?: number,"template"?: string | null,"updated_at"?: string
                   }
                   Relationships: [
                     
@@ -1290,6 +1326,32 @@ isOneToOne: false
       columns: ["business_id","reward_id"]
 isOneToOne: false
       referencedRelation: "rewards"
+      referencedColumns: ["business_id","id"]
+    }
+                  ]
+                },"referrals": {
+                  Row: {
+                    "business_id": string,"created_at": string,"created_by": string | null,"friend_member_id": string,"friend_points": number,"id": string,"referrer_member_id": string,"referrer_points": number,"reward_visit_id": string | null,"rewarded_at": string | null,"status": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "business_id": string,"created_at"?: string,"created_by"?: string | null,"friend_member_id": string,"friend_points"?: number,"id"?: string,"referrer_member_id": string,"referrer_points"?: number,"reward_visit_id"?: string | null,"rewarded_at"?: string | null,"status"?: string
+                  }
+                  Update: {
+                    "business_id"?: string,"created_at"?: string,"created_by"?: string | null,"friend_member_id"?: string,"friend_points"?: number,"id"?: string,"referrer_member_id"?: string,"referrer_points"?: number,"reward_visit_id"?: string | null,"rewarded_at"?: string | null,"status"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "referrals_business_id_friend_member_id_fkey"
+      columns: ["business_id","friend_member_id"]
+isOneToOne: true
+      referencedRelation: "members"
+      referencedColumns: ["business_id","id"]
+    },{
+      foreignKeyName: "referrals_business_id_referrer_member_id_fkey"
+      columns: ["business_id","referrer_member_id"]
+isOneToOne: false
+      referencedRelation: "members"
       referencedColumns: ["business_id","id"]
     }
                   ]
@@ -1385,6 +1447,7 @@ isOneToOne: false
 "lifetime_points": number,
 "member_code": string,
 "points_balance": number,
+"referral_code": string,
 "status": string,
 "updated_at": string
             }
@@ -1435,6 +1498,7 @@ isOneToOne: false
 "lifetime_points": number,
 "member_code": string,
 "points_balance": number,
+"referral_code": string,
 "status": string,
 "updated_at": string
             }
@@ -1471,6 +1535,7 @@ isOneToOne: false
 "lifetime_points": number,
 "member_code": string,
 "points_balance": number,
+"referral_code": string,
 "status": string,
 "updated_at": string
             }
@@ -1487,6 +1552,9 @@ isOneToOne: false
 { Args: { "p_business_id": string }; Returns: string
                            },
 "new_redemption_code":
+{ Args: { "p_business_id": string }; Returns: string
+                           },
+"new_referral_code":
 { Args: { "p_business_id": string }; Returns: string
                            },
 "points_for_visit":
@@ -1518,14 +1586,48 @@ isOneToOne: false
         isOneToOne: true
         isSetofReturn: false
       } },
+"referral_ranking":
+{ Args: { "p_business_id": string }; Returns: {
+              "member_id": string,"name": string,"pending": number,"rewarded": number
+            }[]
+                           },
 "require_module":
 { Args: { "p_business_id": string }; Returns: undefined
+                           },
+"reward_referral":
+{ Args: { "p_friend": Omit<Database["loyalty"]['Tables']["members"]['Row'], Database["loyalty"]['Tables']["members"]['ComputedFields']>,"p_visit_id": string }; Returns: undefined
                            },
 "self_signup":
 { Args: { "p_code": string,"p_name": string,"p_phone": string,"p_terms_accepted": boolean,"p_whatsapp"?: boolean }; Returns: Json
                            },
+"set_referrer":
+{ Args: { "p_code": string,"p_friend_member_id": string }; Returns: {
+              "business_id": string,
+"created_at": string,
+"created_by": string | null,
+"friend_member_id": string,
+"friend_points": number,
+"id": string,
+"referrer_member_id": string,
+"referrer_points": number,
+"reward_visit_id": string | null,
+"rewarded_at": string | null,
+"status": string
+            }
+                          SetofOptions: {
+        from: "*"
+        to: "referrals"
+        isOneToOne: true
+        isSetofReturn: false
+      } },
+"submit_feedback":
+{ Args: { "p_comment"?: string,"p_rating": number,"p_token": string,"p_visit_id": string }; Returns: Json
+                           },
 "template_catalog":
 { Args: Record<PropertyKey, never>; Returns: Json
+                           },
+"void_referral_reward":
+{ Args: { "p_business_id": string,"p_visit_id": string }; Returns: undefined
                            },
 "wallet_apple_pass":
 { Args: { "p_auth_token_hash": string,"p_serial": string }; Returns: Json

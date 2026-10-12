@@ -64,7 +64,15 @@ export type { WeeklyDigest } from './weeklyDigest.ts'
 export type { DashboardSummary } from './dashboard.ts'
 export * as loyalty from './loyalty.ts'
 export * as card from './card.ts'
-export type { Card, CardMovement, CardReward, StampSlots } from './card.ts'
+export type { Card, CardMovement, CardReferral, CardReward, StampSlots } from './card.ts'
+export * as referrals from './referrals.ts'
+export type {
+  MemberReferral,
+  RankingRow as ReferralRankingRow,
+  ReferralSettings,
+} from './referrals.ts'
+export * as feedback from './feedback.ts'
+export type { Feedback } from './feedback.ts'
 export * as wallet from './wallet.ts'
 export type { WalletErrorCode, WalletProvider, WalletStatus } from './wallet.ts'
 export type {
