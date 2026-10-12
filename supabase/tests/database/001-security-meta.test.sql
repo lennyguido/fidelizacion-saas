@@ -115,6 +115,7 @@ select set_eq(
        ('core.create_access_grant(text,text,text)'),
        ('core.revoke_access_grant(uuid)'),
        ('core.my_access()'),
+       ('core.my_plan(uuid)'),
        ('core.set_self_signup(uuid,boolean)'),
        ('core.rotate_self_signup_code(uuid)'),
        ('core.resolve_self_signup_notice(uuid)'),

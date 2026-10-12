@@ -2,6 +2,7 @@ import { EmptyState } from '@plataforma/ui'
 import { useActiveBusiness } from './ActiveBusinessContext'
 import { BrandingForm } from './BrandingForm'
 import { CashRegisterCard } from './CashRegisterCard'
+import { PlanCard } from './PlanCard'
 import { ExportDataCard } from './ExportDataCard'
 import { LogoUploader } from './LogoUploader'
 import { ReviewLinkCard } from './ReviewLinkCard'
@@ -28,6 +29,7 @@ export function BusinessSettingsPage() {
           cambia.
         </p>
       </div>
+      <PlanCard />
       <BrandingForm key={business.id} business={business} />
       <LogoUploader business={business} />
       <ReviewLinkCard />

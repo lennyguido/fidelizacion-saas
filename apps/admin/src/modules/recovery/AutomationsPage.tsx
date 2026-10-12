@@ -10,6 +10,8 @@ import {
 } from '@plataforma/sdk'
 import { Alert, Button, Card, Spinner, TextField, useToast } from '@plataforma/ui'
 import { useActiveBusiness } from '../../features/business/ActiveBusinessContext'
+import { PlanUpsell } from '../../features/business/PlanUpsell'
+import { usePlan } from '../../features/business/usePlan'
 import { AUTOMATION_INFO } from './automationText'
 import { useAutomations, useCampaigns, useInvalidateCampaigns } from './queries'
 
@@ -19,6 +21,7 @@ export function AutomationsPage() {
   const toast = useToast()
   const invalidate = useInvalidateCampaigns(business.id)
   const list = useAutomations(business.id)
+  const plan = usePlan()
   const base = `/b/${business.slug}/recuperacion`
 
   const runNow = useMutation({
@@ -47,11 +50,15 @@ export function AutomationsPage() {
           Ver mensajes listos
         </Link>
       </div>
-      <div className="flex flex-wrap gap-2">
-        <Button variant="secondary" loading={runNow.isPending} onClick={() => runNow.mutate()}>
-          Revisar ahora
-        </Button>
-      </div>
+      {plan.data && !plan.data.features.automations ? (
+        <PlanUpsell plans="Local y Cadena" />
+      ) : (
+        <div className="flex flex-wrap gap-2">
+          <Button variant="secondary" loading={runNow.isPending} onClick={() => runNow.mutate()}>
+            Revisar ahora
+          </Button>
+        </div>
+      )}
       {list.isPending && <Spinner />}
       {list.error && <Alert tone="error">{errorMessage(list.error)}</Alert>}
       {list.data?.map((automation) => (

@@ -12,6 +12,8 @@ import {
 import { Alert, Button, Card, Spinner, TextField, useToast } from '@plataforma/ui'
 import { formatDateTime } from '../../lib/format'
 import { useActiveBusiness } from './ActiveBusinessContext'
+import { PlanUpsell } from './PlanUpsell'
+import { usePlan } from './usePlan'
 
 /** Conexión con la caja (D-033): las ventas entran solas como visitas. */
 export function CashRegisterCard() {
@@ -20,6 +22,7 @@ export function CashRegisterCard() {
   const queryClient = useQueryClient()
   const queryKey = ['customers', business.id, 'integration-keys']
   const keys = useQuery({ queryKey, queryFn: () => integrations.listKeys(business.id) })
+  const plan = usePlan()
   const [name, setName] = useState('Caja')
   const [newKey, setNewKey] = useState<string | null>(null)
   const url = integrations.ingestUrl(readPublicEnv(import.meta.env).supabaseUrl)
@@ -63,6 +66,7 @@ export function CashRegisterCard() {
           Generar clave
         </Button>
       </div>
+      {plan.data && !plan.data.features.cashRegister && <PlanUpsell plans="Cadena" />}
       {keys.isPending && <Spinner />}
       {keys.error && <p className="text-sm text-slate-500">Todavía no está disponible.</p>}
       {keys.data && keys.data.length > 0 && (
