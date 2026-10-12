@@ -52,6 +52,7 @@ Proyecto de **desarrollo**: `fidelizacion-saas`, ref `dqpnqcumlyfifewgzyvh` (ún
 | 33 | 20261012235900 | loyalty_card_referral_feedback | aplicada 2026-10-12 por el dueño desde el SQL Editor (verificado). No figura en el historial de Supabase: antes de un `supabase db push`, `supabase migration repair --status applied 20261012235900` |
 | 34 | 20261013000000 | loyalty_redemption_requests | aplicada 2026-10-12 por el dueño desde el SQL Editor (verificado). Igual que la 33: `migration repair` antes de un `db push` |
 | 35 | 20261012014657 | core_smart_counter | aplicada 2026-10-11 ~22:47 (D-038; CI verde, solo funciones nuevas; archivo renombrado de `20261013010000`) |
+| 36 | 20261012035327 | core_business_stats | aplicada 2026-10-12 (D-042; CI verde, solo una función nueva; archivo renombrado de `20261013020000`) |
 
 Regla vigente desde 2026-10-09: ninguna migración se aplica sin aprobación explícita del dueño después de revisarla.
 
@@ -84,6 +85,13 @@ Rama `fix/archive-owner-admin-only` (commit `62a7b19`):
 | Punta a punta (Playwright) | CI: `supabase start` + build + `vite preview` + `npx playwright test` (celular y escritorio) | OK: registro → onboarding → panel → login; credenciales incorrectas; mostrador; importación CSV |
 
 Limitación: los tests de punta a punta corren contra un Supabase **local** en CI. El panel todavía **no se probó contra el proyecto de desarrollo remoto**. Eso es lo que falta validar ahora.
+
+## Lunes 12 — estadísticas, QR en cualquier celular, instalar la tarjeta
+
+* **Estadísticas** (menú del dueño/admin): números grandes con mini gráfico, visitas por semana según el origen, nuevos contra los que volvieron y días con más gente. Períodos de 7 días a 1 año. D-042.
+* **QR en el mostrador:** ahora anda en cualquier celular (antes solo en Chrome de Android). Se necesita https: `npm run dev:celular`.
+* **Poner en la pantalla de inicio:** el ícono ahora abre la tarjeta (D-041).
+* Migraciones 26, 27, 33, 34 y 36 aplicadas en desarrollo (pedido del dueño: aplicar automáticamente).
 
 ## Domingo 11 — estilo Apple (plan tarea 9)
 
