@@ -6,6 +6,8 @@ const labels: Record<CardMovement['reason'], string> = {
   redemption: 'Canje',
   redemption_cancelled: 'Canje devuelto',
   adjustment: 'Ajuste del negocio',
+  referral: 'Premio por invitación',
+  referral_voided: 'Invitación anulada',
 }
 
 const dateFormat = new Intl.DateTimeFormat('es-AR', { day: 'numeric', month: 'short' })

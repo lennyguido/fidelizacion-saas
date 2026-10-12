@@ -6,6 +6,7 @@ import { useActiveBusiness } from '../features/business/ActiveBusinessContext'
 import { useCustomerCounts } from '../features/customers/queries'
 import { statusInfo } from '../features/customers/status'
 import { HomeModuleCards } from '../modules/HomeModuleCards'
+import { FeedbackCard } from './FeedbackCard'
 import { MonthSummaryCard } from './MonthSummaryCard'
 import { WeeklyDigestCard } from './WeeklyDigestCard'
 
@@ -35,6 +36,8 @@ export function HomePage() {
       {business.role !== 'staff' && <WeeklyDigestCard />}
 
       {business.role !== 'staff' && <MonthSummaryCard />}
+
+      {business.role !== 'staff' && <FeedbackCard />}
 
       <HomeModuleCards />
 

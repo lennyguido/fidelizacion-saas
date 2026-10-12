@@ -162,6 +162,8 @@ Hoy el dueño arma las campañas a mano y manda cada wa.me uno por uno. Tiene qu
 
 ### 6. Traé un amigo + reseñas en Google (#7, #8)
 
+> **Hecha** (2026-10-11, D-036): en `main`. La migración `loyalty_referrals_core_feedback` se aplica en desarrollo; la de la tarjeta (`20261012235900`) **espera al mentor**.
+
 **Traé un amigo (en loyalty):**
 - Cada socio tiene su código o link de invitación.
 - El premio para los dos se da solo con la **primera visita real** del amigo: una sola vez, respetando los topes; las visitas importadas no cuentan.

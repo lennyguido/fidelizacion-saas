@@ -4,6 +4,7 @@ import { BrandingForm } from './BrandingForm'
 import { CashRegisterCard } from './CashRegisterCard'
 import { ExportDataCard } from './ExportDataCard'
 import { LogoUploader } from './LogoUploader'
+import { ReviewLinkCard } from './ReviewLinkCard'
 
 /** /b/:slug/negocio — nombre, color, zona horaria y logo. Solo dueño/admin. */
 export function BusinessSettingsPage() {
@@ -29,6 +30,7 @@ export function BusinessSettingsPage() {
       </div>
       <BrandingForm key={business.id} business={business} />
       <LogoUploader business={business} />
+      <ReviewLinkCard />
       <CashRegisterCard />
       <ExportDataCard />
     </div>

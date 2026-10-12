@@ -2,6 +2,15 @@
 
 > Actualizado 2026-10-09 15:20: migraciones 10 (archivado) y 15 (puntos, rama `feat/loyalty-db`) aplicadas en desarrollo e integradas a `main`. Esperan al mentor: 11–14 (equipo, privacidad, dueños).
 
+## Nuevo (2026-10-11): encuesta y código de invitación en la tarjeta (D-036)
+
+Migración `20261012235900_loyalty_card_referral_feedback` — **no aplicada**. Toca funciones para personas sin cuenta (anon):
+
+* `loyalty.get_card` (ya pública): ahora también devuelve el código para invitar (solo si "Traé un amigo" está prendido), la visita de las últimas 48 h sin opinión y el link de reseñas de Google del negocio.
+* `loyalty.submit_feedback(token, visita, nota 1–5, comentario)` (nueva, anon): con el link secreto de la tarjeta, solo para visitas propias, no anuladas, de las últimas 48 h, una vez por visita (las repetidas se ignoran). Llama a `core.record_feedback` (interna). A todos les devuelve el link de Google (sin premio ni filtro). Notas de 3 o menos dejan el evento `feedback.low` (aviso privado al dueño).
+* Pruebas: `047-feedback` (20) y el meta-test (lista de funciones anon).
+* Qué revisar: que con un token válido no se pueda opinar sobre visitas de otro cliente o negocio, y que el comentario (hasta 500 caracteres) no se muestre en ningún lado público.
+
 ## Estado de las ramas (2026-10-09 tarde)
 
 | Rama | Qué tiene | Toca la base | CI | Estado |

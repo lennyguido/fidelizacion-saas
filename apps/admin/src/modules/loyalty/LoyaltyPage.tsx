@@ -3,6 +3,7 @@ import { Alert, FullPageSpinner } from '@plataforma/ui'
 import { useActiveBusiness } from '../../features/business/ActiveBusinessContext'
 import { LedgerExportCard } from './LedgerExportCard'
 import { ProgramCard } from './ProgramCard'
+import { ReferralSettingsCard } from './ReferralSettingsCard'
 import { RewardsCard } from './RewardsCard'
 import { SelfSignupCard } from './SelfSignupCard'
 import { TemplatesCard } from './TemplatesCard'
@@ -30,6 +31,9 @@ export function LoyaltyPage() {
       <ProgramCard program={program.data} />
       <RewardsCard rewards={rewards.data} />
       <SelfSignupCard />
+      {business.role !== 'staff' && (
+        <ReferralSettingsCard unit={program.data?.kind === 'stamps' ? 'Sellos' : 'Puntos'} />
+      )}
       {business.role !== 'staff' && <LedgerExportCard />}
     </section>
   )

@@ -49,6 +49,8 @@ Proyecto de **desarrollo**: `fidelizacion-saas`, ref `dqpnqcumlyfifewgzyvh` (ún
 | 29 | 20261010184152 | loyalty_templates | aplicada 2026-10-10 ~15:40 (plantillas separadas de la 27: no tienen nada para anon; CI verde) |
 | 30 | 20261012005618 | core_data_export | aplicada 2026-10-11 ~21:56 (D-034; CI verde, no destructiva: solo funciones nuevas; archivo renombrado de `20261011030000`) |
 | 31 | 20261012010243 | core_weekly_digest | aplicada 2026-10-11 ~22:02 (D-035; CI verde, no destructiva: solo funciones nuevas; archivo renombrado de `20261012010000`) |
+| 32 | 20261012020000 | loyalty_referrals_core_feedback | **pendiente de aplicar** (D-036; no destructiva: columnas, tablas y funciones nuevas; amplía los motivos del libro de puntos) |
+| 33 | 20261012235900 | loyalty_card_referral_feedback | **pendiente de revisión del mentor — NO aplicar** (D-036: encuesta anon `loyalty.submit_feedback` y cambios en `get_card`) |
 
 Regla vigente desde 2026-10-09: ninguna migración se aplica sin aprobación explícita del dueño después de revisarla.
 
@@ -81,6 +83,13 @@ Rama `fix/archive-owner-admin-only` (commit `62a7b19`):
 | Punta a punta (Playwright) | CI: `supabase start` + build + `vite preview` + `npx playwright test` (celular y escritorio) | OK: registro → onboarding → panel → login; credenciales incorrectas; mostrador; importación CSV |
 
 Limitación: los tests de punta a punta corren contra un Supabase **local** en CI. El panel todavía **no se probó contra el proyecto de desarrollo remoto**. Eso es lo que falta validar ahora.
+
+## Domingo 11 — Traé un amigo y reseñas (plan tarea 6)
+
+* **Traé un amigo** (Fidelización, apagado por defecto): cada socio tiene un código de 6 letras; en la ficha del cliente nuevo se carga quién lo invitó; con la primera visita real del amigo, los dos reciben su premio (una vez; si se anula esa visita, se descuenta). Ranking "Quién trae más gente". D-036.
+* **Reseñas:** link de Google en **Mi negocio**; opiniones en Inicio ("Qué opinan tus clientes", las de 3 o menos como aviso privado).
+* **Esperan al mentor** (migración 33): la encuesta "¿Cómo te atendimos?" y el código para invitar **en la tarjeta del cliente**. Hasta entonces la tarjeta se ve igual que antes. Detalle en `docs/REVISION-PENDIENTE.md`.
+* Tests: `046-referrals` (22), `047-feedback` (20), unitarios.
 
 ## Domingo 11 — resumen de los lunes (plan tarea 5)
 

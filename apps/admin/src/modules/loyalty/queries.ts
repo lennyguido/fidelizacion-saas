@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { loyalty, selfSignup } from '@plataforma/sdk'
+import { loyalty, referrals, selfSignup } from '@plataforma/sdk'
 
 // Las claves cuelgan de ['customers', negocio] a propósito: cuando se registra o
 // anula una visita se invalida todo lo de clientes, y el saldo de puntos cambia.
@@ -75,5 +75,26 @@ export function useSignupNotices(businessId: string) {
   return useQuery({
     queryKey: [...loyaltyKeys.all(businessId), 'self-signup', 'notices'] as const,
     queryFn: () => selfSignup.listPendingNotices(businessId),
+  })
+}
+
+export function useReferralSettings(businessId: string) {
+  return useQuery({
+    queryKey: [...loyaltyKeys.all(businessId), 'referrals', 'settings'] as const,
+    queryFn: () => referrals.getSettings(businessId),
+  })
+}
+
+export function useMemberReferral(businessId: string, memberId: string) {
+  return useQuery({
+    queryKey: [...loyaltyKeys.all(businessId), 'referrals', 'member', memberId] as const,
+    queryFn: () => referrals.getMemberReferral(memberId),
+  })
+}
+
+export function useReferralRanking(businessId: string) {
+  return useQuery({
+    queryKey: [...loyaltyKeys.all(businessId), 'referrals', 'ranking'] as const,
+    queryFn: () => referrals.ranking(businessId),
   })
 }
