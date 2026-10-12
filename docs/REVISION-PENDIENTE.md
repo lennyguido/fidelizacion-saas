@@ -2,6 +2,17 @@
 
 > Actualizado 2026-10-09 15:20: migraciones 10 (archivado) y 15 (puntos, rama `feat/loyalty-db`) aplicadas en desarrollo e integradas a `main`. Esperan al mentor: 11–14 (equipo, privacidad, dueños).
 
+## Nuevo (2026-10-11): canje desde el celular (D-037)
+
+Migración `20261013000000_loyalty_redemption_requests` — **no aplicada**.
+
+* `loyalty.request_redemption(token, premio)` (anon): con el link secreto, pide un premio que le alcance. Devuelve un código de 6 caracteres que vence en 5 minutos. **No descuenta nada.** Un pedido vivo por tarjeta (uno nuevo reemplaza al anterior); máximo 10 por hora por tarjeta.
+* `loyalty.get_redemption_request(token, pedido)` (anon): estado del pedido, solo si es de esa tarjeta.
+* `find_redemption_request` / `confirm_redemption_request` (equipo): buscar por código y confirmar. Confirmar usa `loyalty.redeem_reward` (valida saldo y premio otra vez) con el id del pedido como `request_id`: dos confirmaciones devuelven el mismo canje.
+* La tabla `loyalty.redemption_requests` no tiene permisos para nadie: solo se usa por las funciones.
+* Qué revisar: que no se pueda adivinar un código ajeno con provecho (el código solo sirve en el mostrador del negocio, por 5 minutos, y lo confirma alguien del equipo viendo el nombre del cliente).
+* Ojo al aplicar: cada migración de `loyalty` termina sacándole a anon todos los permisos y vuelve a dar solo los conocidos. Las nuevas devuelven, si existen, los de esta y los de la encuesta.
+
 ## Nuevo (2026-10-11): encuesta y código de invitación en la tarjeta (D-036)
 
 Migración `20261012235900_loyalty_card_referral_feedback` — **no aplicada**. Toca funciones para personas sin cuenta (anon):

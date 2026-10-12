@@ -62,8 +62,10 @@ select set_eq(
         and has_function_privilege('anon', p.oid, 'execute') $$,
   $$ values ('loyalty.get_card(text)'),
             ('loyalty.self_signup(text,text,text,boolean,boolean)'),
-            ('loyalty.submit_feedback(text,uuid,integer,text)') $$,
-  'anon can execute only the public card, self-signup and feedback functions'
+            ('loyalty.submit_feedback(text,uuid,integer,text)'),
+            ('loyalty.request_redemption(text,uuid)'),
+            ('loyalty.get_redemption_request(text,uuid)') $$,
+  'anon can execute only the public card functions (card, self-signup, feedback, mobile redemption)'
 );
 
 -- 5. Ninguna función queda ejecutable por PUBLIC (default de Postgres).
@@ -137,7 +139,9 @@ select set_eq(
        ('loyalty.apply_template(uuid,text,boolean)'),
        ('loyalty.export_ledger(uuid,date,date)'),
        ('loyalty.set_referrer(uuid,text)'),
-       ('loyalty.referral_ranking(uuid)') $$,
+       ('loyalty.referral_ranking(uuid)'),
+       ('loyalty.find_redemption_request(uuid,text)'),
+       ('loyalty.confirm_redemption_request(uuid)') $$,
   'authenticated can execute only the intended functions'
 );
 

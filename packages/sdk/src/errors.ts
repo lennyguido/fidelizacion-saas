@@ -27,6 +27,7 @@ export type AppErrorCode =
   | 'outbox_discarded'
   | 'outbox_already_sent'
   | 'program_has_activity'
+  | 'request_expired'
   | 'auth_invalid_credentials'
   | 'auth_email_not_confirmed'
   | 'auth_user_exists'
@@ -72,6 +73,7 @@ const DOMAIN_CODES = [
   'outbox_discarded',
   'outbox_already_sent',
   'program_has_activity',
+  'request_expired',
   'insufficient_points',
   'reward_unavailable',
   'member_inactive',
@@ -168,6 +170,7 @@ export function errorMessage(error: unknown): string {
     outbox_already_sent: 'Este mensaje ya se mandó.',
     program_has_activity:
       'El programa ya tiene puntos o sellos cargados. Confirmá que querés reemplazarlo.',
+    request_expired: 'El código venció. Pedile al cliente que genere uno nuevo.',
     auth_invalid_credentials: 'Email o contraseña incorrectos.',
     auth_email_not_confirmed: 'Confirmá tu email antes de ingresar. Revisá tu casilla.',
     auth_user_exists: 'Ya existe una cuenta con ese email. Probá ingresar.',

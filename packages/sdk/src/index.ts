@@ -66,6 +66,8 @@ export * as loyalty from './loyalty.ts'
 export * as card from './card.ts'
 export type { Card, CardMovement, CardReferral, CardReward, StampSlots } from './card.ts'
 export * as referrals from './referrals.ts'
+export * as mobileRedemption from './mobileRedemption.ts'
+export type { FoundRequest, RedemptionRequest, RequestState } from './mobileRedemption.ts'
 export type {
   MemberReferral,
   RankingRow as ReferralRankingRow,

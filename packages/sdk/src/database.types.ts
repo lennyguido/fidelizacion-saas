@@ -1303,6 +1303,38 @@ isOneToOne: false
                   Relationships: [
                     
                   ]
+                },"redemption_requests": {
+                  Row: {
+                    "business_id": string,"code": string,"confirmed_at": string | null,"confirmed_by": string | null,"created_at": string,"expires_at": string,"id": string,"member_id": string,"redemption_id": string | null,"reward_id": string,"status": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "business_id": string,"code": string,"confirmed_at"?: string | null,"confirmed_by"?: string | null,"created_at"?: string,"expires_at": string,"id"?: string,"member_id": string,"redemption_id"?: string | null,"reward_id": string,"status"?: string
+                  }
+                  Update: {
+                    "business_id"?: string,"code"?: string,"confirmed_at"?: string | null,"confirmed_by"?: string | null,"created_at"?: string,"expires_at"?: string,"id"?: string,"member_id"?: string,"redemption_id"?: string | null,"reward_id"?: string,"status"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "redemption_requests_business_id_member_id_fkey"
+      columns: ["business_id","member_id"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["business_id","id"]
+    },{
+      foreignKeyName: "redemption_requests_business_id_redemption_id_fkey"
+      columns: ["business_id","redemption_id"]
+isOneToOne: false
+      referencedRelation: "redemptions"
+      referencedColumns: ["business_id","id"]
+    },{
+      foreignKeyName: "redemption_requests_business_id_reward_id_fkey"
+      columns: ["business_id","reward_id"]
+isOneToOne: false
+      referencedRelation: "rewards"
+      referencedColumns: ["business_id","id"]
+    }
+                  ]
                 },"redemptions": {
                   Row: {
                     "business_id": string,"cancel_reason": string | null,"cancelled_at": string | null,"cancelled_by": string | null,"code": string,"created_at": string,"created_by": string | null,"id": string,"member_id": string,"points": number,"request_id": string | null,"reward_id": string,"reward_name": string,"status": string
@@ -1483,6 +1515,29 @@ isOneToOne: false
         isOneToOne: true
         isSetofReturn: false
       } },
+"confirm_redemption_request":
+{ Args: { "p_request_id": string }; Returns: {
+              "business_id": string,
+"cancel_reason": string | null,
+"cancelled_at": string | null,
+"cancelled_by": string | null,
+"code": string,
+"created_at": string,
+"created_by": string | null,
+"id": string,
+"member_id": string,
+"points": number,
+"request_id": string | null,
+"reward_id": string,
+"reward_name": string,
+"status": string
+            }
+                          SetofOptions: {
+        from: "*"
+        to: "redemptions"
+        isOneToOne: true
+        isSetofReturn: false
+      } },
 "create_card":
 { Args: { "p_member": Omit<Database["loyalty"]['Tables']["members"]['Row'], Database["loyalty"]['Tables']["members"]['ComputedFields']> }; Returns: string
                            },
@@ -1514,8 +1569,14 @@ isOneToOne: false
 "find_member_by_code":
 { Args: { "p_business_id": string,"p_code": string }; Returns: string
                            },
+"find_redemption_request":
+{ Args: { "p_business_id": string,"p_code": string }; Returns: Json
+                           },
 "get_card":
 { Args: { "p_token": string }; Returns: Json
+                           },
+"get_redemption_request":
+{ Args: { "p_request_id": string,"p_token": string }; Returns: Json
                            },
 "integration_member_customer":
 { Args: { "p_code": string,"p_key_hash": string }; Returns: string
@@ -1548,6 +1609,28 @@ isOneToOne: false
 "list_templates":
 { Args: Record<PropertyKey, never>; Returns: Json
                            },
+"member_from_token":
+{ Args: { "p_token": string }; Returns: {
+              "business_id": string,
+"card_issued_at": string | null,
+"created_by": string | null,
+"customer_id": string,
+"id": string,
+"joined_at": string,
+"left_at": string | null,
+"lifetime_points": number,
+"member_code": string,
+"points_balance": number,
+"referral_code": string,
+"status": string,
+"updated_at": string
+            }
+                          SetofOptions: {
+        from: "*"
+        to: "members"
+        isOneToOne: true
+        isSetofReturn: false
+      } },
 "new_member_code":
 { Args: { "p_business_id": string }; Returns: string
                            },
@@ -1555,6 +1638,9 @@ isOneToOne: false
 { Args: { "p_business_id": string }; Returns: string
                            },
 "new_referral_code":
+{ Args: { "p_business_id": string }; Returns: string
+                           },
+"new_request_code":
 { Args: { "p_business_id": string }; Returns: string
                            },
 "points_for_visit":
@@ -1590,6 +1676,9 @@ isOneToOne: false
 { Args: { "p_business_id": string }; Returns: {
               "member_id": string,"name": string,"pending": number,"rewarded": number
             }[]
+                           },
+"request_redemption":
+{ Args: { "p_reward_id": string,"p_token": string }; Returns: Json
                            },
 "require_module":
 { Args: { "p_business_id": string }; Returns: undefined

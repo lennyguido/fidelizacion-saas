@@ -2,6 +2,7 @@ import { loyalty } from '@plataforma/sdk'
 import type { ModuleManifest } from '../types'
 import { CustomerLoyaltyPanel } from './CustomerLoyaltyPanel'
 import { LoyaltyPage } from './LoyaltyPage'
+import { MobileRedeemCounterPanel } from './MobileRedeemCounterPanel'
 import { PosterPage } from './PosterPage'
 
 export const loyaltyManifest: ModuleManifest = {
@@ -13,6 +14,7 @@ export const loyaltyManifest: ModuleManifest = {
     { path: 'fidelizacion/cartel', element: <PosterPage /> },
   ],
   customerPanel: CustomerLoyaltyPanel,
+  counterPanel: MobileRedeemCounterPanel,
   customerCodeLookup: {
     matches: loyalty.looksLikeMemberCode,
     find: loyalty.findCustomerByMemberCode,

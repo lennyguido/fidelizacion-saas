@@ -51,6 +51,7 @@ Proyecto de **desarrollo**: `fidelizacion-saas`, ref `dqpnqcumlyfifewgzyvh` (ún
 | 31 | 20261012010243 | core_weekly_digest | aplicada 2026-10-11 ~22:02 (D-035; CI verde, no destructiva: solo funciones nuevas; archivo renombrado de `20261012010000`) |
 | 32 | 20261012020000 | loyalty_referrals_core_feedback | **pendiente de aplicar — necesita el OK del dueño** (D-036; no borra datos: columnas, tablas y funciones nuevas; el `drop constraint` solo amplía los motivos del libro de puntos. El 2026-10-11 Supabase pidió confirmación y quedó rechazada) |
 | 33 | 20261012235900 | loyalty_card_referral_feedback | **pendiente de revisión del mentor — NO aplicar** (D-036: encuesta anon `loyalty.submit_feedback` y cambios en `get_card`) |
+| 34 | 20261013000000 | loyalty_redemption_requests | **pendiente de revisión del mentor — NO aplicar** (D-037: funciones anon `request_redemption` y `get_redemption_request`) |
 
 Regla vigente desde 2026-10-09: ninguna migración se aplica sin aprobación explícita del dueño después de revisarla.
 
@@ -83,6 +84,12 @@ Rama `fix/archive-owner-admin-only` (commit `62a7b19`):
 | Punta a punta (Playwright) | CI: `supabase start` + build + `vite preview` + `npx playwright test` (celular y escritorio) | OK: registro → onboarding → panel → login; credenciales incorrectas; mostrador; importación CSV |
 
 Limitación: los tests de punta a punta corren contra un Supabase **local** en CI. El panel todavía **no se probó contra el proyecto de desarrollo remoto**. Eso es lo que falta validar ahora.
+
+## Domingo 11 — canje desde el celular (plan tarea 7)
+
+* El cliente toca **Canjear** en su tarjeta y aparece un código + QR que vence en 5 minutos. En el **Mostrador**, "¿Trae un canje desde el celular?": se escribe el código, se ve qué pidió y si le alcanza, y se confirma (recién ahí se descuentan los puntos, con el canje de siempre). La tarjeta se entera sola y muestra "¡Canjeado!". D-037.
+* **Toda la tarea espera al mentor** (migración 34, funciones para personas sin cuenta). Hasta entonces, el botón de la tarjeta dice "Por ahora pedí el canje en la caja" y el mostrador avisa que no está activado.
+* Tests: `026-redemption-requests` (20) y unitarios.
 
 ## Domingo 11 — Traé un amigo y reseñas (plan tarea 6)
 
