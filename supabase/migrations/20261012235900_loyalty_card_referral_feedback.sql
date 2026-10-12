@@ -131,11 +131,17 @@ grant execute on function
   loyalty.get_card(text),
   loyalty.submit_feedback(text, uuid, integer, text)
 to anon;
--- El alta por QR puede estar aplicada antes o después que esta.
+-- Funciones anon de otras migraciones que pueden estar aplicadas antes o después.
 do $$
 begin
   if to_regprocedure('loyalty.self_signup(text,text,text,boolean,boolean)') is not null then
     grant execute on function loyalty.self_signup(text, text, text, boolean, boolean) to anon;
+  end if;
+  if to_regprocedure('loyalty.request_redemption(text,uuid)') is not null then
+    grant execute on function
+      loyalty.request_redemption(text, uuid),
+      loyalty.get_redemption_request(text, uuid)
+    to anon;
   end if;
 end;
 $$;
