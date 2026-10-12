@@ -52,7 +52,7 @@ Proyecto de **desarrollo**: `fidelizacion-saas`, ref `dqpnqcumlyfifewgzyvh` (ún
 | 32 | 20261012020000 | loyalty_referrals_core_feedback | **pendiente de aplicar — necesita el OK del dueño** (D-036; no borra datos: columnas, tablas y funciones nuevas; el `drop constraint` solo amplía los motivos del libro de puntos. El 2026-10-11 Supabase pidió confirmación y quedó rechazada) |
 | 33 | 20261012235900 | loyalty_card_referral_feedback | **pendiente de revisión del mentor — NO aplicar** (D-036: encuesta anon `loyalty.submit_feedback` y cambios en `get_card`) |
 | 34 | 20261013000000 | loyalty_redemption_requests | **pendiente de revisión del mentor — NO aplicar** (D-037: funciones anon `request_redemption` y `get_redemption_request`) |
-| 35 | 20261013010000 | core_smart_counter | **pendiente de aplicar** (D-038; solo funciones nuevas, no destructiva, nada para anon) |
+| 35 | 20261012014657 | core_smart_counter | aplicada 2026-10-11 ~22:47 (D-038; CI verde, solo funciones nuevas; archivo renombrado de `20261013010000`) |
 
 Regla vigente desde 2026-10-09: ninguna migración se aplica sin aprobación explícita del dueño después de revisarla.
 
