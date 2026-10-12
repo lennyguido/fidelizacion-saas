@@ -54,6 +54,7 @@ Proyecto de **desarrollo**: `fidelizacion-saas`, ref `dqpnqcumlyfifewgzyvh` (ún
 | 35 | 20261012014657 | core_smart_counter | aplicada 2026-10-11 ~22:47 (D-038; CI verde, solo funciones nuevas; archivo renombrado de `20261013010000`) |
 | 36 | 20261012035327 | core_business_stats | aplicada 2026-10-12 (D-042; CI verde, solo una función nueva; archivo renombrado de `20261013020000`) |
 | 37 | 20261012164452 | core_access_grants | aplicada 2026-10-12 (D-043; CI verde; acceso solo por invitación; Edge Function `grant-access` publicada) |
+| 38 | 20261012175741 | core_plan_features | aplicada 2026-10-12 (D-044; CI verde; funciones y límites por plan) |
 
 Regla vigente desde 2026-10-09: ninguna migración se aplica sin aprobación explícita del dueño después de revisarla.
 
