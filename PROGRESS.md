@@ -53,6 +53,7 @@ Proyecto de **desarrollo**: `fidelizacion-saas`, ref `dqpnqcumlyfifewgzyvh` (ún
 | 34 | 20261013000000 | loyalty_redemption_requests | aplicada 2026-10-12 por el dueño desde el SQL Editor (verificado). Igual que la 33: `migration repair` antes de un `db push` |
 | 35 | 20261012014657 | core_smart_counter | aplicada 2026-10-11 ~22:47 (D-038; CI verde, solo funciones nuevas; archivo renombrado de `20261013010000`) |
 | 36 | 20261012035327 | core_business_stats | aplicada 2026-10-12 (D-042; CI verde, solo una función nueva; archivo renombrado de `20261013020000`) |
+| 37 | 20261012164452 | core_access_grants | aplicada 2026-10-12 (D-043; CI verde; acceso solo por invitación; Edge Function `grant-access` publicada) |
 
 Regla vigente desde 2026-10-09: ninguna migración se aplica sin aprobación explícita del dueño después de revisarla.
 
