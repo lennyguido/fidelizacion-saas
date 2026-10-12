@@ -81,8 +81,13 @@ export function tokenFromHash(hash: string): string | null {
   return /^[0-9a-f]{64}$/.test(value) ? value : null
 }
 
+/** Ruta de la tarjeta dentro de la app del cliente: "/tarjeta#<código>". */
+export function cardPath(token: string): string {
+  return `/tarjeta#${token}`
+}
+
 export function cardUrl(baseUrl: string, token: string): string {
-  return `${baseUrl.replace(/\/$/, '')}/tarjeta#${token}`
+  return `${baseUrl.replace(/\/$/, '')}${cardPath(token)}`
 }
 
 /** Devuelve null si el link no existe, se regeneró o el cliente salió del programa. */

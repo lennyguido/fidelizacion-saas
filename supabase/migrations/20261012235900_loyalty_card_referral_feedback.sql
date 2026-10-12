@@ -2,7 +2,7 @@
 -- LOYALTY · Tarjeta del cliente: código para invitar y encuesta "¿Cómo te
 -- atendimos?". Plan de Claude Code, tarea 6. D-036.
 --
--- *** PENDIENTE DE REVISIÓN DEL MENTOR: NO APLICAR EN SUPABASE HASTA ENTONCES ***
+-- Aplicada en desarrollo el 2026-10-12 (pedido del dueño).
 -- Toca funciones que usan personas sin cuenta (anon):
 --   * loyalty.get_card: además devuelve
 --       - referral: código de invitación y puntos de cada lado (solo si la

@@ -192,3 +192,7 @@ Referencia: `docs/ESTILO-APPLE.md`. En vez de reescribir cada pantalla, `package
 ## D-040 — Prioridad MVP y migraciones con aprobación (2026-10-11, vigente)
 
 Criterio del mentor: terminar el MVP y conseguir los primeros negocios que paguen. Por módulo alcanza con protecciones básicas, pruebas relevantes una vez y CI en verde. Sin auditorías repetidas ni pruebas redundantes. Si aparece un riesgo crítico, se explica y se frena solo ese cambio. **Ninguna migración nueva se aplica en Supabase sin aprobación** (reemplaza D-019). La seguridad avanzada y las optimizaciones se hacen cuando hagan falta.
+
+## D-041 — El link de la tarjeta queda en la dirección hasta instalarla (2026-10-12, vigente)
+
+Antes, al abrir la tarjeta se sacaba el link secreto de la barra de direcciones (D-020). Pero el ícono de "Poner en mi pantalla de inicio" guarda la dirección visible, y en iPhone la app instalada no comparte lo guardado en Safari, así que el ícono abría "Abrí el link que te mandó el negocio". Ahora, en el navegador, la tarjeta deja su link (`/tarjeta#…`) en la dirección; el manifest de la tarjeta no tiene `start_url` (el ícono abre la dirección del momento de instalar); ya instalada, se saca de la vista. Costo aceptado: el link se ve en la barra mientras se usa desde el navegador.

@@ -1,5 +1,3 @@
-import { useEffect } from 'react'
-
 function ShareIcon() {
   return (
     <svg viewBox="0 0 24 24" className="inline h-5 w-5 align-text-bottom" fill="none" aria-hidden>
@@ -18,27 +16,14 @@ function AddIcon() {
   )
 }
 
-/**
- * Hoja con los pasos de Safari. Mientras está abierta, el link secreto vuelve a la
- * barra de direcciones: el ícono que crea el iPhone guarda esa dirección, y así la
- * app instalada abre la tarjeta aunque no comparta lo guardado en Safari.
- */
+/** Hoja con los pasos de Safari para poner la tarjeta en la pantalla de inicio. */
 export function IosInstallSheet({
-  token,
   needsSafari,
   onClose,
 }: {
-  token: string
   needsSafari: boolean
   onClose: () => void
 }) {
-  useEffect(() => {
-    if (needsSafari) return
-    const previous = window.location.pathname
-    window.history.replaceState(null, '', `/tarjeta#${token}`)
-    return () => window.history.replaceState(null, '', previous)
-  }, [needsSafari, token])
-
   return (
     <div
       role="dialog"

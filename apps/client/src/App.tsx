@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { card, selfSignup } from '@plataforma/sdk'
 import { CardPage } from '@/card/CardPage'
 import { NoCard } from '@/card/NoCard'
+import { isInstalledApp } from '@/install/useInstallPrompt'
 import { forgetToken, readSavedToken, saveToken } from '@/savedToken'
 import { SignupPage } from '@/signup/SignupPage'
 
@@ -16,13 +17,16 @@ export function App() {
   )
 
   useEffect(() => {
-    if (!token) return
+    if (!token || signupCode) return
     saveToken(token)
-    // Saca el código de la barra de direcciones (no queda en el historial ni en capturas).
-    if (window.location.hash) {
-      window.history.replaceState(null, '', window.location.pathname)
+    // El ícono de "Poner en mi pantalla de inicio" guarda la dirección que se ve en
+    // ese momento, y en iPhone la app instalada no ve lo guardado en Safari: por eso,
+    // en el navegador, el link de la tarjeta queda en la dirección. Ya instalada, se saca.
+    const target = isInstalledApp() ? '/' : card.cardPath(token)
+    if (window.location.pathname + window.location.hash !== target) {
+      window.history.replaceState(null, '', target)
     }
-  }, [token])
+  }, [token, signupCode])
 
   useEffect(() => {
     const onHash = () => {

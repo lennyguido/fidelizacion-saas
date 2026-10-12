@@ -2,7 +2,7 @@
 -- LOYALTY · Canje desde el celular (OPORTUNIDADES #10). Plan de Claude Code,
 -- tarea 7. Decisión D-037.
 --
--- *** PENDIENTE DE REVISIÓN DEL MENTOR: NO APLICAR EN SUPABASE HASTA ENTONCES ***
+-- Aplicada en desarrollo el 2026-10-12 (pedido del dueño).
 -- Agrega dos funciones para personas sin cuenta (anon), con el link secreto de
 -- la tarjeta:
 --   * loyalty.request_redemption(token, premio): el cliente elige el premio y

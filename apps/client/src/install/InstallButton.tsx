@@ -6,7 +6,7 @@ import { IosInstallSheet } from './IosInstallSheet'
  * "Poner en mi pantalla de inicio". En Android usa el aviso del navegador; en iPhone
  * explica los pasos de Safari. No aparece si ya está instalada o si eligieron "Ahora no".
  */
-export function InstallButton({ token }: { token: string }) {
+export function InstallButton() {
   const { platform, install, dismiss } = useInstallPrompt()
   const [sheetOpen, setSheetOpen] = useState(false)
 
@@ -37,7 +37,6 @@ export function InstallButton({ token }: { token: string }) {
       </button>
       {sheetOpen && (
         <IosInstallSheet
-          token={token}
           needsSafari={platform === 'ios-other'}
           onClose={() => setSheetOpen(false)}
         />

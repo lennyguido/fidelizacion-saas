@@ -25,7 +25,8 @@ if (typeof window !== 'undefined') {
   })
 }
 
-function isStandalone(): boolean {
+/** ¿Se está usando la app instalada (ícono en la pantalla de inicio)? */
+export function isInstalledApp(): boolean {
   const iosStandalone = (navigator as Navigator & { standalone?: boolean }).standalone === true
   return iosStandalone || window.matchMedia('(display-mode: standalone)').matches
 }
@@ -56,7 +57,7 @@ export interface InstallPrompt {
 
 export function useInstallPrompt(): InstallPrompt {
   const [, setVersion] = useState(0)
-  const [hidden, setHidden] = useState(() => isStandalone() || wasDismissed())
+  const [hidden, setHidden] = useState(() => isInstalledApp() || wasDismissed())
 
   useEffect(() => {
     const notify = () => setVersion((v) => v + 1)

@@ -66,9 +66,7 @@ Está en `apps/client/src/install/` (D-034).
 
 "Ahora no" lo esconde para siempre en ese teléfono (se guarda en el navegador).
 
-**iPhone y el link secreto:** la app instalada en iPhone no ve lo que guardó Safari. Por eso,
-mientras se muestran los pasos, el link secreto de la tarjeta vuelve a la barra de
-direcciones: el ícono queda guardado con ese link y abre la tarjeta directo.
+**El link secreto y el ícono:** el ícono guarda la dirección que se ve al instalar, y en iPhone la app instalada no ve lo guardado en Safari. Por eso, en el navegador, la tarjeta deja su link (`/tarjeta#…`) en la barra de direcciones, y el manifest no tiene `start_url` (así el ícono abre esa dirección). Ya instalada, el link se saca de la vista (D-041).
 Para probarlo en un iPhone real:
 
 1. Abrir el link de una tarjeta en Safari.

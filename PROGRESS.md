@@ -8,9 +8,8 @@ Plan de Claude Code (`docs/PLAN-CLAUDE-CODE.md`): **tareas 1 a 9 hechas** (2026-
 
 ## Current task — lo que falta (del dueño o del mentor)
 
-1. **Aplicar las migraciones 33 y 34** (encuesta y canje desde el celular), en ese orden, desde el SQL Editor de Supabase o habilitando el permiso de Claude Code.
-2. **Prueba visual** del dueño, incluido el botón "Poner en mi pantalla de inicio" en un iPhone real (`docs/PWA.md`).
-3. **Cuentas que tiene que abrir el dueño** (checkpoint): Google Wallet, Apple Developer, Cloudflare (publicar), WhatsApp Business (mensajes automáticos), Mercado Pago (cobros), un proveedor de mail (resumen de los lunes por mail) y publicar la Edge Function `sales-ingest`.
+1. **Prueba visual** del dueño, incluido el botón "Poner en mi pantalla de inicio" en un iPhone real (`docs/PWA.md`).
+2. **Cuentas que tiene que abrir el dueño** (checkpoint): Google Wallet, Apple Developer, Cloudflare (publicar), WhatsApp Business (mensajes automáticos), Mercado Pago (cobros), un proveedor de mail (resumen de los lunes por mail) y publicar la Edge Function `sales-ingest`.
 
 ## Migraciones
 
@@ -50,8 +49,8 @@ Proyecto de **desarrollo**: `fidelizacion-saas`, ref `dqpnqcumlyfifewgzyvh` (ún
 | 30 | 20261012005618 | core_data_export | aplicada 2026-10-11 ~21:56 (D-034; CI verde, no destructiva: solo funciones nuevas; archivo renombrado de `20261011030000`) |
 | 31 | 20261012010243 | core_weekly_digest | aplicada 2026-10-11 ~22:02 (D-035; CI verde, no destructiva: solo funciones nuevas; archivo renombrado de `20261012010000`) |
 | 32 | 20261012020000 | loyalty_referrals_core_feedback | aplicada 2026-10-12 por el dueño desde el SQL Editor (verificado: tablas, columnas y funciones presentes). **No figura en el historial de migraciones de Supabase**: si algún día se usa `supabase db push`, marcarla antes como aplicada con `supabase migration repair --status applied 20261012020000`. |
-| 33 | 20261012235900 | loyalty_card_referral_feedback | **pendiente**: el dueño pidió aplicarla; Claude Code no tiene permiso para hacerlo solo (aplicar desde el SQL Editor o habilitar el permiso) |
-| 34 | 20261013000000 | loyalty_redemption_requests | **pendiente**: igual que la 33 (aplicar después de la 33) |
+| 33 | 20261012235900 | loyalty_card_referral_feedback | aplicada 2026-10-12 por el dueño desde el SQL Editor (verificado). No figura en el historial de Supabase: antes de un `supabase db push`, `supabase migration repair --status applied 20261012235900` |
+| 34 | 20261013000000 | loyalty_redemption_requests | aplicada 2026-10-12 por el dueño desde el SQL Editor (verificado). Igual que la 33: `migration repair` antes de un `db push` |
 | 35 | 20261012014657 | core_smart_counter | aplicada 2026-10-11 ~22:47 (D-038; CI verde, solo funciones nuevas; archivo renombrado de `20261013010000`) |
 
 Regla vigente desde 2026-10-09: ninguna migración se aplica sin aprobación explícita del dueño después de revisarla.

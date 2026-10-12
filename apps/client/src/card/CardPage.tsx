@@ -98,7 +98,7 @@ function CardView({ card, token, onForget }: { card: Card; token: string; onForg
       </section>
 
       <WalletButtons token={token} />
-      <InstallButton token={token} />
+      <InstallButton />
 
       {redeem.active && (
         <MobileRedeem token={token} request={redeem.active} onClose={redeem.close} />
