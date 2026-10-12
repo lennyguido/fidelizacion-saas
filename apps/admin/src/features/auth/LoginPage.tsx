@@ -60,12 +60,12 @@ export function LoginPage() {
           <Link to="/forgot-password" className="text-slate-600 underline-offset-4 hover:underline">
             Olvidé mi contraseña
           </Link>
-          <Link
-            to="/signup"
+          <a
+            href="https://vueltita.neriva.net/#planes"
             className="font-medium text-slate-900 underline-offset-4 hover:underline"
           >
-            Crear cuenta
-          </Link>
+            ¿No tenés cuenta? Ver planes
+          </a>
         </div>
       </form>
     </AuthLayout>

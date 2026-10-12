@@ -123,3 +123,13 @@ export function logoUrl(logoPath: string | null): string | null {
   if (!logoPath) return null
   return getSupabase().storage.from(LOGO_BUCKET).getPublicUrl(logoPath).data.publicUrl
 }
+
+/**
+ * ¿Esta cuenta puede crear un negocio? (D-043) Devuelve el plan del acceso
+ * comprado, 'admin', 'open' (entorno de pruebas) o null si no tiene acceso.
+ */
+export async function myAccess(): Promise<string | null> {
+  const { data, error } = await getSupabase().rpc('my_access')
+  if (error) throw fromPostgrestError(error)
+  return data ?? null
+}

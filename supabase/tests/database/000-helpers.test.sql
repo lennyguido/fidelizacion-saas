@@ -103,3 +103,7 @@ grant execute on all functions in schema tests to anon, authenticated;
 select plan(1);
 select pass('test helpers loaded');
 select * from finish();
+
+-- Entorno de pruebas: cualquiera puede crear un negocio (en desarrollo y producción
+-- hace falta un acceso, D-043). 052-access-grants prueba el modo por invitación.
+update core.platform_settings set value = 'open' where key = 'signup_mode';

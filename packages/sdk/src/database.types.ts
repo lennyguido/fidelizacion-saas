@@ -5,7 +5,33 @@ export type Database = {
   
   "core": {
           Tables: {
-            "audit_log": {
+            "access_grants": {
+                  Row: {
+                    "business_id": string | null,"created_at": string,"created_by": string | null,"email": string,"id": string,"note": string | null,"plan_id": string,"revoked_at": string | null,"status": string,"used_at": string | null,"used_by": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "business_id"?: string | null,"created_at"?: string,"created_by"?: string | null,"email": string,"id"?: string,"note"?: string | null,"plan_id": string,"revoked_at"?: string | null,"status"?: string,"used_at"?: string | null,"used_by"?: string | null
+                  }
+                  Update: {
+                    "business_id"?: string | null,"created_at"?: string,"created_by"?: string | null,"email"?: string,"id"?: string,"note"?: string | null,"plan_id"?: string,"revoked_at"?: string | null,"status"?: string,"used_at"?: string | null,"used_by"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "access_grants_business_id_fkey"
+      columns: ["business_id"]
+isOneToOne: false
+      referencedRelation: "businesses"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "access_grants_plan_id_fkey"
+      columns: ["plan_id"]
+isOneToOne: false
+      referencedRelation: "plans"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"audit_log": {
                   Row: {
                     "action": string,"actor_id": string | null,"business_id": string,"changed_at": string,"id": number,"new_data": Json | null,"old_data": Json | null,"record_id": string | null,"table_name": string
                   }
@@ -497,6 +523,20 @@ isOneToOne: false
                   Relationships: [
                     
                   ]
+                },"platform_settings": {
+                  Row: {
+                    "key": string,"value": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "key": string,"value": string
+                  }
+                  Update: {
+                    "key"?: string,"value"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
                 },"self_signup_settings": {
                   Row: {
                     "business_id": string,"code": string,"created_at": string,"enabled": boolean,"updated_at": string
@@ -683,6 +723,26 @@ isOneToOne: false
 "coupon_info":
 { Args: { "p_recipient_id": string }; Returns: Json
                            },
+"create_access_grant":
+{ Args: { "p_email": string,"p_note"?: string,"p_plan_id": string }; Returns: {
+              "business_id": string | null,
+"created_at": string,
+"created_by": string | null,
+"email": string,
+"id": string,
+"note": string | null,
+"plan_id": string,
+"revoked_at": string | null,
+"status": string,
+"used_at": string | null,
+"used_by": string | null
+            }
+                          SetofOptions: {
+        from: "*"
+        to: "access_grants"
+        isOneToOne: true
+        isSetofReturn: false
+      } },
 "create_business":
 { Args: { "p_name": string,"p_slug": string,"p_timezone"?: string }; Returns: {
               "address": string | null,
@@ -945,6 +1005,9 @@ isOneToOne: false
         isOneToOne: true
         isSetofReturn: false
       } },
+"my_access":
+{ Args: Record<PropertyKey, never>; Returns: string
+                           },
 "my_business_ids":
 { Args: Record<PropertyKey, never>; Returns: string[]
                            },
@@ -1066,8 +1129,14 @@ isOneToOne: false
 "require_member":
 { Args: { "p_business_id": string,"p_roles"?: (string)[] }; Returns: undefined
                            },
+"require_platform_admin":
+{ Args: Record<PropertyKey, never>; Returns: undefined
+                           },
 "resolve_self_signup_notice":
 { Args: { "p_notice_id": string }; Returns: undefined
+                           },
+"revoke_access_grant":
+{ Args: { "p_grant_id": string }; Returns: undefined
                            },
 "revoke_integration_key":
 { Args: { "p_key_id": string }; Returns: undefined
