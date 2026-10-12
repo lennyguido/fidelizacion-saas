@@ -1,16 +1,17 @@
 # Progreso del proyecto
 
-> Estado verificado el 2026-10-09 ~19:30 (hora Argentina).
+> Estado verificado el 2026-10-11 ~23:00 (hora Argentina).
 
 ## Current phase
 
-Fases 0–5 construidas y completas (2026-10-09, incluida la atribución por cupón). Integradas en `main` y aplicadas en desarrollo. **Siguiente:** Fase 6 (mensajería real) requiere checkpoint humano (WhatsApp real); mientras tanto, pendientes chicos de las fases 4–5 y Fase 7 (PWA/deploy).
+Plan de Claude Code (`docs/PLAN-CLAUDE-CODE.md`): **tareas 1 a 9 hechas** (2026-10-11), todas en `main` con CI en verde.
 
-## Current task
+## Current task — lo que falta (del dueño o del mentor)
 
-1. Revisión humana de las migraciones nuevas y del cambio de archivado (rama `fix/archive-owner-admin-only`).
-2. Configurar el proyecto de desarrollo (esquema `core` expuesto, Redirect URLs).
-3. Levantar el panel en Codespaces y validar el mostrador con datos de prueba.
+1. **Aplicar la migración 32** (`loyalty_referrals_core_feedback`, "Traé un amigo" y opiniones): Supabase pidió confirmación y quedó rechazada. No borra datos. Hasta aplicarla, esas pantallas muestran errores en desarrollo.
+2. **Revisión del mentor** (funciones para personas sin cuenta): migraciones 11–14 (equipo y dueños), 26–27 (alta por QR), 33 (encuesta y código en la tarjeta) y 34 (canje desde el celular). Detalle en `docs/REVISION-PENDIENTE.md`.
+3. **Prueba visual** del dueño, incluido el botón "Poner en mi pantalla de inicio" en un iPhone real (`docs/PWA.md`).
+4. **Cuentas que tiene que abrir el dueño** (checkpoint): Google Wallet, Apple Developer, Cloudflare (publicar), WhatsApp Business (mensajes automáticos), Mercado Pago (cobros), un proveedor de mail (resumen de los lunes por mail) y publicar la Edge Function `sales-ingest`.
 
 ## Migraciones
 
