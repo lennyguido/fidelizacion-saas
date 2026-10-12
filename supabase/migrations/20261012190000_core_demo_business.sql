@@ -74,10 +74,11 @@ begin
             case when v_kind = 'birthday' then extract(month from v_today)::smallint end)
     returning id into v_customer;
 
-    v_interval := 5 + (i % 5);
+    -- En riesgo = entre 1,5 y 3 veces su intervalo sin venir (y más de 14 días, para el automático).
+    v_interval := case when v_kind = 'risk' then 7 + (i % 3) else 5 + (i % 5) end;
     v_last := case v_kind
       when 'regular' then i % 4 when 'birthday' then 2
-      when 'risk' then 24 + i when 'new' then 10 else 75 end;
+      when 'risk' then floor(v_interval * 2.6)::int when 'new' then 10 else 75 end;
     v_count := case v_kind when 'new' then 1 when 'inactive' then 3 else 6 + (i % 6) end;
     for j in 0 .. v_count - 1 loop
       insert into core.visits (business_id, location_id, customer_id, occurred_at, amount_minor,
