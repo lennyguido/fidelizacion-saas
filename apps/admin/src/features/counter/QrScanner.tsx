@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import { Alert, Button } from '@plataforma/ui'
-import { getDetectorClass } from './qrSupport'
+import { createQrReader } from './qrSupport'
 
 /**
  * Abre la cámara de atrás y lee un QR (por ejemplo, el de la tarjeta del cliente).
- * Funciona en Chrome para Android; donde no está disponible, se escribe el código.
+ * Funciona en cualquier celular con cámara, siempre que la página esté en https.
  */
 export function QrScanner({
   onResult,
@@ -17,9 +17,6 @@ export function QrScanner({
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    const Detector = getDetectorClass()
-    if (!Detector) return
-    const detector = new Detector({ formats: ['qr_code'] })
     let stream: MediaStream | null = null
     let timer: number | undefined
     let stopped = false
@@ -38,12 +35,12 @@ export function QrScanner({
         stream = obtained
         video.srcObject = stream
         await video.play()
+        const read = await createQrReader()
         if (stopped) return
         timer = window.setInterval(async () => {
           try {
-            const codes = await detector.detect(video)
-            const value = codes[0]?.rawValue?.trim()
-            if (value) {
+            const value = await read(video)
+            if (value && !stopped) {
               stopped = true
               onResult(value)
             }

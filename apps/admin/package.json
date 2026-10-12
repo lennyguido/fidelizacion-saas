@@ -13,6 +13,7 @@
     "@plataforma/sdk": "*",
     "@plataforma/ui": "*",
     "@tanstack/react-query": "^5.80.0",
+    "jsqr": "^1.4.0",
     "qrcode": "^1.5.4",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
