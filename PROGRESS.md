@@ -55,6 +55,7 @@ Proyecto de **desarrollo**: `fidelizacion-saas`, ref `dqpnqcumlyfifewgzyvh` (ún
 | 36 | 20261012035327 | core_business_stats | aplicada 2026-10-12 (D-042; CI verde, solo una función nueva; archivo renombrado de `20261013020000`) |
 | 37 | 20261012164452 | core_access_grants | aplicada 2026-10-12 (D-043; CI verde; acceso solo por invitación; Edge Function `grant-access` publicada) |
 | 38 | 20261012175741 | core_plan_features | aplicada 2026-10-12 (D-044; CI verde; funciones y límites por plan) |
+| 39 | 20261012181337 | core_demo_business | aplicada 2026-10-12 (D-045; CI verde). Al aplicarla en desarrollo se volvió a dar permiso anon a `request_redemption`, `get_redemption_request` y `submit_feedback` (el revoke general de loyalty los habría sacado) |
 
 Regla vigente desde 2026-10-09: ninguna migración se aplica sin aprobación explícita del dueño después de revisarla.
 
