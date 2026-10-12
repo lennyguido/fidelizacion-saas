@@ -71,3 +71,28 @@ export async function revoke(grantId: string): Promise<void> {
   const { error } = await getSupabase().rpc('revoke_access_grant', { p_grant_id: grantId })
   if (error) throw fromPostgrestError(error)
 }
+
+export const DEMO_TRADES: { id: string; name: string }[] = [
+  { id: 'cafeteria', name: 'Cafetería' },
+  { id: 'heladeria', name: 'Heladería' },
+  { id: 'panaderia', name: 'Panadería' },
+  { id: 'barberia', name: 'Barbería / peluquería' },
+  { id: 'petshop', name: 'Petshop' },
+  { id: 'otro', name: 'Otro rubro' },
+]
+
+/**
+ * "Armar demo" (D-045): negocio de demostración con el nombre del local, datos de
+ * ejemplo y el programa del rubro. Devuelve la dirección (slug) del negocio.
+ */
+export async function createDemo(name: string, trade: string): Promise<string> {
+  const supabase = getSupabase()
+  const { data, error } = await supabase.rpc('create_demo_business', { p_name: name })
+  if (error) throw fromPostgrestError(error)
+  const business = data as { id: string; slug: string }
+  const seeded = await supabase
+    .schema('loyalty')
+    .rpc('seed_demo', { p_business_id: business.id, p_kind: trade })
+  if (seeded.error) throw fromPostgrestError(seeded.error)
+  return business.slug
+}

@@ -19,6 +19,8 @@ import {
   useToast,
 } from '@plataforma/ui'
 
+import { DemoCard } from './DemoCard'
+
 const RESULT_TEXT: Record<GrantResult, string> = {
   invited: 'Listo: le mandamos un mail para que elija su contraseña.',
   existing_user: 'Listo: ya tenía cuenta. Que entre con su contraseña y cree su negocio.',
@@ -51,6 +53,7 @@ export function AccessGrantsPage() {
         Cuando alguien te paga, cargá su mail y el plan. Le llega un mail para elegir su contraseña
         y crear su negocio. Sin acceso, nadie puede crear un negocio.
       </p>
+      <DemoCard />
       <GrantForm />
       <GrantList />
     </main>
