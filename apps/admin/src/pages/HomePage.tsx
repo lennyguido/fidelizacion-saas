@@ -28,7 +28,7 @@ export function HomePage() {
 
       <Link
         to={`${base}/mostrador`}
-        className="flex items-center justify-center rounded-xl bg-slate-900 px-5 py-4 text-lg font-semibold text-white shadow-sm hover:bg-slate-700"
+        className="flex items-center justify-center rounded-full bg-action px-5 py-4 text-lg font-semibold text-white hover:bg-action-hover"
       >
         Registrar una visita
       </Link>

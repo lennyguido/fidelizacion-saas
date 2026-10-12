@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import '../../../packages/ui/src/theme.css';
 
 @source "../../../packages/ui/src";
 
@@ -9,6 +10,9 @@
 
 body {
   @apply bg-slate-50 text-slate-900 antialiased;
+  /* Estilo Apple: cuerpo de 17px con letras apenas más juntas. */
+  font-size: 17px;
+  letter-spacing: -0.022em;
 }
 
 /* Tarjeta de sellos: el último sello "cae" sobre la tarjeta (sin animación si el

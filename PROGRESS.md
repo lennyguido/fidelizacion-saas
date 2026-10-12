@@ -86,6 +86,11 @@ Rama `fix/archive-owner-admin-only` (commit `62a7b19`):
 
 Limitación: los tests de punta a punta corren contra un Supabase **local** en CI. El panel todavía **no se probó contra el proyecto de desarrollo remoto**. Eso es lo que falta validar ahora.
 
+## Domingo 11 — estilo Apple (plan tarea 9)
+
+* Panel y tarjeta con el estilo de `docs/ESTILO-APPLE.md`: fondo gris muy claro, tarjetas blancas sin sombras, botones redondos con un solo azul de acción, barra de arriba translúcida de 44px y ancho máximo de 980px. D-039.
+* Capturas de las pantallas en cada CI (artefacto **capturas** en GitHub → Actions → la última corrida).
+
 ## Domingo 11 — mostrador inteligente (plan tarea 8)
 
 * **Mostrador:** al encontrar al cliente se ve "hace 2 años · visita 50 · viene cada ~9 días", la nota corta y, para dueño/admin, cuánto gastó (solo si hay montos cargados).

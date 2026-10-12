@@ -146,7 +146,7 @@ export function ImportCustomersPage() {
           columna con el nombre. Teléfono, email y notas son opcionales.
         </p>
         <div className="flex flex-wrap items-center gap-3">
-          <label className="inline-flex h-10 cursor-pointer items-center rounded-lg bg-slate-900 px-4 text-sm font-medium text-white hover:bg-slate-700">
+          <label className="inline-flex h-10 cursor-pointer items-center rounded-full bg-action px-4 text-sm font-medium text-white hover:bg-action-hover">
             Elegir archivo
             <input type="file" accept=".csv,text/csv" className="sr-only" onChange={handleFile} />
           </label>

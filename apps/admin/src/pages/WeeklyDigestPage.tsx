@@ -50,7 +50,7 @@ export function WeeklyDigestPage() {
           href={whatsappLink(data.businessPhone, weeklyDigest.whatsappText(data, business.name))}
           target="_blank"
           rel="noreferrer"
-          className="self-start rounded-full bg-green-600 px-4 py-2 text-sm font-medium text-white"
+          className="self-start rounded-full bg-action px-4 py-2 text-sm font-medium text-white"
         >
           Mandármelo por WhatsApp
         </a>

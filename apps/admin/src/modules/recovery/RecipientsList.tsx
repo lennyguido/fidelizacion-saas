@@ -113,10 +113,10 @@ function WhatsAppButton({
       target="_blank"
       rel="noreferrer"
       onClick={onOpen}
-      className={`shrink-0 rounded-lg px-4 py-2 text-sm font-medium ${
+      className={`shrink-0 rounded-full px-4 py-2 text-sm font-medium ${
         recipient.contactedAt
-          ? 'text-green-700 ring-1 ring-inset ring-green-600'
-          : 'bg-green-600 text-white hover:bg-green-500'
+          ? 'text-link ring-1 ring-inset ring-link'
+          : 'bg-action text-white hover:bg-action-hover'
       }`}
     >
       {recipient.contactedAt ? 'Reenviar' : 'WhatsApp'}

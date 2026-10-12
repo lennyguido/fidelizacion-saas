@@ -20,7 +20,7 @@ export function ReadyMessagesHomeCard() {
       </div>
       <Link
         to={n === 0 ? `${base}/automatico` : `${base}/mensajes`}
-        className="shrink-0 rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700"
+        className="shrink-0 rounded-full bg-action px-4 py-2 text-sm font-medium text-white hover:bg-action-hover"
       >
         {n === 0 ? 'Configurar' : 'Mandar'}
       </Link>

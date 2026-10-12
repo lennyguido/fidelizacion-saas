@@ -6,16 +6,17 @@ type Variant = 'primary' | 'secondary' | 'ghost' | 'danger'
 type Size = 'md' | 'lg'
 
 const variants: Record<Variant, string> = {
-  primary: 'bg-slate-900 text-white hover:bg-slate-700 disabled:bg-slate-400',
+  // Un solo color de acción (#0071e3) en el botón lleno; el resto, azul de link o gris.
+  primary: 'bg-action text-white hover:bg-action-hover disabled:bg-slate-300',
   secondary:
-    'bg-white text-slate-900 ring-1 ring-inset ring-slate-300 hover:bg-slate-50 disabled:text-slate-400',
-  ghost: 'text-slate-700 hover:bg-slate-100 disabled:text-slate-400',
+    'bg-transparent text-link ring-1 ring-inset ring-link hover:bg-white disabled:text-slate-400 disabled:ring-slate-300',
+  ghost: 'text-link hover:bg-white disabled:text-slate-400',
   danger: 'bg-red-600 text-white hover:bg-red-500 disabled:bg-red-300',
 }
 
 const sizes: Record<Size, string> = {
-  md: 'h-10 px-4 text-sm',
-  lg: 'h-12 px-5 text-base',
+  md: 'min-h-10 px-[21px] py-[11px] text-sm',
+  lg: 'min-h-12 px-6 py-3 text-[17px]',
 }
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -42,8 +43,8 @@ export function Button({
       disabled={disabled || loading}
       aria-busy={loading || undefined}
       className={cn(
-        'inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors',
-        'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-900',
+        'inline-flex items-center justify-center gap-2 rounded-full font-normal transition-colors',
+        'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action',
         'disabled:cursor-not-allowed',
         variants[variant],
         sizes[size],

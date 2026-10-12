@@ -19,7 +19,7 @@ export function InstallButton({ token }: { token: string }) {
 
   return (
     <section
-      className="flex flex-col items-center gap-2 rounded-2xl bg-white p-4 text-center shadow-sm"
+      className="flex flex-col items-center gap-2 rounded-2xl bg-white p-4 text-center"
       data-testid="install-card"
     >
       <p className="text-sm text-slate-600">
@@ -28,7 +28,7 @@ export function InstallButton({ token }: { token: string }) {
       <button
         type="button"
         onClick={onInstall}
-        className="w-full max-w-xs rounded-full bg-slate-900 px-5 py-3 text-sm font-medium text-white"
+        className="w-full max-w-xs rounded-full bg-action px-5 py-3 text-sm font-medium text-white"
       >
         Poner en mi pantalla de inicio
       </button>

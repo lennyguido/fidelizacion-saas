@@ -434,7 +434,7 @@ function DigitalCard({
                 href={whatsappLink(phone, message)}
                 target="_blank"
                 rel="noreferrer"
-                className="rounded-lg bg-green-600 px-4 py-2 font-medium text-white hover:bg-green-500"
+                className="rounded-full bg-action px-4 py-2 font-medium text-white hover:bg-action-hover"
               >
                 Mandar por WhatsApp
               </a>
