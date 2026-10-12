@@ -75,12 +75,12 @@ export function OnboardingPage() {
     return (
       <AuthLayout title="Tu cuenta todavía no tiene un plan">
         <p className="text-sm text-slate-600">
-          Para crear tu negocio necesitás un plan de Vueltita. Elegilo en vueltita.neriva.net y te
-          activamos el acceso con este mismo mail ({session.user.email}).
+          Para crear tu negocio necesitás un plan de Neriva. Elegilo en neriva.net y te activamos el
+          acceso con este mismo mail ({session.user.email}).
         </p>
         <div className="mt-4 flex gap-2">
           <a
-            href="https://vueltita.neriva.net/#planes"
+            href="https://neriva.net/#planes"
             className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white"
           >
             Ver planes

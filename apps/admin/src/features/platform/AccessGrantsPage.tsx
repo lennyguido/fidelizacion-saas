@@ -35,7 +35,7 @@ export function AccessGrantsPage() {
   if (!admin.data) {
     return (
       <main className="mx-auto max-w-xl p-4">
-        <EmptyState title="No tenés permiso" description="Esta pantalla es solo para Vueltita." />
+        <EmptyState title="No tenés permiso" description="Esta pantalla es solo para Neriva." />
       </main>
     )
   }
