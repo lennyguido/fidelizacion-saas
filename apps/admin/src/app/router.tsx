@@ -6,6 +6,7 @@ import { ResetPasswordPage } from '../features/auth/ResetPasswordPage'
 import { SignupPage } from '../features/auth/SignupPage'
 import { BusinessLayout } from '../features/business/BusinessLayout'
 import { BusinessSettingsPage } from '../features/business/BusinessSettingsPage'
+import { AccessGrantsPage } from '../features/platform/AccessGrantsPage'
 import { HomeRedirect } from '../features/business/HomeRedirect'
 import { OnboardingPage } from '../features/business/OnboardingPage'
 import { StatsPage } from '../features/stats/StatsPage'
@@ -53,6 +54,14 @@ export const router = createBrowserRouter([
     ),
   },
   { path: '/reset-password', element: <ResetPasswordPage /> },
+  {
+    path: '/admin/accesos',
+    element: (
+      <RequireAuth>
+        <AccessGrantsPage />
+      </RequireAuth>
+    ),
+  },
   {
     path: '/onboarding',
     element: (

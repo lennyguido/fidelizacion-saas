@@ -11,7 +11,9 @@ test('a new owner signs up, creates a business and gets back in', async ({ page 
   await page.goto('/')
   await expect(page).toHaveURL(/\/login$/)
 
-  await page.getByRole('link', { name: 'Crear cuenta' }).click()
+  // El registro libre ya no se ofrece en el login (D-043); en las pruebas sigue abierto.
+  await expect(page.getByRole('link', { name: '¿No tenés cuenta? Ver planes' })).toBeVisible()
+  await page.goto('/signup')
   // El login también tiene "Email": esperar al registro antes de escribir.
   await expect(page).toHaveURL(/\/signup$/)
   await expect(page.getByRole('heading', { name: 'Creá tu cuenta' })).toBeVisible()

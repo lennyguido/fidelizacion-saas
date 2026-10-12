@@ -13,7 +13,8 @@ insert into platform_schemas values ('core'), ('loyalty'), ('recovery'), ('booki
 -- Tablas globales que no pertenecen a un negocio.
 create temp table global_tables (name text primary key) on commit drop;
 insert into global_tables values
-  ('core.businesses'), ('core.platform_admins'), ('core.modules'), ('core.plans'), ('core.plan_modules');
+  ('core.businesses'), ('core.platform_admins'), ('core.modules'), ('core.plans'), ('core.plan_modules'),
+  ('core.platform_settings'), ('core.access_grants');
 
 -- 1. Toda tabla tiene RLS habilitado.
 select is_empty(
@@ -111,6 +112,9 @@ select set_eq(
        ('core.find_campaign_coupon(uuid,text)'),
        ('core.record_visit_with_coupon(uuid,text,uuid,bigint)'),
        ('core.dashboard_summary(uuid)'),
+       ('core.create_access_grant(text,text,text)'),
+       ('core.revoke_access_grant(uuid)'),
+       ('core.my_access()'),
        ('core.set_self_signup(uuid,boolean)'),
        ('core.rotate_self_signup_code(uuid)'),
        ('core.resolve_self_signup_notice(uuid)'),

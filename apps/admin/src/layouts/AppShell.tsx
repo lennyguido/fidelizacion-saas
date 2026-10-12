@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { PlatformAdminLink } from '../features/platform/PlatformAdminLink'
 import { NavLink, useNavigate } from 'react-router'
 import { auth, type MyBusiness } from '@plataforma/sdk'
 import { cn } from '@plataforma/ui'
@@ -80,13 +81,16 @@ export function AppShell({
             </NavLink>
           ))}
         </nav>
-        <button
-          type="button"
-          onClick={() => void auth.signOut()}
-          className="mt-auto rounded-full px-3 py-1.5 text-left text-sm text-link hover:bg-slate-100"
-        >
-          Salir
-        </button>
+        <div className="mt-auto flex flex-col gap-1">
+          <PlatformAdminLink />
+          <button
+            type="button"
+            onClick={() => void auth.signOut()}
+            className="rounded-full px-3 py-1.5 text-left text-sm text-link hover:bg-slate-100"
+          >
+            Salir
+          </button>
+        </div>
       </aside>
 
       {/* Barra de arriba de 44px, translúcida (estilo Apple). */}

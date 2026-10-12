@@ -88,3 +88,7 @@ begin
   end loop;
 end
 $seed$;
+
+-- Entorno local y CI: registro abierto para las pruebas de punta a punta. En
+-- desarrollo y producción el seed no se aplica y el modo queda en invitación (D-043).
+update core.platform_settings set value = 'open' where key = 'signup_mode';

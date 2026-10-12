@@ -1,8 +1,8 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router'
-import { useQueryClient } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { auth, businesses, errorMessage, isValidSlug, slugify } from '@plataforma/sdk'
-import { Alert, Button, TextField } from '@plataforma/ui'
+import { Alert, Button, FullPageSpinner, TextField } from '@plataforma/ui'
 import { AuthLayout } from '../auth/AuthLayout'
 import { useSession } from '../auth/AuthContext'
 import { businessKeys } from './queries'
@@ -19,6 +19,10 @@ export function OnboardingPage() {
   const [check, setCheck] = useState<SlugCheck | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
+  const access = useQuery({
+    queryKey: ['my-access', session.user.id],
+    queryFn: () => businesses.myAccess(),
+  })
 
   const slug = customSlug ?? slugify(name)
   const slugValid = isValidSlug(slug)
@@ -64,6 +68,29 @@ export function OnboardingPage() {
     } finally {
       setSubmitting(false)
     }
+  }
+
+  if (access.isPending) return <FullPageSpinner />
+  if (!access.isError && access.data === null) {
+    return (
+      <AuthLayout title="Tu cuenta todavía no tiene un plan">
+        <p className="text-sm text-slate-600">
+          Para crear tu negocio necesitás un plan de Vueltita. Elegilo en vueltita.neriva.net y te
+          activamos el acceso con este mismo mail ({session.user.email}).
+        </p>
+        <div className="mt-4 flex gap-2">
+          <a
+            href="https://vueltita.neriva.net/#planes"
+            className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white"
+          >
+            Ver planes
+          </a>
+          <Button variant="secondary" onClick={() => void auth.signOut()}>
+            Salir
+          </Button>
+        </div>
+      </AuthLayout>
+    )
   }
 
   return (

@@ -41,3 +41,6 @@ verify_jwt = false
 
 [functions.sales-ingest]
 verify_jwt = false
+
+[functions.grant-access]
+verify_jwt = true
