@@ -54,16 +54,7 @@ export function Rewards({
                   <p className="text-sm text-slate-500">{reward.description}</p>
                 )}
               </div>
-              {ready && onRedeem ? (
-                <button
-                  type="button"
-                  disabled={redeeming}
-                  onClick={() => onRedeem(reward.id)}
-                  className="shrink-0 rounded-full bg-green-700 px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
-                >
-                  Canjear
-                </button>
-              ) : (
+              <div className="flex shrink-0 flex-col items-end gap-1">
                 <span
                   className={
                     ready ? 'text-sm font-semibold text-green-700' : 'text-sm text-slate-500'
@@ -71,7 +62,17 @@ export function Rewards({
                 >
                   {ready ? '¡Ya podés canjearla!' : `${reward.costPoints} ${unit}`}
                 </span>
-              )}
+                {ready && onRedeem && (
+                  <button
+                    type="button"
+                    disabled={redeeming}
+                    onClick={() => onRedeem(reward.id)}
+                    className="rounded-full bg-green-700 px-4 py-1.5 text-sm font-medium text-white disabled:opacity-60"
+                  >
+                    Canjear desde el celular
+                  </button>
+                )}
+              </div>
             </li>
           )
         })}

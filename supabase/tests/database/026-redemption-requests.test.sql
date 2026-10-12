@@ -34,8 +34,10 @@ select loyalty.request_redemption(:'token', :'cafe') as req1 \gset
 select ok((:'req1'::jsonb ->> 'code') ~ '^[A-Z2-9]{6}$', 'the customer gets a 6-character code');
 select ok((:'req1'::jsonb ->> 'expiresAt')::timestamptz between now() + interval '4 minutes' and now() + interval '6 minutes',
   'the code expires in 5 minutes');
+reset role;
 select is((select points_balance from loyalty.members where id = :'rita_m'), 8::bigint,
   'asking does not take points yet');
+select tests.authenticate_as_anon();
 select is(loyalty.get_redemption_request(:'token', (:'req1'::jsonb ->> 'requestId')::uuid) ->> 'status',
   'pending', 'the card sees the request as pending');
 
