@@ -7,6 +7,7 @@ import { useCustomerCounts } from '../features/customers/queries'
 import { statusInfo } from '../features/customers/status'
 import { HomeModuleCards } from '../modules/HomeModuleCards'
 import { MonthSummaryCard } from './MonthSummaryCard'
+import { WeeklyDigestCard } from './WeeklyDigestCard'
 
 const roleLabels = { owner: 'Dueño', admin: 'Administrador', staff: 'Empleado' } as const
 
@@ -30,6 +31,8 @@ export function HomePage() {
       </Link>
 
       <VisitsCard />
+
+      {business.role !== 'staff' && <WeeklyDigestCard />}
 
       {business.role !== 'staff' && <MonthSummaryCard />}
 

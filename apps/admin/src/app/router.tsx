@@ -17,6 +17,7 @@ import { moduleManifests } from '../modules/registry'
 import { RequireModule } from '../modules/RequireModule'
 import { HomePage } from '../pages/HomePage'
 import { NotFoundPage } from '../pages/NotFoundPage'
+import { WeeklyDigestPage } from '../pages/WeeklyDigestPage'
 
 const moduleRoutes = moduleManifests.flatMap((manifest) =>
   manifest.routes.map((route) => ({
@@ -82,6 +83,7 @@ export const router = createBrowserRouter([
       { path: 'clientes/importar', element: <ImportCustomersPage /> },
       { path: 'clientes/:customerId', element: <CustomerDetailPage /> },
       { path: 'negocio', element: <BusinessSettingsPage /> },
+      { path: 'semana', element: <WeeklyDigestPage /> },
       ...moduleRoutes,
     ],
   },

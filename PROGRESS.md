@@ -48,6 +48,7 @@ Proyecto de **desarrollo**: `fidelizacion-saas`, ref `dqpnqcumlyfifewgzyvh` (ún
 | 28 | 20261010154103 | core_sales_ingest | aplicada 2026-10-10 ~12:40 (D-033; CI verde, no destructiva, sin funciones para anon; archivo renombrado de `20261011000000`) |
 | 29 | 20261010184152 | loyalty_templates | aplicada 2026-10-10 ~15:40 (plantillas separadas de la 27: no tienen nada para anon; CI verde) |
 | 30 | 20261012005618 | core_data_export | aplicada 2026-10-11 ~21:56 (D-034; CI verde, no destructiva: solo funciones nuevas; archivo renombrado de `20261011030000`) |
+| 31 | 20261012010000 | core_weekly_digest | **pendiente de aplicar** (D-035; solo funciones nuevas, no destructiva) |
 
 Regla vigente desde 2026-10-09: ninguna migración se aplica sin aprobación explícita del dueño después de revisarla.
 
@@ -80,6 +81,12 @@ Rama `fix/archive-owner-admin-only` (commit `62a7b19`):
 | Punta a punta (Playwright) | CI: `supabase start` + build + `vite preview` + `npx playwright test` (celular y escritorio) | OK: registro → onboarding → panel → login; credenciales incorrectas; mostrador; importación CSV |
 
 Limitación: los tests de punta a punta corren contra un Supabase **local** en CI. El panel todavía **no se probó contra el proyecto de desarrollo remoto**. Eso es lo que falta validar ahora.
+
+## Domingo 11 — resumen de los lunes (plan tarea 5)
+
+* **Resumen de la semana** para dueño/admin: tarjeta en Inicio y página "Resumen de la semana" (`/semana`). Visitas contra lo normal (alerta si bajan más de 20 %), nuevos, recuperados, 3 habituales en riesgo, alertas raras (muchas visitas del mismo cliente con el mismo empleado, anulaciones fuera de lo normal) y una sola acción sugerida. Botón "Mandármelo por WhatsApp". D-035.
+* Envío automático por mail: checkpoint (necesita proveedor de correo y dominio).
+* Tests: `050-weekly-digest` (19), unitarios del texto de WhatsApp, e2e `weekly-digest.spec.ts`.
 
 ## Domingo 11 — instalar la tarjeta y exportar datos (plan tarea 4)
 
