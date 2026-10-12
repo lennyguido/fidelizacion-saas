@@ -145,6 +145,8 @@ Hoy el dueño arma las campañas a mano y manda cada wa.me uno por uno. Tiene qu
 
 ### 5. Resumen de los lunes para el dueño (#5, #20)
 
+> **Hecha** (2026-10-11, D-035): en `main` y aplicada en desarrollo (migración `20261012010243_core_weekly_digest`). El envío por mail queda como checkpoint.
+
 **`core.weekly_digest()`:**
 - visitas contra el promedio de las 4–8 semanas anteriores, con alerta si bajan más de 20 %;
 - clientes nuevos;
