@@ -8,6 +8,7 @@ import { BusinessLayout } from '../features/business/BusinessLayout'
 import { BusinessSettingsPage } from '../features/business/BusinessSettingsPage'
 import { HomeRedirect } from '../features/business/HomeRedirect'
 import { OnboardingPage } from '../features/business/OnboardingPage'
+import { StatsPage } from '../features/stats/StatsPage'
 import { CounterPage } from '../features/counter/CounterPage'
 import { CustomerDetailPage } from '../features/customers/CustomerDetailPage'
 import { CustomersPage } from '../features/customers/CustomersPage'
@@ -84,6 +85,7 @@ export const router = createBrowserRouter([
       { path: 'clientes/:customerId', element: <CustomerDetailPage /> },
       { path: 'negocio', element: <BusinessSettingsPage /> },
       { path: 'semana', element: <WeeklyDigestPage /> },
+      { path: 'estadisticas', element: <StatsPage /> },
       ...moduleRoutes,
     ],
   },

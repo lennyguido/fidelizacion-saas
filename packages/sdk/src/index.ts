@@ -60,6 +60,16 @@ export * as integrations from './integrations.ts'
 export type { IntegrationKey, SimulatedSale } from './integrations.ts'
 export * as dashboard from './dashboard.ts'
 export * as weeklyDigest from './weeklyDigest.ts'
+export * as stats from './stats.ts'
+export {
+  SOURCE_GROUP_LABELS,
+  SOURCE_GROUPS,
+  WEEKDAY_LABELS,
+  type BusinessStats,
+  type SourceGroup,
+  type StatsRange,
+  type WeekRow,
+} from './stats.ts'
 export * as smartCounter from './smartCounter.ts'
 export type { CustomerSnapshot, TeamMemberWeek, TopCustomer } from './smartCounter.ts'
 export type { WeeklyDigest } from './weeklyDigest.ts'

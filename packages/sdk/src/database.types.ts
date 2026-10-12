@@ -638,6 +638,9 @@ isOneToOne: false
 "automation_defaults":
 { Args: { "p_kind": string }; Returns: Json
                            },
+"business_stats":
+{ Args: { "p_business_id": string,"p_days"?: number }; Returns: Json
+                           },
 "campaign_results":
 { Args: { "p_campaign_id": string }; Returns: {
               "contacted_count": number,"control_count": number,"control_rate": number,"control_returned": number,"control_revenue_minor": number,"coupons_redeemed": number,"incremental_customers": number,"incremental_revenue_minor": number,"treatment_count": number,"treatment_rate": number,"treatment_returned": number,"treatment_revenue_minor": number,"window_ends_at": string,"window_open": boolean

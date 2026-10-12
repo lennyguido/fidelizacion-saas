@@ -129,6 +129,7 @@ select set_eq(
        ('core.customer_snapshot(uuid)'),
        ('core.team_week_stats(uuid)'),
        ('core.top_customers(uuid)'),
+       ('core.business_stats(uuid,integer)'),
        ('loyalty.enroll_customer(uuid)'),
        ('loyalty.leave_program(uuid)'),
        ('loyalty.redeem_reward(uuid,uuid,uuid)'),
