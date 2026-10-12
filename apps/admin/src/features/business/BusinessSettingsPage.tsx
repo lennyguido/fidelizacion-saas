@@ -2,6 +2,7 @@ import { EmptyState } from '@plataforma/ui'
 import { useActiveBusiness } from './ActiveBusinessContext'
 import { BrandingForm } from './BrandingForm'
 import { CashRegisterCard } from './CashRegisterCard'
+import { ExportDataCard } from './ExportDataCard'
 import { LogoUploader } from './LogoUploader'
 
 /** /b/:slug/negocio — nombre, color, zona horaria y logo. Solo dueño/admin. */
@@ -29,6 +30,7 @@ export function BusinessSettingsPage() {
       <BrandingForm key={business.id} business={business} />
       <LogoUploader business={business} />
       <CashRegisterCard />
+      <ExportDataCard />
     </div>
   )
 }

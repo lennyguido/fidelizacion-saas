@@ -1,6 +1,7 @@
 import { errorMessage } from '@plataforma/sdk'
 import { Alert, FullPageSpinner } from '@plataforma/ui'
 import { useActiveBusiness } from '../../features/business/ActiveBusinessContext'
+import { LedgerExportCard } from './LedgerExportCard'
 import { ProgramCard } from './ProgramCard'
 import { RewardsCard } from './RewardsCard'
 import { SelfSignupCard } from './SelfSignupCard'
@@ -29,6 +30,7 @@ export function LoyaltyPage() {
       <ProgramCard program={program.data} />
       <RewardsCard rewards={rewards.data} />
       <SelfSignupCard />
+      {business.role !== 'staff' && <LedgerExportCard />}
     </section>
   )
 }

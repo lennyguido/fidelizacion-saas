@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { startOfDayInTimeZone } from './dates.ts'
+import { localDateInTimeZone, startOfDayInTimeZone } from './dates.ts'
 
 describe('startOfDayInTimeZone', () => {
   const now = new Date('2026-10-09T13:20:00Z') // 10:20 en Buenos Aires
@@ -25,5 +25,18 @@ describe('startOfDayInTimeZone', () => {
 
   it('handles zones ahead of UTC', () => {
     expect(startOfDayInTimeZone('Europe/Madrid', now)).toBe('2026-10-08T22:00:00.000Z')
+  })
+})
+
+describe('localDateInTimeZone', () => {
+  it('uses the business date, not UTC', () => {
+    const lateNight = new Date('2026-10-10T01:30:00Z') // 22:30 del 9/10 en Buenos Aires
+    expect(localDateInTimeZone('America/Argentina/Buenos_Aires', lateNight)).toBe('2026-10-09')
+    expect(localDateInTimeZone('UTC', lateNight)).toBe('2026-10-10')
+  })
+
+  it('goes back whole days across months', () => {
+    const now = new Date('2026-10-02T15:00:00Z')
+    expect(localDateInTimeZone('America/Argentina/Buenos_Aires', now, 30)).toBe('2026-09-02')
   })
 })

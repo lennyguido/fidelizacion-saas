@@ -44,3 +44,17 @@ function offsetMs(timeZone: string, at: Date): number {
   )
   return asUtc - at.getTime()
 }
+
+/** Fecha (AAAA-MM-DD) en la zona horaria del negocio; `daysAgo` resta días. */
+export function localDateInTimeZone(timeZone: string, now: Date = new Date(), daysAgo = 0): string {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).formatToParts(now)
+  const get = (type: string) => Number(parts.find((p) => p.type === type)?.value)
+  return new Date(Date.UTC(get('year'), get('month') - 1, get('day') - daysAgo))
+    .toISOString()
+    .slice(0, 10)
+}
