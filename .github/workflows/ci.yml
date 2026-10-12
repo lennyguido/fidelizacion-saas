@@ -86,7 +86,7 @@ jobs:
       - uses: actions/checkout@v5
       - uses: supabase/setup-cli@v1
         with:
-          version: latest
+          version: 2.120.0
       # Los errores se publican como anotaciones para poder leerlos desde la API de checks.
       - name: Start database (migrations + seed)
         run: |
@@ -115,7 +115,7 @@ jobs:
           node-version-file: .nvmrc
       - uses: supabase/setup-cli@v1
         with:
-          version: latest
+          version: 2.120.0
       - run: scripts/ci-run.sh install bash -c 'if [ -f package-lock.json ]; then npm ci; else npm install; fi'
       - run: scripts/ci-run.sh "supabase start" supabase start -x studio,imgproxy,vector,logflare,supavisor,edge-runtime
       - name: Configure panel env from local Supabase

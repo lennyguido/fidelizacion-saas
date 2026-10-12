@@ -21,6 +21,7 @@ function useNavItems(): NavItem[] {
     { label: 'Inicio', to: base, end: true },
     { label: 'Mostrador', to: `${base}/mostrador` },
     { label: 'Clientes', to: `${base}/clientes` },
+    ...(business.role === 'staff' ? [] : [{ label: 'Estadísticas', to: `${base}/estadisticas` }]),
     ...moduleItems,
     ...(business.role === 'staff' ? [] : [{ label: 'Mi negocio', to: `${base}/negocio` }]),
   ]

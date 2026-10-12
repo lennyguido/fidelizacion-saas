@@ -196,3 +196,7 @@ Criterio del mentor: terminar el MVP y conseguir los primeros negocios que pague
 ## D-041 — El link de la tarjeta queda en la dirección hasta instalarla (2026-10-12, vigente)
 
 Antes, al abrir la tarjeta se sacaba el link secreto de la barra de direcciones (D-020). Pero el ícono de "Poner en mi pantalla de inicio" guarda la dirección visible, y en iPhone la app instalada no comparte lo guardado en Safari, así que el ícono abría "Abrí el link que te mandó el negocio". Ahora, en el navegador, la tarjeta deja su link (`/tarjeta#…`) en la dirección; el manifest de la tarjeta no tiene `start_url` (el ícono abre la dirección del momento de instalar); ya instalada, se saca de la vista. Costo aceptado: el link se ve en la barra mientras se usa desde el navegador.
+
+## D-042 — Página "Estadísticas" para el dueño (2026-10-12, vigente)
+
+Tablero tipo "analytics" para dueño/admin en `/estadisticas`, con períodos de 7, 30, 90, 180 y 365 días comparados con el período anterior. Muestra cuatro números grandes con mini gráfico (visitas, clientes distintos, ticket promedio y % de visitas con cliente), visitas por semana apiladas por origen (mostrador, QR, caja, otros), clientes nuevos contra los que volvieron (torta) y visitas por día de la semana. Todo lo calcula `core.business_stats` en la zona horaria del negocio; el panel solo agrupa los orígenes para la leyenda. Gráficos con `recharts` y la paleta validada del método dataviz (orden fijo). Verde y amarillo tienen poco contraste sobre blanco, así que las leyendas muestran los números escritos.
