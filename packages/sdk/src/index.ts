@@ -60,7 +60,13 @@ export type {
 export * as integrations from './integrations.ts'
 export type { IntegrationKey, SimulatedSale } from './integrations.ts'
 export * as access from './access.ts'
-export { SALES_PLANS, type AccessGrant, type GrantResult, type SalesPlan } from './access.ts'
+export {
+  DEMO_TRADES,
+  SALES_PLANS,
+  type AccessGrant,
+  type GrantResult,
+  type SalesPlan,
+} from './access.ts'
 export * as dashboard from './dashboard.ts'
 export * as weeklyDigest from './weeklyDigest.ts'
 export * as stats from './stats.ts'
