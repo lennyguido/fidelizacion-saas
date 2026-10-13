@@ -377,6 +377,26 @@ isOneToOne: false
       referencedColumns: ["business_id","id"]
     }
                   ]
+                },"invitations": {
+                  Row: {
+                    "accepted_at": string | null,"accepted_by": string | null,"business_id": string,"created_at": string,"created_by": string | null,"email": string,"expires_at": string,"id": string,"revoked_at": string | null,"role": string,"token_hash": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "accepted_at"?: string | null,"accepted_by"?: string | null,"business_id": string,"created_at"?: string,"created_by"?: string | null,"email": string,"expires_at"?: string,"id"?: string,"revoked_at"?: string | null,"role": string,"token_hash": string
+                  }
+                  Update: {
+                    "accepted_at"?: string | null,"accepted_by"?: string | null,"business_id"?: string,"created_at"?: string,"created_by"?: string | null,"email"?: string,"expires_at"?: string,"id"?: string,"revoked_at"?: string | null,"role"?: string,"token_hash"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "invitations_business_id_fkey"
+      columns: ["business_id"]
+isOneToOne: false
+      referencedRelation: "businesses"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"locations": {
                   Row: {
                     "active": boolean,"address": string | null,"business_id": string,"created_at": string,"id": string,"name": string,"timezone": string | null,"updated_at": string
@@ -667,7 +687,57 @@ isOneToOne: false
                 }
           }
           Functions: {
-            "automation_candidates":
+            "accept_invitation":
+{ Args: { "p_token": string }; Returns: {
+              "address": string | null,
+"created_at": string,
+"currency": string,
+"email": string | null,
+"google_review_url": string | null,
+"id": string,
+"logo_path": string | null,
+"name": string,
+"phone": string | null,
+"primary_color": string | null,
+"secondary_color": string | null,
+"settings": NonNullable<Json>,
+"slug": string,
+"status": string,
+"timezone": string,
+"updated_at": string
+            }
+                          SetofOptions: {
+        from: "*"
+        to: "businesses"
+        isOneToOne: true
+        isSetofReturn: false
+      } },
+"anonymize_customer":
+{ Args: { "p_customer_id": string }; Returns: {
+              "anonymized_at": string | null,
+"birth_day": number | null,
+"birth_month": number | null,
+"birthdate": string | null,
+"business_id": string,
+"created_at": string,
+"created_by": string | null,
+"email": string | null,
+"id": string,
+"name": string,
+"notes": string | null,
+"phone": string | null,
+"source": string,
+"status": string,
+"tags": (string)[],
+"updated_at": string
+            }
+                          SetofOptions: {
+        from: "*"
+        to: "customers"
+        isOneToOne: true
+        isSetofReturn: false
+      } },
+"automation_candidates":
 { Args: { "p_automation": Omit<Database["core"]['Tables']["automations"]['Row'], Database["core"]['Tables']["automations"]['ComputedFields']>,"p_now": string }; Returns: {
               "customer_id": string,"first_name": string,"risk_score": number,"status": string
             }[]
@@ -730,6 +800,9 @@ isOneToOne: false
       } },
 "check_export_range":
 { Args: { "p_from": string,"p_to": string }; Returns: undefined
+                           },
+"cleanup_old_records":
+{ Args: Record<PropertyKey, never>; Returns: Json
                            },
 "compute_customer_status":
 { Args: { "p_first_visit_at": string,"p_is_new_visit": boolean,"p_last_visit_at": string,"p_median_interval": number,"p_now": string,"p_prev_changed_at": string,"p_prev_status": string,"p_settings": Json,"p_visit_count": number }; Returns: Record<string, unknown>
@@ -838,6 +911,11 @@ isOneToOne: false
 "create_integration_key":
 { Args: { "p_business_id": string,"p_location_id"?: string,"p_name": string }; Returns: Json
                            },
+"create_invitation":
+{ Args: { "p_business_id": string,"p_email": string,"p_role": string }; Returns: {
+              "expires_at": string,"invitation_id": string,"token": string
+            }[]
+                           },
 "customer_snapshot":
 { Args: { "p_customer_id": string }; Returns: Json
                            },
@@ -879,6 +957,11 @@ isOneToOne: false
 "find_campaign_coupon":
 { Args: { "p_business_id": string,"p_code": string }; Returns: Json
                            },
+"get_invitation":
+{ Args: { "p_token": string }; Returns: {
+              "business_name": string,"email": string,"role": string,"status": string
+            }[]
+                           },
 "has_feature":
 { Args: { "p_business_id": string,"p_feature": string }; Returns: boolean
                            },
@@ -887,6 +970,9 @@ isOneToOne: false
                            },
 "has_role":
 { Args: { "p_business_id": string,"p_roles": (string)[] }; Returns: boolean
+                           },
+"hash_token":
+{ Args: { "p_token": string }; Returns: string
                            },
 "import_customers":
 { Args: { "p_business_id": string,"p_rows": Json }; Returns: Json
@@ -970,6 +1056,11 @@ isOneToOne: false
 "list_campaign_recipients":
 { Args: { "p_campaign_id": string }; Returns: {
               "blocked_reason": string,"contacted_at": string,"coupon_code": string,"coupon_redeemed_at": string,"customer_id": string,"is_control": boolean,"message": string,"name": string,"phone": string,"recipient_id": string,"returned_amount_minor": number,"returned_at": string,"status_at_send": string
+            }[]
+                           },
+"list_members":
+{ Args: { "p_business_id": string }; Returns: {
+              "created_at": string,"email": string,"membership_id": string,"role": string,"status": string,"user_id": string
             }[]
                            },
 "list_outbox":
@@ -1192,6 +1283,9 @@ isOneToOne: false
 "revoke_integration_key":
 { Args: { "p_key_id": string }; Returns: undefined
                            },
+"revoke_invitation":
+{ Args: { "p_invitation_id": string }; Returns: undefined
+                           },
 "rotate_self_signup_code":
 { Args: { "p_business_id": string }; Returns: {
               "business_id": string,
@@ -1305,6 +1399,9 @@ isOneToOne: false
 { Args: { "p_business_id": string }; Returns: {
               "customer_id": string,"last_visit_at": string,"name": string,"spend_minor": number,"visits": number
             }[]
+                           },
+"update_member":
+{ Args: { "p_membership_id": string,"p_role": string,"p_status": string }; Returns: undefined
                            },
 "validate_segment":
 { Args: { "p_segment": Json }; Returns: undefined

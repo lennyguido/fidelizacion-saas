@@ -15,6 +15,8 @@ import { CustomerDetailPage } from '../features/customers/CustomerDetailPage'
 import { CustomersPage } from '../features/customers/CustomersPage'
 import { ImportCustomersPage } from '../features/customers/ImportCustomersPage'
 import { NewCustomerPage } from '../features/customers/NewCustomerPage'
+import { AcceptInvitationPage } from '../features/team/AcceptInvitationPage'
+import { TeamPage } from '../features/team/TeamPage'
 import { moduleManifests } from '../modules/registry'
 import { RequireModule } from '../modules/RequireModule'
 import { HomePage } from '../pages/HomePage'
@@ -63,6 +65,14 @@ export const router = createBrowserRouter([
     ),
   },
   {
+    path: '/invitacion/:token',
+    element: (
+      <RequireAuth>
+        <AcceptInvitationPage />
+      </RequireAuth>
+    ),
+  },
+  {
     path: '/onboarding',
     element: (
       <RequireAuth>
@@ -92,6 +102,7 @@ export const router = createBrowserRouter([
       { path: 'clientes/nuevo', element: <NewCustomerPage /> },
       { path: 'clientes/importar', element: <ImportCustomersPage /> },
       { path: 'clientes/:customerId', element: <CustomerDetailPage /> },
+      { path: 'equipo', element: <TeamPage /> },
       { path: 'negocio', element: <BusinessSettingsPage /> },
       { path: 'semana', element: <WeeklyDigestPage /> },
       { path: 'estadisticas', element: <StatsPage /> },

@@ -12,7 +12,7 @@ import {
   type CustomerInput,
   type Visit,
 } from '@plataforma/sdk'
-import { Alert, Button, Card, FullPageSpinner, useToast } from '@plataforma/ui'
+import { Alert, Button, Card, FullPageSpinner, TextField, useToast } from '@plataforma/ui'
 import { CustomerModulePanels } from '../../modules/CustomerModulePanels'
 import { useActiveBusiness } from '../business/ActiveBusinessContext'
 import { formatDateTime, formatDaysAgo } from '../../lib/format'
@@ -97,6 +97,18 @@ function CustomerHeader({ customer }: { customer: Customer }) {
     onError: (err) => setError(errorMessage(err)),
   })
 
+  const [confirmErase, setConfirmErase] = useState('')
+  const [erasing, setErasing] = useState(false)
+  const erase = useMutation({
+    mutationFn: () => customers.anonymize(customer.id),
+    onSuccess: async () => {
+      await invalidate()
+      toast.show('Se borraron los datos personales del cliente', 'success')
+      navigate(`/b/${business.slug}/clientes`, { replace: true })
+    },
+    onError: (err) => toast.show(errorMessage(err), 'error'),
+  })
+
   const archive = useMutation({
     mutationFn: () => customers.archive(customer.id),
     onSuccess: async () => {
@@ -158,11 +170,13 @@ function CustomerHeader({ customer }: { customer: Customer }) {
         </div>
         {customer.stats && <StatusBadge status={customer.stats.status} />}
       </div>
-      {customer.status === 'archived' ? (
+      {customer.anonymized ? (
+        <Alert>Los datos personales de este cliente fueron borrados.</Alert>
+      ) : customer.status === 'archived' ? (
         <div className="flex flex-col gap-3">
           <Alert>Este cliente está archivado: no aparece en la lista ni en el mostrador.</Alert>
           {canManage && (
-            <div>
+            <div className="flex flex-wrap gap-2">
               <Button
                 variant="secondary"
                 size="lg"
@@ -171,6 +185,11 @@ function CustomerHeader({ customer }: { customer: Customer }) {
               >
                 Reactivar
               </Button>
+              {!erasing && (
+                <Button variant="ghost" size="lg" onClick={() => setErasing(true)}>
+                  Borrar datos personales
+                </Button>
+              )}
             </div>
           )}
         </div>
@@ -192,7 +211,45 @@ function CustomerHeader({ customer }: { customer: Customer }) {
               Archivar
             </Button>
           )}
+          {canManage && !erasing && (
+            <Button variant="ghost" size="lg" onClick={() => setErasing(true)}>
+              Borrar datos personales
+            </Button>
+          )}
         </div>
+      )}
+      {erasing && (
+        <form
+          className="flex flex-col gap-3 rounded-lg border border-red-200 bg-red-50 p-4"
+          onSubmit={(e) => {
+            e.preventDefault()
+            erase.mutate()
+          }}
+        >
+          <p className="text-sm text-red-800">
+            Se borran para siempre el nombre, teléfono, email y notas de este cliente. Sus visitas
+            quedan como anónimas para que tus estadísticas no cambien. Usalo cuando el cliente pide
+            que borres sus datos. Para confirmar, escribí <strong>BORRAR</strong>.
+          </p>
+          <TextField
+            label="Confirmación"
+            value={confirmErase}
+            onChange={(e) => setConfirmErase(e.target.value)}
+          />
+          <div className="flex gap-2">
+            <Button
+              type="submit"
+              variant="danger"
+              loading={erase.isPending}
+              disabled={confirmErase !== 'BORRAR'}
+            >
+              Borrar datos
+            </Button>
+            <Button variant="secondary" onClick={() => setErasing(false)}>
+              Cancelar
+            </Button>
+          </div>
+        </form>
       )}
     </Card>
   )

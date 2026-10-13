@@ -1,6 +1,6 @@
 # Progreso del proyecto
 
-> Estado verificado el 2026-10-11 ~23:00 (hora Argentina).
+> Estado verificado el 2026-10-12 ~22:00 (hora Argentina).
 
 ## Current phase
 
@@ -8,8 +8,9 @@ Plan de Claude Code (`docs/PLAN-CLAUDE-CODE.md`): **tareas 1 a 9 hechas** (2026-
 
 ## Current task — lo que falta (del dueño o del mentor)
 
+0. **Publicado (2026-10-12):** neriva.net (página de venta, Vercel `neriva-landing`), panel.neriva.net y tarjeta.neriva.net (Cloudflare Pages), tienda.neriva.net (la tienda). Supabase: Site URL y Redirect URL del panel, secret `PANEL_URL`.
 1. **Prueba visual** del dueño, incluido el botón "Poner en mi pantalla de inicio" en un iPhone real (`docs/PWA.md`).
-2. **Cuentas que tiene que abrir el dueño** (checkpoint): Google Wallet, Apple Developer, Cloudflare (publicar), WhatsApp Business (mensajes automáticos), Mercado Pago (cobros), un proveedor de mail (resumen de los lunes por mail) y publicar la Edge Function `sales-ingest`.
+2. **Cuentas que tiene que abrir el dueño** (checkpoint): Google Wallet, Apple Developer, WhatsApp Business (mensajes automáticos), Mercado Pago (cobros), un proveedor de mail (resumen de los lunes por mail) (la Edge Function `sales-ingest` ya está publicada).
 
 ## Migraciones
 
@@ -27,10 +28,10 @@ Proyecto de **desarrollo**: `fidelizacion-saas`, ref `dqpnqcumlyfifewgzyvh` (ún
 | 8 | 20261009110534 | core_customer_search | aplicada 2026-10-09 08:05 (con OK del dueño) |
 | 9 | 20261009110548 | core_customer_import | aplicada 2026-10-09 08:05 (con OK del dueño) |
 | 10 | 20261009182015 | core_archive_owner_admin_only | aplicada 2026-10-09 15:20 (aprobada por el mentor; merge a `main`) |
-| 11 | 20261009130000 | core_team | **pendiente de revisión — NO aplicada** |
-| 12 | 20261009130100 | core_customer_anonymize | **pendiente de revisión — NO aplicada** |
-| 13 | 20261009130200 | core_housekeeping | **pendiente de revisión — NO aplicada** |
-| 14 | 20261009130300 | core_team_owner_protection | **pendiente de revisión — NO aplicada** (rama `feat/proteger-duenos`) |
+| 11 | 20261013010000 | core_team | aplicada 2026-10-12 (D-046; antes `20261009130000`, renombrada para correr después de las últimas; CI verde) |
+| 12 | 20261013010100 | core_customer_anonymize | aplicada 2026-10-12 (D-046) |
+| 13 | 20261013010200 | core_housekeeping | aplicada 2026-10-12 (D-046; pg_cron `core-cleanup-old-records` domingos 07:00 UTC) |
+| 14 | 20261013010300 | core_team_owner_protection | aplicada 2026-10-12 (D-046) |
 | 15 | 20261009182137 | loyalty_core | aplicada 2026-10-09 15:21 (OK del dueño, D-019; merge a `main`) |
 | 16 | 20261009183337 | loyalty_cards | aplicada 2026-10-09 15:33 (D-019; merge a `main`) |
 | 17 | 20261009184605 | core_campaigns | aplicada 2026-10-09 15:46 (D-019; merge a `main`) |
@@ -48,14 +49,15 @@ Proyecto de **desarrollo**: `fidelizacion-saas`, ref `dqpnqcumlyfifewgzyvh` (ún
 | 29 | 20261010184152 | loyalty_templates | aplicada 2026-10-10 ~15:40 (plantillas separadas de la 27: no tienen nada para anon; CI verde) |
 | 30 | 20261012005618 | core_data_export | aplicada 2026-10-11 ~21:56 (D-034; CI verde, no destructiva: solo funciones nuevas; archivo renombrado de `20261011030000`) |
 | 31 | 20261012010243 | core_weekly_digest | aplicada 2026-10-11 ~22:02 (D-035; CI verde, no destructiva: solo funciones nuevas; archivo renombrado de `20261012010000`) |
-| 32 | 20261012020000 | loyalty_referrals_core_feedback | aplicada 2026-10-12 por el dueño desde el SQL Editor (verificado: tablas, columnas y funciones presentes). **No figura en el historial de migraciones de Supabase**: si algún día se usa `supabase db push`, marcarla antes como aplicada con `supabase migration repair --status applied 20261012020000`. |
-| 33 | 20261012235900 | loyalty_card_referral_feedback | aplicada 2026-10-12 por el dueño desde el SQL Editor (verificado). No figura en el historial de Supabase: antes de un `supabase db push`, `supabase migration repair --status applied 20261012235900` |
-| 34 | 20261013000000 | loyalty_redemption_requests | aplicada 2026-10-12 por el dueño desde el SQL Editor (verificado). Igual que la 33: `migration repair` antes de un `db push` |
+| 32 | 20261012020000 | loyalty_referrals_core_feedback | aplicada 2026-10-12 por el dueño desde el SQL Editor; registrada en el historial de Supabase el 2026-10-12 |
+| 33 | 20261012235900 | loyalty_card_referral_feedback | aplicada 2026-10-12 por el dueño desde el SQL Editor; registrada en el historial |
+| 34 | 20261013000000 | loyalty_redemption_requests | aplicada 2026-10-12 por el dueño desde el SQL Editor; registrada en el historial |
 | 35 | 20261012014657 | core_smart_counter | aplicada 2026-10-11 ~22:47 (D-038; CI verde, solo funciones nuevas; archivo renombrado de `20261013010000`) |
 | 36 | 20261012035327 | core_business_stats | aplicada 2026-10-12 (D-042; CI verde, solo una función nueva; archivo renombrado de `20261013020000`) |
 | 37 | 20261012164452 | core_access_grants | aplicada 2026-10-12 (D-043; CI verde; acceso solo por invitación; Edge Function `grant-access` publicada) |
 | 38 | 20261012175741 | core_plan_features | aplicada 2026-10-12 (D-044; CI verde; funciones y límites por plan) |
 | 39 | 20261012181337 | core_demo_business | aplicada 2026-10-12 (D-045; CI verde). Al aplicarla en desarrollo se volvió a dar permiso anon a `request_redemption`, `get_redemption_request` y `submit_feedback` (el revoke general de loyalty los habría sacado) |
+| 40 | 20261013010400 | core_customer_anonymize_followup | aplicada 2026-10-12 (D-046; borrar datos también cubre cumpleaños, opiniones, alta por QR y mensajes automáticos) |
 
 Regla vigente desde 2026-10-09: ninguna migración se aplica sin aprobación explícita del dueño después de revisarla.
 
@@ -177,7 +179,7 @@ Rama `chore/calidad-pre-piloto` (llevada a `main` con CI en verde; no toca la ba
 ### Hallazgos que necesitan decisión
 
 1. **`core` todavía NO está expuesto** en el proyecto de desarrollo: los tipos generados desde Supabase solo traían `public`. Sin esto el panel no puede leer datos.
-2. **Cuentas de empleados:** resuelto en la rama `feat/equipo-y-privacidad` (pendiente de revisión).
+2. **Cuentas de empleados:** resuelto e integrado (D-046).
 3. **Limpieza de registros:** resuelto en la rama `feat/equipo-y-privacidad` (pendiente de revisión).
 4. **Pedido de baja de datos** (Ley 25.326): resuelto en la rama `feat/equipo-y-privacidad` (pendiente de revisión).
 
