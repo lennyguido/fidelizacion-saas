@@ -3,7 +3,154 @@ export type Json = string | number | boolean | null | { [key: string]: Json | un
 
 export type Database = {
   
-  "core": {
+  "booking": {
+          Tables: {
+            "appointments": {
+                  Row: {
+                    "business_id": string,"cancelled_at": string | null,"created_at": string,"created_by": string | null,"customer_id": string,"ends_at": string,"id": string,"price_minor": number | null,"service_id": string,"source": string,"staff_id": string,"starts_at": string,"status": string,"token_hash": string,"visit_id": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "business_id": string,"cancelled_at"?: string | null,"created_at"?: string,"created_by"?: string | null,"customer_id": string,"ends_at": string,"id"?: string,"price_minor"?: number | null,"service_id": string,"source"?: string,"staff_id": string,"starts_at": string,"status"?: string,"token_hash": string,"visit_id"?: string | null
+                  }
+                  Update: {
+                    "business_id"?: string,"cancelled_at"?: string | null,"created_at"?: string,"created_by"?: string | null,"customer_id"?: string,"ends_at"?: string,"id"?: string,"price_minor"?: number | null,"service_id"?: string,"source"?: string,"staff_id"?: string,"starts_at"?: string,"status"?: string,"token_hash"?: string,"visit_id"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "appointments_business_id_service_id_fkey"
+      columns: ["business_id","service_id"]
+isOneToOne: false
+      referencedRelation: "services"
+      referencedColumns: ["business_id","id"]
+    },{
+      foreignKeyName: "appointments_business_id_staff_id_fkey"
+      columns: ["business_id","staff_id"]
+isOneToOne: false
+      referencedRelation: "staff"
+      referencedColumns: ["business_id","id"]
+    }
+                  ]
+                },"hours": {
+                  Row: {
+                    "business_id": string,"end_time": string,"id": string,"staff_id": string,"start_time": string,"weekday": number
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "business_id": string,"end_time": string,"id"?: string,"staff_id": string,"start_time": string,"weekday": number
+                  }
+                  Update: {
+                    "business_id"?: string,"end_time"?: string,"id"?: string,"staff_id"?: string,"start_time"?: string,"weekday"?: number
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "hours_business_id_staff_id_fkey"
+      columns: ["business_id","staff_id"]
+isOneToOne: false
+      referencedRelation: "staff"
+      referencedColumns: ["business_id","id"]
+    }
+                  ]
+                },"services": {
+                  Row: {
+                    "active": boolean,"business_id": string,"created_at": string,"duration_minutes": number,"id": string,"name": string,"price_minor": number | null,"sort": number
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "active"?: boolean,"business_id": string,"created_at"?: string,"duration_minutes": number,"id"?: string,"name": string,"price_minor"?: number | null,"sort"?: number
+                  }
+                  Update: {
+                    "active"?: boolean,"business_id"?: string,"created_at"?: string,"duration_minutes"?: number,"id"?: string,"name"?: string,"price_minor"?: number | null,"sort"?: number
+                  }
+                  Relationships: [
+                    
+                  ]
+                },"settings": {
+                  Row: {
+                    "business_id": string,"cancel_notice_minutes": number,"enabled": boolean,"max_days_ahead": number,"message": string | null,"min_notice_minutes": number,"slot_minutes": number,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "business_id": string,"cancel_notice_minutes"?: number,"enabled"?: boolean,"max_days_ahead"?: number,"message"?: string | null,"min_notice_minutes"?: number,"slot_minutes"?: number,"updated_at"?: string
+                  }
+                  Update: {
+                    "business_id"?: string,"cancel_notice_minutes"?: number,"enabled"?: boolean,"max_days_ahead"?: number,"message"?: string | null,"min_notice_minutes"?: number,"slot_minutes"?: number,"updated_at"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
+                },"staff": {
+                  Row: {
+                    "active": boolean,"business_id": string,"created_at": string,"id": string,"name": string,"sort": number
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "active"?: boolean,"business_id": string,"created_at"?: string,"id"?: string,"name": string,"sort"?: number
+                  }
+                  Update: {
+                    "active"?: boolean,"business_id"?: string,"created_at"?: string,"id"?: string,"name"?: string,"sort"?: number
+                  }
+                  Relationships: [
+                    
+                  ]
+                }
+          }
+          Views: {
+            [_ in never]: never
+          }
+          Functions: {
+            "agenda":
+{ Args: { "p_business_id": string,"p_from": string,"p_to": string }; Returns: {
+              "customer_id": string,"customer_name": string,"customer_phone": string,"ends_at": string,"id": string,"price_minor": number,"service_name": string,"source": string,"staff_id": string,"staff_name": string,"starts_at": string,"status": string
+            }[]
+                           },
+"available_slots":
+{ Args: { "p_day": string,"p_service_id": string,"p_slug": string,"p_staff_id": string }; Returns: {
+              "staff_id": string,"starts_at": string
+            }[]
+                           },
+"book":
+{ Args: { "p_name": string,"p_phone": string,"p_service_id": string,"p_slug": string,"p_staff_id": string,"p_starts_at": string,"p_terms_accepted": boolean }; Returns: Json
+                           },
+"book_from_panel":
+{ Args: { "p_business_id": string,"p_name": string,"p_phone": string,"p_service_id": string,"p_staff_id": string,"p_starts_at": string }; Returns: Json
+                           },
+"business_by_slug":
+{ Args: { "p_slug": string }; Returns: Database["core"]['Tables']["businesses"]['Row']
+                          SetofOptions: {
+        from: "*"
+        to: "businesses"
+        isOneToOne: true
+        isSetofReturn: false
+      } },
+"cancel_by_customer":
+{ Args: { "p_token": string }; Returns: string
+                           },
+"create_appointment":
+{ Args: { "p_business_id": string,"p_created_by": string,"p_name": string,"p_phone": string,"p_service_id": string,"p_source": string,"p_staff_id": string,"p_starts_at": string }; Returns: Json
+                           },
+"free_slots":
+{ Args: { "p_business_id": string,"p_day": string,"p_service_id": string,"p_staff_id": string }; Returns: {
+              "staff_id": string,"starts_at": string
+            }[]
+                           },
+"get_appointment":
+{ Args: { "p_token": string }; Returns: Json
+                           },
+"get_public_page":
+{ Args: { "p_slug": string }; Returns: Json
+                           },
+"set_status":
+{ Args: { "p_appointment_id": string,"p_status": string }; Returns: string
+                           }
+          }
+          Enums: {
+            [_ in never]: never
+          }
+          CompositeTypes: {
+            [_ in never]: never
+          }
+        },"core": {
           Tables: {
             "access_grants": {
                   Row: {
@@ -956,6 +1103,9 @@ isOneToOne: false
                            },
 "find_campaign_coupon":
 { Args: { "p_business_id": string,"p_code": string }; Returns: Json
+                           },
+"find_or_create_customer":
+{ Args: { "p_business_id": string,"p_name": string,"p_phone": string,"p_source": string }; Returns: string
                            },
 "get_invitation":
 { Args: { "p_token": string }; Returns: {
@@ -2199,7 +2349,11 @@ export type CompositeTypes<
   : never
 
 export const Constants = {
-  "core": {
+  "booking": {
+          Enums: {
+            
+          }
+        },"core": {
           Enums: {
             
           }
