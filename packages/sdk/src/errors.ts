@@ -169,7 +169,8 @@ export function errorMessage(error: unknown): string {
     invitation_email_mismatch:
       'Esta invitación es para otro email. Salí e ingresá con el email invitado.',
     invitation_unavailable: 'Esta invitación ya se usó, venció o fue cancelada. Pedí una nueva.',
-    limit_reached: 'Llegaste al límite de tu plan. Podés pasarte a un plan más grande desde Mi negocio.',
+    limit_reached:
+      'Llegaste al límite de tu plan. Podés pasarte a un plan más grande desde Mi negocio.',
     insufficient_points: 'No le alcanzan los puntos para esta recompensa.',
     reward_unavailable: 'Esta recompensa no está disponible (desactivada o vencida).',
     member_inactive: 'Este cliente ya no está en el programa de puntos.',

@@ -46,7 +46,8 @@ export const PLAN_CATALOG: CatalogPlan[] = [
 export const FEATURE_PITCH: Record<PlanFeature, { title: string; benefit: string }> = {
   automations: {
     title: 'Recuperación automática',
-    benefit: 'Todas las mañanas el sistema arma los mensajes para los clientes que dejaron de venir.',
+    benefit:
+      'Todas las mañanas el sistema arma los mensajes para los clientes que dejaron de venir.',
   },
   selfSignup: {
     title: 'Alta por QR',
