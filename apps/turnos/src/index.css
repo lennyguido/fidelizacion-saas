@@ -1,0 +1,14 @@
+@import 'tailwindcss';
+@import '../../../packages/ui/src/theme.css';
+
+@source "../../../packages/ui/src";
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  @apply bg-slate-50 text-slate-900 antialiased;
+  font-size: 17px;
+  letter-spacing: -0.022em;
+}

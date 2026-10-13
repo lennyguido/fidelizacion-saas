@@ -9,7 +9,7 @@ export interface HandlerDeps {
   fetch?: typeof fetch
 }
 
-const PLANS = ['barrio', 'local', 'cadena']
+const PLANS = ['barrio', 'local', 'cadena', 'turnos']
 
 function cors(origin: string | null): Record<string, string> {
   return {
