@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react'
-import { Link, useNavigate } from 'react-router'
+import { Link, useNavigate, useSearchParams } from 'react-router'
 import { auth, errorMessage } from '@plataforma/sdk'
 import { Alert, Button, FullPageSpinner, TextField, useToast } from '@plataforma/ui'
 import { useAuth } from './AuthContext'
@@ -11,6 +11,11 @@ const MIN_PASSWORD = 8
 export function ResetPasswordPage() {
   const state = useAuth()
   const navigate = useNavigate()
+  const [params] = useSearchParams()
+  // A dónde seguir después (por ejemplo, aceptar una invitación de equipo).
+  // Solo rutas internas: nunca otro sitio.
+  const nextParam = params.get('next')
+  const next = nextParam && /^\/(?!\/)/.test(nextParam) ? nextParam : '/'
   const toast = useToast()
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -39,7 +44,7 @@ export function ResetPasswordPage() {
     try {
       await auth.updatePassword(password)
       toast.show('Contraseña actualizada', 'success')
-      navigate('/', { replace: true })
+      navigate(next, { replace: true })
     } catch (err) {
       setError(errorMessage(err))
     } finally {

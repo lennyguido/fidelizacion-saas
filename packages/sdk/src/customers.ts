@@ -47,6 +47,8 @@ export interface Customer {
   birthday: Birthday | null
   notes: string | null
   status: 'active' | 'archived'
+  /** Se borraron sus datos personales (irreversible). */
+  anonymized: boolean
   createdAt: string
   stats: CustomerStats | null
 }
@@ -92,11 +94,12 @@ type CustomerRow = Pick<
   | 'birth_month'
   | 'notes'
   | 'status'
+  | 'anonymized_at'
   | 'created_at'
 > & { stats: StatsRow | StatsRow[] | null }
 
 const CUSTOMER_COLUMNS =
-  'id, business_id, name, phone, email, birthdate, birth_day, birth_month, notes, status, created_at, stats:customer_stats(first_visit_at, last_visit_at, visit_count, total_spend_minor, avg_ticket_minor, median_interval_days, expected_next_visit_at, status, risk_score)' as const
+  'id, business_id, name, phone, email, birthdate, birth_day, birth_month, notes, status, anonymized_at, created_at, stats:customer_stats(first_visit_at, last_visit_at, visit_count, total_spend_minor, avg_ticket_minor, median_interval_days, expected_next_visit_at, status, risk_score)' as const
 
 function toStats(row: StatsRow): CustomerStats {
   return {
@@ -128,6 +131,7 @@ function toCustomer(row: CustomerRow): Customer {
         : null,
     notes: row.notes,
     status: row.status as Customer['status'],
+    anonymized: row.anonymized_at !== null,
     createdAt: row.created_at,
     stats: stats ? toStats(stats) : null,
   }
@@ -256,6 +260,12 @@ export async function setStatus(customerId: string, status: 'active' | 'archived
     p_customer_id: customerId,
     p_status: status,
   })
+  if (error) throw fromPostgrestError(error)
+}
+
+/** Borra los datos personales del cliente (irreversible). Solo owner/admin. */
+export async function anonymize(customerId: string): Promise<void> {
+  const { error } = await getSupabase().rpc('anonymize_customer', { p_customer_id: customerId })
   if (error) throw fromPostgrestError(error)
 }
 

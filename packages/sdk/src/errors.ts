@@ -8,6 +8,11 @@ export type AppErrorCode =
   | 'duplicate_visit'
   | 'duplicate_phone'
   | 'duplicate_email'
+  | 'already_member'
+  | 'member_disabled'
+  | 'owner_protected'
+  | 'invitation_email_mismatch'
+  | 'invitation_unavailable'
   | 'limit_reached'
   | 'insufficient_points'
   | 'reward_unavailable'
@@ -83,6 +88,11 @@ const DOMAIN_CODES = [
   'member_inactive',
   'module_disabled',
   'customer_not_active',
+  'already_member',
+  'member_disabled',
+  'invitation_email_mismatch',
+  'invitation_unavailable',
+  'owner_protected',
 ] as const
 
 /** Convierte un error de PostgREST (base de datos) en AppError. */
@@ -151,6 +161,14 @@ export function errorMessage(error: unknown): string {
     duplicate_visit: 'Esta visita ya se registró hace un momento.',
     duplicate_phone: 'Ya hay un cliente con ese teléfono.',
     duplicate_email: 'Ya hay un cliente con ese email.',
+    already_member: 'Esa persona ya es parte del equipo.',
+    owner_protected:
+      'No podés cambiar el rol de otro dueño. Cada dueño solo puede cambiarse a sí mismo.',
+    member_disabled:
+      'Esa persona está desactivada en el equipo. El dueño puede reactivarla desde la lista de miembros.',
+    invitation_email_mismatch:
+      'Esta invitación es para otro email. Salí e ingresá con el email invitado.',
+    invitation_unavailable: 'Esta invitación ya se usó, venció o fue cancelada. Pedí una nueva.',
     limit_reached: 'Llegaste al límite de tu plan.',
     insufficient_points: 'No le alcanzan los puntos para esta recompensa.',
     reward_unavailable: 'Esta recompensa no está disponible (desactivada o vencida).',

@@ -44,3 +44,6 @@ verify_jwt = false
 
 [functions.grant-access]
 verify_jwt = true
+
+[functions.team-invite]
+verify_jwt = true

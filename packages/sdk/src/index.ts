@@ -23,6 +23,14 @@ export {
   type CustomerStatus,
 } from './customers.ts'
 export { formatBirthday, isValidBirthday, MONTH_NAMES } from './birthday.ts'
+export * as team from './team.ts'
+export type {
+  CreatedInvitation,
+  InvitationEmailStatus,
+  InvitationPreview,
+  PendingInvitation,
+  TeamMember,
+} from './team.ts'
 export * as visits from './visits.ts'
 export * as campaigns from './campaigns.ts'
 export type {
