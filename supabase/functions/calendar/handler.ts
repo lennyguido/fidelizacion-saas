@@ -24,12 +24,19 @@ interface EventRow {
 const TOKEN = /^[0-9a-f]{40}$/
 
 function icsDate(iso: string): string {
-  return new Date(iso).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '')
+  return new Date(iso)
+    .toISOString()
+    .replace(/[-:]/g, '')
+    .replace(/\.\d{3}/, '')
 }
 
 /** Escapa texto para iCal (RFC 5545 §3.3.11). */
 function esc(text: string): string {
-  return text.replace(/\\/g, '\\\\').replace(/;/g, '\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n')
+  return text
+    .replace(/\\/g, '\\\\')
+    .replace(/;/g, '\;')
+    .replace(/,/g, '\\,')
+    .replace(/\r?\n/g, '\\n')
 }
 
 /** Corta líneas largas a 75 octetos (aprox. por caracteres), como pide iCal. */

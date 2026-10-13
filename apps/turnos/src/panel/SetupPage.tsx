@@ -450,8 +450,8 @@ function PhoneCalendar({ member }: { member: StaffMember }) {
           aparece solo en el celular.
         </p>
         <p className="mt-1">
-          El calendario se actualiza solo: iPhone cada 15 minutos aprox.; Google puede tardar
-          varias horas. Mirá siempre el panel para lo urgente.
+          El calendario se actualiza solo: iPhone cada 15 minutos aprox.; Google puede tardar varias
+          horas. Mirá siempre el panel para lo urgente.
         </p>
       </div>
       <p className="text-xs text-slate-500">
