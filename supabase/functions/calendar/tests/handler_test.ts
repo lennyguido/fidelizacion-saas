@@ -53,5 +53,5 @@ Deno.test('an empty calendar is still valid', () => {
 
 Deno.test('escapes commas and semicolons in text', () => {
   const ics = buildIcs([{ ...row, service_name: 'Corte; barba, cejas' }], new Date(), 'X')
-  assert.ok(ics.includes('Corte\; barba\\, cejas'))
+  assert.ok(ics.includes('Corte\\; barba\\, cejas'))
 })
