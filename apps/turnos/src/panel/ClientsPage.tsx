@@ -124,7 +124,9 @@ function ClientSheet({ client, onClose }: { client: BookingClient; onClose: () =
             <li key={v.id} className="flex items-center justify-between gap-3 py-2">
               <div>
                 <p className="font-medium capitalize">
-                  {booking.formatDay(booking.dayInTimeZone(new Date(v.startsAt), business.timezone))}{' '}
+                  {booking.formatDay(
+                    booking.dayInTimeZone(new Date(v.startsAt), business.timezone),
+                  )}{' '}
                   {booking.formatTime(v.startsAt, business.timezone)}
                 </p>
                 <p className="text-slate-500">

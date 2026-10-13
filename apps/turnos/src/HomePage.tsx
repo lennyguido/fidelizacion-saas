@@ -34,8 +34,11 @@ export function HomePage() {
       </main>
 
       <footer className="mx-auto max-w-6xl px-5 py-10 text-sm opacity-70">
-        Neriva Turnos es parte de <a href="https://neriva.net" className="underline">Neriva</a>,
-        hecho en Argentina.
+        Neriva Turnos es parte de{' '}
+        <a href="https://neriva.net" className="underline">
+          Neriva
+        </a>
+        , hecho en Argentina.
       </footer>
     </div>
   )
@@ -69,7 +72,9 @@ function Hero() {
             Calcular cuánto ahorro
           </a>
         </div>
-        <p className="text-sm opacity-60">Sin tarjeta. Te lo dejamos andando nosotros, por WhatsApp.</p>
+        <p className="text-sm opacity-60">
+          Sin tarjeta. Te lo dejamos andando nosotros, por WhatsApp.
+        </p>
       </div>
       <PhoneDemo />
     </section>
@@ -147,7 +152,9 @@ function Calculator() {
             />
           </label>
           <label className="flex flex-col gap-2">
-            <span className="font-semibold">Lo que cobra un turno en promedio: {pesos(ticket)}</span>
+            <span className="font-semibold">
+              Lo que cobra un turno en promedio: {pesos(ticket)}
+            </span>
             <input
               type="range"
               min={3000}
@@ -171,9 +178,7 @@ function Calculator() {
             <p className="display text-5xl font-extrabold text-[#7fe0b0]">
               {pesos(PRICE)} <span className="text-xl font-semibold">fijos por mes</span>
             </p>
-            <p className="mt-2 opacity-70">
-              Tengas 5 o 500 reservas. Lo que cobrás es todo tuyo.
-            </p>
+            <p className="mt-2 opacity-70">Tengas 5 o 500 reservas. Lo que cobrás es todo tuyo.</p>
           </div>
         </div>
       </div>
@@ -279,8 +284,8 @@ function Pricing() {
       <div>
         <h2 className="display text-[clamp(2.2rem,5vw,3.75rem)] font-bold">Un solo precio.</h2>
         <p className="mt-4 max-w-[44ch] text-lg leading-relaxed opacity-80">
-          Reservas y profesionales sin límite, agenda semanal y la ficha de tus clientes. 30
-          días gratis para probarlo con tu agenda real.
+          Reservas y profesionales sin límite, agenda semanal y la ficha de tus clientes. 30 días
+          gratis para probarlo con tu agenda real.
         </p>
       </div>
       <div className="rounded-[2rem] bg-white p-8 ring-2 ring-[var(--ink)]">

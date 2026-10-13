@@ -28,9 +28,7 @@ export function PanelApp() {
   }, [])
 
   if (session === undefined) return <FullPageSpinner />
-  return (
-    <ToastProvider>{session ? <SignedIn session={session} /> : <LoginScreen />}</ToastProvider>
-  )
+  return <ToastProvider>{session ? <SignedIn session={session} /> : <LoginScreen />}</ToastProvider>
 }
 
 function LoginScreen() {
@@ -108,9 +106,7 @@ function SignedIn({ session }: { session: Session }) {
     return (
       <main className="mx-auto flex max-w-md flex-col gap-4 px-4 py-12">
         <h1 className="text-2xl font-bold">Todavía no tenés un negocio</h1>
-        <p className="text-slate-600">
-          Para usar Turnos, escribinos y te damos acceso en el día.
-        </p>
+        <p className="text-slate-600">Para usar Turnos, escribinos y te damos acceso en el día.</p>
         <Button variant="secondary" onClick={() => void auth.signOut()}>
           Salir
         </Button>
@@ -184,7 +180,9 @@ function Shell() {
                 onClick={() => go(v.path)}
                 aria-current={v.path === view.path ? 'page' : undefined}
                 className={`rounded-full px-3 py-1.5 text-sm font-medium ${
-                  v.path === view.path ? 'bg-slate-900 text-white' : 'text-slate-700 hover:bg-slate-100'
+                  v.path === view.path
+                    ? 'bg-slate-900 text-white'
+                    : 'text-slate-700 hover:bg-slate-100'
                 }`}
               >
                 {v.label}

@@ -49,10 +49,18 @@ export function CalendarPage() {
   return (
     <section className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center gap-2">
-        <Button variant="secondary" onClick={() => setFrom(booking.addDays(from, -7))} aria-label="Semana anterior">
+        <Button
+          variant="secondary"
+          onClick={() => setFrom(booking.addDays(from, -7))}
+          aria-label="Semana anterior"
+        >
           ←
         </Button>
-        <Button variant="secondary" onClick={() => setFrom(booking.addDays(from, 7))} aria-label="Semana siguiente">
+        <Button
+          variant="secondary"
+          onClick={() => setFrom(booking.addDays(from, 7))}
+          aria-label="Semana siguiente"
+        >
           →
         </Button>
         <Button variant="ghost" onClick={() => setFrom(booking.weekStart(today))}>
@@ -154,15 +162,21 @@ export function CalendarPage() {
         </div>
       </div>
 
-      {selected && (
-        <AppointmentSheet item={selected} onClose={() => setSelected(null)} />
-      )}
+      {selected && <AppointmentSheet item={selected} onClose={() => setSelected(null)} />}
       {creating && <NewAppointmentSheet onClose={() => setCreating(false)} />}
     </section>
   )
 }
 
-function Sheet({ title, onClose, children }: { title: string; onClose: () => void; children: React.ReactNode }) {
+function Sheet({
+  title,
+  onClose,
+  children,
+}: {
+  title: string
+  onClose: () => void
+  children: React.ReactNode
+}) {
   return (
     <div className="fixed inset-0 z-20 flex justify-end bg-black/30" onClick={onClose}>
       <div
@@ -202,7 +216,8 @@ function AppointmentSheet({ item, onClose }: { item: AgendaItem; onClose: () => 
     onError: (err) => toast.show(errorMessage(err), 'error'),
   })
   const move = useMutation({
-    mutationFn: () => booking.moveAppointment(item.id, staffId, localToIso(day, time, business.timezone)),
+    mutationFn: () =>
+      booking.moveAppointment(item.id, staffId, localToIso(day, time, business.timezone)),
     onSuccess: async (result) => {
       if (result === 'taken') {
         toast.show('En ese horario ya hay otro turno', 'error')
@@ -235,7 +250,8 @@ function AppointmentSheet({ item, onClose }: { item: AgendaItem; onClose: () => 
         </p>
         {item.customerPhone && <p>{formatPhone(item.customerPhone)}</p>}
         <p className="text-slate-500">
-          {STATUS_LABEL[item.status]} · {item.source === 'online' ? 'Reservó online' : 'Cargado en el panel'}
+          {STATUS_LABEL[item.status]} ·{' '}
+          {item.source === 'online' ? 'Reservó online' : 'Cargado en el panel'}
         </p>
       </div>
       {whatsapp && (
@@ -294,11 +310,13 @@ function AppointmentSheet({ item, onClose }: { item: AgendaItem; onClose: () => 
               value={staffId}
               onChange={(e) => setStaffId(e.target.value)}
             >
-              {(staff.data ?? []).filter((s) => s.active).map((s) => (
-                <option key={s.id} value={s.id}>
-                  {s.name}
-                </option>
-              ))}
+              {(staff.data ?? [])
+                .filter((s) => s.active)
+                .map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {s.name}
+                  </option>
+                ))}
             </select>
           </label>
           <Button loading={move.isPending} onClick={() => move.mutate()}>
@@ -370,11 +388,13 @@ function NewAppointmentSheet({ onClose }: { onClose: () => void }) {
             onChange={(e) => setServiceId(e.target.value)}
           >
             <option value="">Elegí…</option>
-            {(services.data ?? []).filter((s) => s.active).map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.name} ({s.durationMinutes} min)
-              </option>
-            ))}
+            {(services.data ?? [])
+              .filter((s) => s.active)
+              .map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.name} ({s.durationMinutes} min)
+                </option>
+              ))}
           </select>
         </label>
         <label className="flex flex-col gap-1 text-sm">
@@ -385,11 +405,13 @@ function NewAppointmentSheet({ onClose }: { onClose: () => void }) {
             onChange={(e) => setStaffId(e.target.value)}
           >
             <option value="">Cualquiera libre</option>
-            {(staff.data ?? []).filter((s) => s.active).map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.name}
-              </option>
-            ))}
+            {(staff.data ?? [])
+              .filter((s) => s.active)
+              .map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.name}
+                </option>
+              ))}
           </select>
         </label>
         <div className="grid grid-cols-2 gap-2">
@@ -413,7 +435,11 @@ function NewAppointmentSheet({ onClose }: { onClose: () => void }) {
             />
           </label>
         </div>
-        <TextField label="Nombre del cliente" value={name} onChange={(e) => setName(e.target.value)} />
+        <TextField
+          label="Nombre del cliente"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
         <TextField
           label="Celular"
           type="tel"

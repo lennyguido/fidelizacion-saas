@@ -482,7 +482,10 @@ export interface ClientVisit {
   priceMinor: number | null
 }
 
-export async function clientHistory(businessId: string, customerId: string): Promise<ClientVisit[]> {
+export async function clientHistory(
+  businessId: string,
+  customerId: string,
+): Promise<ClientVisit[]> {
   const { data, error } = await db().rpc('client_history', {
     p_business_id: businessId,
     p_customer_id: customerId,

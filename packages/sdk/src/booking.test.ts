@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest'
-import { addDays, dayInTimeZone, minutesOfDay, nextDays, tokenFromHash, weekStart } from './booking.ts'
+import {
+  addDays,
+  dayInTimeZone,
+  minutesOfDay,
+  nextDays,
+  tokenFromHash,
+  weekStart,
+} from './booking.ts'
 
 describe('turnos', () => {
   it('calcula el día en la zona del negocio', () => {
