@@ -128,7 +128,8 @@ begin
 end;
 $$;
 
-create function reputation.update_tag(p_tag_id uuid, p_label text, p_destination text, p_active boolean)
+create function reputation.update_tag(p_tag_id uuid, p_label text default null,
+                                      p_destination text default null, p_active boolean default null)
 returns reputation.tags
 language plpgsql
 security definer

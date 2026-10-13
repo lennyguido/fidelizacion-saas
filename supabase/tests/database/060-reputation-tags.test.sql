@@ -55,7 +55,7 @@ select tests.authenticate_as(:'owner');
 select id as tag_id from reputation.tags where code = :'code' \gset
 select is((reputation.update_tag(:'tag_id', null, 'https://instagram.com/cafesol', null)).destination,
   'https://instagram.com/cafesol', 'the destination changes without reprinting');
-select reputation.update_tag(:'tag_id', null, null, false);
+select reputation.update_tag(:'tag_id', p_active => false);
 reset role;
 set local role service_role;
 select is(reputation.resolve_tap(:'code', 'nfc'), null, 'a turned-off tag does not redirect');

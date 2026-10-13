@@ -76,11 +76,12 @@ export async function updateTag(
   tagId: string,
   changes: { label?: string; destination?: string; active?: boolean },
 ): Promise<void> {
+  // Lo que no viene no se manda: la base deja ese dato como estaba.
   const { error } = await db().rpc('update_tag', {
     p_tag_id: tagId,
-    p_label: changes.label ?? null,
-    p_destination: changes.destination ?? null,
-    p_active: changes.active ?? null,
+    ...(changes.label !== undefined && { p_label: changes.label }),
+    ...(changes.destination !== undefined && { p_destination: changes.destination }),
+    ...(changes.active !== undefined && { p_active: changes.active }),
   })
   if (error) throw fromPostgrestError(error)
 }
