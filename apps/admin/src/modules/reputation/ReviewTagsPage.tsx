@@ -40,7 +40,9 @@ export function ReviewTagsPage() {
       {tags.data && tags.data.length === 0 && (
         <EmptyState title="Todavía no hay carteles" description="Creá el primero arriba." />
       )}
-      {tags.data?.map((tag) => <TagCard key={tag.id} tag={tag} canManage={canManage} />)}
+      {tags.data?.map((tag) => (
+        <TagCard key={tag.id} tag={tag} canManage={canManage} />
+      ))}
     </section>
   )
 }
