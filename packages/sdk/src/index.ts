@@ -74,7 +74,9 @@ export * as booking from './booking.ts'
 export type {
   AgendaItem,
   AppointmentView,
+  BookingClient,
   BookingSettings,
+  ClientVisit,
   HoursRange,
   PublicPage,
   PublicService,

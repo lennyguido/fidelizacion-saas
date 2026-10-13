@@ -1,5 +1,4 @@
 import { useState, type FormEvent } from 'react'
-import { Link } from 'react-router'
 import { useMutation } from '@tanstack/react-query'
 import {
   booking,
@@ -9,7 +8,7 @@ import {
   type StaffMember,
 } from '@plataforma/sdk'
 import { Alert, Button, Card, EmptyState, Spinner, TextField, useToast } from '@plataforma/ui'
-import { useActiveBusiness } from '../../features/business/ActiveBusinessContext'
+import { usePanel } from './context'
 import {
   useBookingSettings,
   useHours,
@@ -29,16 +28,13 @@ const DEFAULT_SETTINGS: BookingSettings = {
 
 /** Turnos → Configurar: servicios, profesionales, horarios y reservas online (dueño/admin). */
 export function BookingSetupPage() {
-  const { business } = useActiveBusiness()
+  const { business } = usePanel()
   if (business.role === 'staff') {
     return <EmptyState title="Solo el dueño o un administrador puede configurar los turnos" />
   }
   return (
     <section className="flex max-w-3xl flex-col gap-4">
-      <Link to={`/b/${business.slug}/turnos`} className="text-sm underline">
-        ← Volver a la agenda
-      </Link>
-      <h1 className="text-2xl font-bold tracking-tight">Configurar turnos</h1>
+      <h1 className="text-2xl font-bold tracking-tight">Configuración</h1>
       <ServicesCard />
       <StaffCard />
       <SettingsCard />
@@ -47,7 +43,7 @@ export function BookingSetupPage() {
 }
 
 function SettingsCard() {
-  const { business } = useActiveBusiness()
+  const { business } = usePanel()
   const settings = useBookingSettings(business.id)
   const services = useServices(business.id)
   const hours = useHours(business.id)
@@ -166,7 +162,7 @@ function NumberSelect(props: {
 }
 
 function ServicesCard() {
-  const { business } = useActiveBusiness()
+  const { business } = usePanel()
   const services = useServices(business.id)
   const invalidate = useInvalidateBooking(business.id)
   const toast = useToast()
@@ -253,7 +249,7 @@ function ServicesCard() {
 }
 
 function StaffCard() {
-  const { business } = useActiveBusiness()
+  const { business } = usePanel()
   const staff = useStaff(business.id)
   const hours = useHours(business.id)
   const invalidate = useInvalidateBooking(business.id)
@@ -310,7 +306,7 @@ function StaffCard() {
 type DayDraft = { on: boolean; start: string; end: string }
 
 function StaffHours({ member, ranges }: { member: StaffMember; ranges: HoursRange[] }) {
-  const { business } = useActiveBusiness()
+  const { business } = usePanel()
   const invalidate = useInvalidateBooking(business.id)
   const toast = useToast()
   const initial: DayDraft[] = booking.WEEKDAYS.map((_, weekday) => {

@@ -22,3 +22,9 @@ Pago adelantado (seña), comisiones por profesional, caja, marketplace, recordat
 
 ## Ángulo
 "Tus clientes sacan turno solos, sin comisiones por turno, y el que dejó de venir recibe un mensaje": Turnos + la recuperación que ya tiene Neriva.
+
+## Fresha (2026-10-13)
+Fuentes: https://www.fresha.com/for-business · opiniones en Capterra (https://capterra.com/p/142138/Shedul-com/reviews/).
+* Tiene: reserva 24/7 y marketplace, calendario por profesional, ficha de cliente con valor histórico, recordatorios, seña/pago adelantado, política de cancelación, reprogramar, caja y terminal, campañas, reseñas, reportes, inventario.
+* Quejas: comisión ("New Client Marketplace Fee", ~20 %) cobrada también a clientes que entran por el link del local; precios que suben y extras por SMS/pagos; soporte lento; calendario difícil, no permite dos profesionales en un turno.
+* Tomamos en esta versión: calendario semanal, ficha de cliente, reprogramar. Después: seña, recordatorios.

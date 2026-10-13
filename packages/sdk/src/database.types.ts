@@ -126,6 +126,16 @@ isOneToOne: false
 "cancel_by_customer":
 { Args: { "p_token": string }; Returns: string
                            },
+"client_history":
+{ Args: { "p_business_id": string,"p_customer_id": string }; Returns: {
+              "id": string,"price_minor": number,"service_name": string,"staff_name": string,"starts_at": string,"status": string
+            }[]
+                           },
+"clients":
+{ Args: { "p_business_id": string,"p_search"?: string }; Returns: {
+              "attended": number,"bookings": number,"customer_id": string,"last_at": string,"name": string,"next_at": string,"no_shows": number,"phone": string,"spent_minor": number
+            }[]
+                           },
 "create_appointment":
 { Args: { "p_business_id": string,"p_created_by": string,"p_name": string,"p_phone": string,"p_service_id": string,"p_source": string,"p_staff_id": string,"p_starts_at": string }; Returns: Json
                            },
@@ -139,6 +149,12 @@ isOneToOne: false
                            },
 "get_public_page":
 { Args: { "p_slug": string }; Returns: Json
+                           },
+"move_appointment":
+{ Args: { "p_appointment_id": string,"p_staff_id": string,"p_starts_at": string }; Returns: string
+                           },
+"reschedule":
+{ Args: { "p_starts_at": string,"p_token": string }; Returns: string
                            },
 "set_status":
 { Args: { "p_appointment_id": string,"p_status": string }; Returns: string

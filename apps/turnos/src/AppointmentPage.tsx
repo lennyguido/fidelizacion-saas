@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { booking, errorMessage } from '@plataforma/sdk'
-import { Alert, Button, FullPageSpinner } from '@plataforma/ui'
+import { booking, errorMessage, type AppointmentView } from '@plataforma/sdk'
+import { Alert, Button, FullPageSpinner, Spinner } from '@plataforma/ui'
 
 const STATUS_TEXT = {
   booked: 'Tu turno está confirmado',
@@ -68,6 +68,16 @@ export function AppointmentPage({ token }: { token: string | null }) {
           turno.
         </p>
       )}
+      {a.canCancel && token && (
+        <Reschedule
+          token={token}
+          view={a}
+          onDone={async (text) => {
+            setNotice(text)
+            await client.invalidateQueries({ queryKey: ['appointment', token] })
+          }}
+        />
+      )}
       {a.canCancel && (
         <Button variant="secondary" loading={cancel.isPending} onClick={() => cancel.mutate()}>
           Cancelar turno
@@ -77,5 +87,84 @@ export function AppointmentPage({ token }: { token: string | null }) {
         Sacar otro turno
       </a>
     </main>
+  )
+}
+
+const RESCHEDULE_TEXT = {
+  rescheduled: 'Listo, cambiamos tu turno.',
+  taken: 'Ese horario se acaba de ocupar. Elegí otro.',
+  too_late: 'Ya no se puede cambiar online: escribile al negocio.',
+  not_booked: 'Este turno ya no está pendiente.',
+  not_found: 'No encontramos este turno.',
+  unavailable: 'El negocio no está tomando cambios online ahora.',
+} as const
+
+/** Cambiar el horario sin cancelar (mismo servicio). */
+function Reschedule(props: {
+  token: string
+  view: AppointmentView
+  onDone: (text: string) => Promise<void>
+}) {
+  const { token, view, onDone } = props
+  const [open, setOpen] = useState(false)
+  const days = booking.nextDays(view.timezone, 14)
+  const [day, setDay] = useState(days[0] ?? '')
+  const slots = useQuery({
+    queryKey: ['reschedule', view.businessSlug, view.serviceId, day],
+    queryFn: () => booking.availableSlots(view.businessSlug, view.serviceId, null, day),
+    enabled: open && Boolean(day),
+  })
+  const change = useMutation({
+    mutationFn: (startsAt: string) => booking.reschedule(token, startsAt),
+    onSuccess: async (result) => {
+      await onDone(RESCHEDULE_TEXT[result])
+      if (result === 'rescheduled') setOpen(false)
+    },
+    onError: (err) => void onDone(errorMessage(err)),
+  })
+
+  if (!open) {
+    return (
+      <Button variant="secondary" onClick={() => setOpen(true)}>
+        Cambiar día u horario
+      </Button>
+    )
+  }
+  return (
+    <section className="flex flex-col gap-3 rounded-2xl bg-white p-4">
+      <h2 className="font-semibold">Elegí el nuevo horario</h2>
+      <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1">
+        {days.map((d) => (
+          <button
+            key={d}
+            type="button"
+            onClick={() => setDay(d)}
+            aria-pressed={d === day}
+            className={`shrink-0 rounded-full px-4 py-2 text-sm font-medium ring-1 ring-inset ${
+              d === day ? 'bg-action text-white ring-action' : 'ring-slate-300'
+            }`}
+          >
+            {booking.formatDay(d)}
+          </button>
+        ))}
+      </div>
+      {slots.isPending && <Spinner />}
+      {slots.data && slots.data.length === 0 && (
+        <p className="text-sm text-slate-600">No hay horarios libres ese día.</p>
+      )}
+      <div className="grid grid-cols-4 gap-2">
+        {slots.data?.map((s) => (
+          <button
+            key={s.startsAt}
+            type="button"
+            disabled={change.isPending}
+            onClick={() => change.mutate(s.startsAt)}
+            className="rounded-full px-3 py-2 text-sm font-medium ring-1 ring-inset ring-slate-300 hover:bg-slate-50"
+          >
+            {booking.formatTime(s.startsAt, view.timezone)}
+          </button>
+        ))}
+      </div>
+    </section>
   )
 }
