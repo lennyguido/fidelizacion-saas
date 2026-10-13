@@ -58,6 +58,7 @@ Proyecto de **desarrollo**: `fidelizacion-saas`, ref `dqpnqcumlyfifewgzyvh` (ún
 | 38 | 20261012175741 | core_plan_features | aplicada 2026-10-12 (D-044; CI verde; funciones y límites por plan) |
 | 39 | 20261012181337 | core_demo_business | aplicada 2026-10-12 (D-045; CI verde). Al aplicarla en desarrollo se volvió a dar permiso anon a `request_redemption`, `get_redemption_request` y `submit_feedback` (el revoke general de loyalty los habría sacado) |
 | 40 | 20261013010400 | core_customer_anonymize_followup | aplicada 2026-10-12 (D-046; borrar datos también cubre cumpleaños, opiniones, alta por QR y mensajes automáticos) |
+| 41 | 20261013020000 | core_team_plan_limit | D-047: el tope de equipo se controla al invitar |
 
 Regla vigente desde 2026-10-09: ninguna migración se aplica sin aprobación explícita del dueño después de revisarla.
 
@@ -90,6 +91,11 @@ Rama `fix/archive-owner-admin-only` (commit `62a7b19`):
 | Punta a punta (Playwright) | CI: `supabase start` + build + `vite preview` + `npx playwright test` (celular y escritorio) | OK: registro → onboarding → panel → login; credenciales incorrectas; mostrador; importación CSV |
 
 Limitación: los tests de punta a punta corren contra un Supabase **local** en CI. El panel todavía **no se probó contra el proyecto de desarrollo remoto**. Eso es lo que falta validar ahora.
+
+## Lunes 12 (noche) — los planes venden solos (D-047)
+
+* Funciones fuera del plan visibles con candado, precio y botón "Pasar a …" (WhatsApp de ventas). Equipo muestra "X de Y lugares" y ofrece el plan siguiente al llegar al tope. Mi negocio muestra qué suma el plan siguiente. Inicio avisa al 80 % del tope de clientes.
+* El tope de equipo se controla al invitar (migración 41). Tests: `053-plan-features` (15), `plans.test.ts`.
 
 ## Lunes 12 — estadísticas, QR en cualquier celular, instalar la tarjeta
 

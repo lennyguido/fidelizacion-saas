@@ -8,6 +8,7 @@ import { statusInfo } from '../features/customers/status'
 import { HomeModuleCards } from '../modules/HomeModuleCards'
 import { FeedbackCard } from './FeedbackCard'
 import { MonthSummaryCard } from './MonthSummaryCard'
+import { PlanLimitNudge } from './PlanLimitNudge'
 import { TeamWeekCard } from './TeamWeekCard'
 import { TopCustomersCard } from './TopCustomersCard'
 import { WeeklyDigestCard } from './WeeklyDigestCard'
@@ -32,6 +33,8 @@ export function HomePage() {
       >
         Registrar una visita
       </Link>
+
+      {business.role !== 'staff' && <PlanLimitNudge />}
 
       <VisitsCard />
 

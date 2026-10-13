@@ -4,6 +4,8 @@ import { Alert, Button, Card, EmptyState, Spinner, useToast } from '@plataforma/
 import { useActiveBusiness } from '../business/ActiveBusinessContext'
 import { useSession } from '../auth/AuthContext'
 import { formatDateTime } from '../../lib/format'
+import { usePlan } from '../business/usePlan'
+import { PlanUpsell } from '../business/PlanUpsell'
 import { InviteForm } from './InviteForm'
 import { useInvalidateTeam, usePendingInvitations, useTeamMembers } from './queries'
 import { roleLabels } from './roles'
@@ -18,10 +20,37 @@ export function TeamPage() {
   return (
     <section className="flex max-w-2xl flex-col gap-4">
       <h1 className="text-2xl font-bold tracking-tight">Equipo</h1>
-      <InviteForm />
+      <TeamSeats />
       <PendingInvitations />
       <Members />
     </section>
+  )
+}
+
+/**
+ * Lugares del equipo según el plan (D-047): cuenta miembros activos e
+ * invitaciones pendientes. Al llegar al tope, en lugar del formulario se ofrece
+ * el plan siguiente.
+ */
+function TeamSeats() {
+  const { business } = useActiveBusiness()
+  const plan = usePlan()
+  const invitations = usePendingInvitations(business.id)
+  const max = plan.data?.features.maxStaff ?? null
+  const used = (plan.data?.usage.staff ?? 0) + (invitations.data?.length ?? 0)
+  const full = max !== null && used >= max
+
+  return (
+    <>
+      {plan.data && (
+        <p className="text-sm text-slate-600" data-testid="team-seats">
+          {max === null
+            ? `Tu plan ${plan.data.name} no tiene límite de equipo.`
+            : `Usás ${used} de ${max} lugares para tu equipo (sin contarte a vos).`}
+        </p>
+      )}
+      {full ? <PlanUpsell limit="maxStaff" used={used} /> : <InviteForm />}
+    </>
   )
 }
 

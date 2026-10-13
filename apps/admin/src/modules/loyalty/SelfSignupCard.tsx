@@ -55,7 +55,7 @@ export function SelfSignupCard() {
       </div>
       {settings.isPending && <Spinner />}
       {settings.error && <p className="text-sm text-slate-500">Todavía no está disponible.</p>}
-      {plan.data && !plan.data.features.selfSignup && <PlanUpsell plans="Local y Cadena" />}
+      {plan.data && !plan.data.features.selfSignup && <PlanUpsell feature="selfSignup" />}
       {settings.data && enabled && (
         <div className="flex flex-col gap-2 rounded-lg bg-slate-50 p-3 text-sm">
           <p className="break-all text-slate-600">{signupUrl(settings.data.code)}</p>
