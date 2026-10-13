@@ -69,6 +69,8 @@ export * as integrations from './integrations.ts'
 export type { IntegrationKey, SimulatedSale } from './integrations.ts'
 export * as access from './access.ts'
 export * as plans from './plans.ts'
+export * as reputation from './reputation.ts'
+export type { ReviewTag } from './reputation.ts'
 export type { CatalogPlan, PlanFeature, PlanLimit } from './plans.ts'
 export {
   DEMO_TRADES,

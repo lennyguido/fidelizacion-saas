@@ -35,6 +35,7 @@ export type AppErrorCode =
   | 'access_required'
   | 'plan_feature_required'
   | 'request_expired'
+  | 'destination_required'
   | 'auth_invalid_credentials'
   | 'auth_email_not_confirmed'
   | 'auth_user_exists'
@@ -67,6 +68,7 @@ interface AuthLikeError {
 }
 
 const DOMAIN_CODES = [
+  'destination_required',
   'empty_segment',
   'campaign_not_draft',
   'control_group',
@@ -169,6 +171,8 @@ export function errorMessage(error: unknown): string {
     invitation_email_mismatch:
       'Esta invitación es para otro email. Salí e ingresá con el email invitado.',
     invitation_unavailable: 'Esta invitación ya se usó, venció o fue cancelada. Pedí una nueva.',
+    destination_required:
+      'Cargá primero el link de reseñas de Google en Mi negocio, o escribí a dónde tiene que llevar el cartel.',
     limit_reached:
       'Llegaste al límite de tu plan. Podés pasarte a un plan más grande desde Mi negocio.',
     insufficient_points: 'No le alcanzan los puntos para esta recompensa.',
