@@ -59,6 +59,7 @@ Proyecto de **desarrollo**: `fidelizacion-saas`, ref `dqpnqcumlyfifewgzyvh` (ún
 | 39 | 20261012181337 | core_demo_business | aplicada 2026-10-12 (D-045; CI verde). Al aplicarla en desarrollo se volvió a dar permiso anon a `request_redemption`, `get_redemption_request` y `submit_feedback` (el revoke general de loyalty los habría sacado) |
 | 40 | 20261013010400 | core_customer_anonymize_followup | aplicada 2026-10-12 (D-046; borrar datos también cubre cumpleaños, opiniones, alta por QR y mensajes automáticos) |
 | 41 | 20261013020000 | core_team_plan_limit | D-047: el tope de equipo se controla al invitar |
+| 42 | 20261013030000 | reputation_tags | D-048: carteles NFC/QR de reseñas; esquema `reputation` expuesto en Data API; Edge Function `tap` publicada |
 
 Regla vigente desde 2026-10-09: ninguna migración se aplica sin aprobación explícita del dueño después de revisarla.
 
@@ -91,6 +92,11 @@ Rama `fix/archive-owner-admin-only` (commit `62a7b19`):
 | Punta a punta (Playwright) | CI: `supabase start` + build + `vite preview` + `npx playwright test` (celular y escritorio) | OK: registro → onboarding → panel → login; credenciales incorrectas; mostrador; importación CSV |
 
 Limitación: los tests de punta a punta corren contra un Supabase **local** en CI. El panel todavía **no se probó contra el proyecto de desarrollo remoto**. Eso es lo que falta validar ahora.
+
+## Lunes 12 (noche) — carteles de reseñas NFC/QR (D-048)
+
+* Módulo **Reseñas**: crear cartel, link para grabar en el chip (NFC Tools), QR para imprimir, cambiar destino sin regrabar, toques por mes; tarjeta en Inicio. Link corto `neriva.net/r/<código>` (Vercel → Edge Function `tap`).
+* Workflow **Format**: un commit con `[format]` en el mensaje corre Prettier en GitHub y commitea el resultado.
 
 ## Lunes 12 (noche) — los planes venden solos (D-047)
 
