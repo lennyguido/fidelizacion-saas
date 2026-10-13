@@ -3,7 +3,8 @@ import { booking } from '@plataforma/sdk'
 
 export const bookingKeys = {
   all: (businessId: string) => ['customers', businessId, 'booking'] as const,
-  agenda: (businessId: string, day: string) => ['customers', businessId, 'booking', 'agenda', day] as const,
+  agenda: (businessId: string, day: string) =>
+    ['customers', businessId, 'booking', 'agenda', day] as const,
   settings: (businessId: string) => ['customers', businessId, 'booking', 'settings'] as const,
   services: (businessId: string) => ['customers', businessId, 'booking', 'services'] as const,
   staff: (businessId: string) => ['customers', businessId, 'booking', 'staff'] as const,
@@ -32,11 +33,17 @@ export function useServices(businessId: string) {
 }
 
 export function useStaff(businessId: string) {
-  return useQuery({ queryKey: bookingKeys.staff(businessId), queryFn: () => booking.listStaff(businessId) })
+  return useQuery({
+    queryKey: bookingKeys.staff(businessId),
+    queryFn: () => booking.listStaff(businessId),
+  })
 }
 
 export function useHours(businessId: string) {
-  return useQuery({ queryKey: bookingKeys.hours(businessId), queryFn: () => booking.listHours(businessId) })
+  return useQuery({
+    queryKey: bookingKeys.hours(businessId),
+    queryFn: () => booking.listHours(businessId),
+  })
 }
 
 export function useInvalidateBooking(businessId: string) {

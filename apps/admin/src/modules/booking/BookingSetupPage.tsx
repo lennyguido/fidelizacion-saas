@@ -74,7 +74,9 @@ function SettingsCard() {
     <Card className="flex flex-col gap-4">
       <h2 className="text-base font-semibold">Reservas online</h2>
       {!ready && (
-        <Alert tone="info">Para prenderlas, cargá al menos un servicio y los horarios de alguien.</Alert>
+        <Alert tone="info">
+          Para prenderlas, cargá al menos un servicio y los horarios de alguien.
+        </Alert>
       )}
       <label className="flex items-center gap-2 text-sm font-medium">
         <input
@@ -211,8 +213,16 @@ function ServicesCard() {
           </li>
         ))}
       </ul>
-      <form onSubmit={handleSubmit} className="grid gap-3 sm:grid-cols-[2fr_1fr_1fr_auto] sm:items-end">
-        <TextField label="Servicio" placeholder="Corte" value={name} onChange={(e) => setName(e.target.value)} />
+      <form
+        onSubmit={handleSubmit}
+        className="grid gap-3 sm:grid-cols-[2fr_1fr_1fr_auto] sm:items-end"
+      >
+        <TextField
+          label="Servicio"
+          placeholder="Corte"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
         <label className="flex flex-col gap-1.5 text-sm">
           <span className="font-medium text-slate-800">Dura</span>
           <select
@@ -338,7 +348,11 @@ function StaffHours({ member, ranges }: { member: StaffMember; ranges: HoursRang
       {current.map((d, weekday) => (
         <div key={weekday} className="flex flex-wrap items-center gap-2 text-sm">
           <label className="flex w-28 items-center gap-2">
-            <input type="checkbox" checked={d.on} onChange={(e) => setDay(weekday, { on: e.target.checked })} />
+            <input
+              type="checkbox"
+              checked={d.on}
+              onChange={(e) => setDay(weekday, { on: e.target.checked })}
+            />
             {booking.WEEKDAYS[weekday]}
           </label>
           {d.on && (
@@ -362,7 +376,12 @@ function StaffHours({ member, ranges }: { member: StaffMember; ranges: HoursRang
           )}
         </div>
       ))}
-      <Button className="w-fit" loading={save.isPending} disabled={days === null} onClick={() => save.mutate()}>
+      <Button
+        className="w-fit"
+        loading={save.isPending}
+        disabled={days === null}
+        onClick={() => save.mutate()}
+      >
         Guardar horarios
       </Button>
     </div>

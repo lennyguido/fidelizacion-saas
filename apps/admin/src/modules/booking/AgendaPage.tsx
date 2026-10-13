@@ -73,13 +73,21 @@ export function AgendaPage() {
       )}
 
       <div className="flex items-center gap-2">
-        <Button variant="secondary" onClick={() => setDay(shiftDay(day, -1))} aria-label="Día anterior">
+        <Button
+          variant="secondary"
+          onClick={() => setDay(shiftDay(day, -1))}
+          aria-label="Día anterior"
+        >
           ←
         </Button>
         <p className="min-w-40 text-center font-semibold capitalize">
           {day === today ? 'Hoy' : booking.formatDay(day)}
         </p>
-        <Button variant="secondary" onClick={() => setDay(shiftDay(day, 1))} aria-label="Día siguiente">
+        <Button
+          variant="secondary"
+          onClick={() => setDay(shiftDay(day, 1))}
+          aria-label="Día siguiente"
+        >
           →
         </Button>
         {day !== today && (
@@ -92,7 +100,9 @@ export function AgendaPage() {
       {agenda.isPending && <Spinner />}
       {agenda.error && <Alert tone="error">{errorMessage(agenda.error)}</Alert>}
       {agenda.data && agenda.data.length === 0 && <EmptyState title="No hay turnos este día" />}
-      {agenda.data?.map((item) => <AgendaRow key={item.id} item={item} />)}
+      {agenda.data?.map((item) => (
+        <AgendaRow key={item.id} item={item} />
+      ))}
     </section>
   )
 }
@@ -102,7 +112,8 @@ function AgendaRow({ item }: { item: AgendaItem }) {
   const invalidate = useInvalidateBooking(business.id)
   const toast = useToast()
   const update = useMutation({
-    mutationFn: (status: 'attended' | 'no_show' | 'cancelled') => booking.setStatus(item.id, status),
+    mutationFn: (status: 'attended' | 'no_show' | 'cancelled') =>
+      booking.setStatus(item.id, status),
     onSuccess: async () => {
       await invalidate()
     },

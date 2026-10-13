@@ -207,7 +207,10 @@ export async function setStatus(
   appointmentId: string,
   status: 'attended' | 'no_show' | 'cancelled',
 ): Promise<void> {
-  const { error } = await db().rpc('set_status', { p_appointment_id: appointmentId, p_status: status })
+  const { error } = await db().rpc('set_status', {
+    p_appointment_id: appointmentId,
+    p_status: status,
+  })
   if (error) throw fromPostgrestError(error)
 }
 
@@ -267,7 +270,9 @@ export interface HoursRange {
 export async function getSettings(businessId: string): Promise<BookingSettings | null> {
   const { data, error } = await db()
     .from('settings')
-    .select('enabled, slot_minutes, min_notice_minutes, max_days_ahead, cancel_notice_minutes, message')
+    .select(
+      'enabled, slot_minutes, min_notice_minutes, max_days_ahead, cancel_notice_minutes, message',
+    )
     .eq('business_id', businessId)
     .maybeSingle()
   if (error) throw fromPostgrestError(error)
@@ -376,7 +381,11 @@ export async function replaceHours(
   staffId: string,
   ranges: { weekday: number; startTime: string; endTime: string }[],
 ): Promise<void> {
-  const del = await db().from('hours').delete().eq('business_id', businessId).eq('staff_id', staffId)
+  const del = await db()
+    .from('hours')
+    .delete()
+    .eq('business_id', businessId)
+    .eq('staff_id', staffId)
   if (del.error) throw fromPostgrestError(del.error)
   if (ranges.length === 0) return
   const { error } = await db()

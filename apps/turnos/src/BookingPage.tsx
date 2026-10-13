@@ -238,8 +238,9 @@ function ContactForm(props: {
   return (
     <Step title="4. Tus datos">
       <p className="text-sm text-slate-600">
-        {service.name} · {booking.formatDay(booking.dayInTimeZone(new Date(slot.startsAt), page.timezone))}{' '}
-        a las {booking.formatTime(slot.startsAt, page.timezone)}
+        {service.name} ·{' '}
+        {booking.formatDay(booking.dayInTimeZone(new Date(slot.startsAt), page.timezone))} a las{' '}
+        {booking.formatTime(slot.startsAt, page.timezone)}
       </p>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4" noValidate>
         {message && <Alert tone="error">{message}</Alert>}
@@ -257,7 +258,9 @@ function ContactForm(props: {
           inputMode="tel"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
-          error={phoneInvalid ? 'Escribilo con característica, por ejemplo 11 2233 4455.' : undefined}
+          error={
+            phoneInvalid ? 'Escribilo con característica, por ejemplo 11 2233 4455.' : undefined
+          }
           hint="Para avisarte si hay algún cambio."
         />
         <label className="flex items-start gap-2 text-sm text-slate-700">
