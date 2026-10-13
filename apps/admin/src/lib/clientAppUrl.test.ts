@@ -14,6 +14,9 @@ describe('clientAppUrl', () => {
       'https://my-space-5174.app.github.dev',
     )
   })
+  it('published panel without the variable uses tarjeta.<domain>', () => {
+    expect(clientAppUrl({}, loc('https://panel.neriva.net/b/x'))).toBe('https://tarjeta.neriva.net')
+  })
   it('uses port 5174 locally', () => {
     expect(clientAppUrl({}, loc('http://localhost:5173/'))).toBe('http://localhost:5174')
   })
