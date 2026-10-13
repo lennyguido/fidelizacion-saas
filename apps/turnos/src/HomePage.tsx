@@ -322,7 +322,9 @@ function Pricing() {
             <li>Todo lo del plan Turnos</li>
             <li>Tu web con fotos, servicios, precios y el botón de reservar adentro</li>
             <li>Tu dominio propio (tunegocio.com.ar): el primer año va incluido en el armado</li>
-            <li>La armamos nosotros. Si cambiás un precio en tu agenda, la web se actualiza sola</li>
+            <li>
+              La armamos nosotros. Si cambiás un precio en tu agenda, la web se actualiza sola
+            </li>
           </ul>
           <a
             href={WEB_LINK}
