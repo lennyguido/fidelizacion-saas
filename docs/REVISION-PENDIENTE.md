@@ -1,3 +1,5 @@
+> **2026-10-12:** todo lo de este archivo está integrado y aplicado en desarrollo (D-046). Queda como historia.
+
 # Cambios esperando revisión
 
 > Actualizado 2026-10-09 15:20: migraciones 10 (archivado) y 15 (puntos, rama `feat/loyalty-db`) aplicadas en desarrollo e integradas a `main`. Esperan al mentor: 11–14 (equipo, privacidad, dueños).
