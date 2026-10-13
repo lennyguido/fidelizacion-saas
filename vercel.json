@@ -1,0 +1,9 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    {
+      "source": "/r/:code",
+      "destination": "https://dqpnqcumlyfifewgzyvh.supabase.co/functions/v1/tap/:code"
+    }
+  ]
+}

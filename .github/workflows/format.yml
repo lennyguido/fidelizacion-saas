@@ -1,0 +1,33 @@
+name: Format
+
+# Formatea el código con Prettier y commitea el resultado. Corre solo cuando el
+# mensaje del commit incluye [format] (para quien no puede correr Prettier local).
+on:
+  push:
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    if: contains(github.event.head_commit.message, '[format]')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npx prettier --write .
+      - name: Commit if changed
+        run: |
+          if git diff --quiet; then
+            echo "already formatted"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "style: prettier"
+          git pull --rebase
+          git push

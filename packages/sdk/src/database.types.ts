@@ -1991,6 +1991,105 @@ isOneToOne: false
           CompositeTypes: {
             [_ in never]: never
           }
+        },"reputation": {
+          Tables: {
+            "tags": {
+                  Row: {
+                    "active": boolean,"business_id": string,"code": string,"created_at": string,"created_by": string | null,"destination": string,"id": string,"label": string,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "active"?: boolean,"business_id": string,"code": string,"created_at"?: string,"created_by"?: string | null,"destination": string,"id"?: string,"label": string,"updated_at"?: string
+                  }
+                  Update: {
+                    "active"?: boolean,"business_id"?: string,"code"?: string,"created_at"?: string,"created_by"?: string | null,"destination"?: string,"id"?: string,"label"?: string,"updated_at"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
+                },"taps": {
+                  Row: {
+                    "business_id": string,"id": number,"source": string,"tag_id": string,"tapped_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "business_id": string,"id"?: never,"source"?: string,"tag_id": string,"tapped_at"?: string
+                  }
+                  Update: {
+                    "business_id"?: string,"id"?: never,"source"?: string,"tag_id"?: string,"tapped_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "taps_business_id_tag_id_fkey"
+      columns: ["business_id","tag_id"]
+isOneToOne: false
+      referencedRelation: "tags"
+      referencedColumns: ["business_id","id"]
+    }
+                  ]
+                }
+          }
+          Views: {
+            [_ in never]: never
+          }
+          Functions: {
+            "create_tag":
+{ Args: { "p_business_id": string,"p_destination"?: string,"p_label": string }; Returns: {
+              "active": boolean,
+"business_id": string,
+"code": string,
+"created_at": string,
+"created_by": string | null,
+"destination": string,
+"id": string,
+"label": string,
+"updated_at": string
+            }
+                          SetofOptions: {
+        from: "*"
+        to: "tags"
+        isOneToOne: true
+        isSetofReturn: false
+      } },
+"new_code":
+{ Args: Record<PropertyKey, never>; Returns: string
+                           },
+"require_manager":
+{ Args: { "p_business_id": string }; Returns: undefined
+                           },
+"resolve_tap":
+{ Args: { "p_code": string,"p_source"?: string }; Returns: string
+                           },
+"tag_stats":
+{ Args: { "p_business_id": string }; Returns: {
+              "last_tap_at": string,"tag_id": string,"taps_last_month": number,"taps_this_month": number,"taps_total": number
+            }[]
+                           },
+"update_tag":
+{ Args: { "p_active"?: boolean,"p_destination"?: string,"p_label"?: string,"p_tag_id": string }; Returns: {
+              "active": boolean,
+"business_id": string,
+"code": string,
+"created_at": string,
+"created_by": string | null,
+"destination": string,
+"id": string,
+"label": string,
+"updated_at": string
+            }
+                          SetofOptions: {
+        from: "*"
+        to: "tags"
+        isOneToOne: true
+        isSetofReturn: false
+      } }
+          }
+          Enums: {
+            [_ in never]: never
+          }
+          CompositeTypes: {
+            [_ in never]: never
+          }
         }
 }
 
@@ -2105,6 +2204,10 @@ export const Constants = {
             
           }
         },"loyalty": {
+          Enums: {
+            
+          }
+        },"reputation": {
           Enums: {
             
           }

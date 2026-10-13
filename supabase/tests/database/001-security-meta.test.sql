@@ -86,6 +86,9 @@ select set_eq(
       where n.nspname in (select name from platform_schemas)
         and has_function_privilege('authenticated', p.oid, 'execute') $$,
   $$ values
+       ('reputation.create_tag(uuid,text,text)'),
+       ('reputation.update_tag(uuid,text,text,boolean)'),
+       ('reputation.tag_stats(uuid)'),
        ('core.my_business_ids()'),
        ('core.my_business_ids_with_role(text[])'),
        ('core.my_business_ids_with_module(text)'),

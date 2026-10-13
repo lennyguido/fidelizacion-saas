@@ -7,7 +7,7 @@ enabled = true
 port = 54321
 # Esquemas expuestos por la API. Agregar cada módulo nuevo (loyalty, recovery, ...).
 # En el proyecto remoto se configura igual en Project Settings → Data API → Exposed schemas.
-schemas = ["public", "graphql_public", "core", "loyalty"]
+schemas = ["public", "graphql_public", "core", "loyalty", "reputation"]
 extra_search_path = ["public", "extensions"]
 max_rows = 1000
 
@@ -47,3 +47,6 @@ verify_jwt = true
 
 [functions.team-invite]
 verify_jwt = true
+
+[functions.tap]
+verify_jwt = false
