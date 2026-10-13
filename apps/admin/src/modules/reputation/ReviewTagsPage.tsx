@@ -158,8 +158,8 @@ function TagCard({ tag, canManage }: { tag: ReviewTag; canManage: boolean }) {
           <p className="font-medium">Link para grabar en el chip NFC</p>
           <p className="break-all rounded bg-slate-50 px-2 py-1 font-mono text-xs">{nfcLink}</p>
           <p className="text-xs text-slate-500">
-            Con la app gratis NFC Tools: Escribir → Agregar registro → URL → pegar este link
-            → Escribir, y apoyar el chip.
+            Con la app gratis NFC Tools: Escribir → Agregar registro → URL → pegar este link →
+            Escribir, y apoyar el chip.
           </p>
           <Button variant="secondary" onClick={() => void copy()} className="w-fit">
             Copiar link
