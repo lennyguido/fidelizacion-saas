@@ -65,12 +65,19 @@ begin
 
   -- Se libera el horario actual para que cuente como libre, y se busca el nuevo.
   update booking.appointments set status = 'cancelled' where id = v_appt.id;
+  -- Primero el mismo profesional; si no está libre, cualquiera.
   select f.staff_id into v_staff
-    from booking.free_slots(v_appt.business_id, v_appt.service_id, null,
+    from booking.free_slots(v_appt.business_id, v_appt.service_id, v_appt.staff_id,
                             (p_starts_at at time zone v_tz)::date) f
    where f.starts_at = p_starts_at
-   order by (f.staff_id = v_appt.staff_id) desc
    limit 1;
+  if v_staff is null then
+    select f.staff_id into v_staff
+      from booking.free_slots(v_appt.business_id, v_appt.service_id, null,
+                              (p_starts_at at time zone v_tz)::date) f
+     where f.starts_at = p_starts_at
+     limit 1;
+  end if;
   if v_staff is null then
     update booking.appointments set status = 'booked' where id = v_appt.id;
     return 'taken';
