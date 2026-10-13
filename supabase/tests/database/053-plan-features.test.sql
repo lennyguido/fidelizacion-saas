@@ -3,7 +3,7 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 
-select plan(12);
+select plan(15);
 
 select tests.create_user('barrio@test.local') as owner \gset
 select tests.create_user('cajero1@test.local') as staff1 \gset
@@ -44,6 +44,16 @@ select is(
 
 -- Límites ---------------------------------------------------------------------------
 select tests.add_member(:'biz', :'staff1', 'staff');
+-- Al invitar ya se controla el tope (D-047): 1 miembro + 1 invitación pendiente = 2.
+select tests.authenticate_as(:'owner');
+select lives_ok(format($$ select core.create_invitation(%L, 'nuevo@test.local', 'staff') $$, :'biz'),
+  'Barrio can invite while under the team limit');
+select throws_ok(format($$ select core.create_invitation(%L, 'otro@test.local', 'staff') $$, :'biz'),
+  '54000', null, 'an invitation over the team limit is refused when inviting');
+select lives_ok(format($$ select core.create_invitation(%L, 'nuevo@test.local', 'staff') $$, :'biz'),
+  'replacing the pending invitation for the same email is still allowed');
+reset role;
+update core.invitations set revoked_at = now() where business_id = :'biz' and revoked_at is null;
 select tests.add_member(:'biz', :'staff2', 'staff');
 select throws_ok(format($$ select tests.add_member(%L, %L, 'staff') $$, :'biz', :'staff3'),
   '54000', null, 'Barrio allows 2 team members besides the owner');

@@ -51,7 +51,7 @@ export function AutomationsPage() {
         </Link>
       </div>
       {plan.data && !plan.data.features.automations ? (
-        <PlanUpsell plans="Local y Cadena" />
+        <PlanUpsell feature="automations" />
       ) : (
         <div className="flex flex-wrap gap-2">
           <Button variant="secondary" loading={runNow.isPending} onClick={() => runNow.mutate()}>

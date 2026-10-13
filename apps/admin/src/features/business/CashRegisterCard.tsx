@@ -66,7 +66,7 @@ export function CashRegisterCard() {
           Generar clave
         </Button>
       </div>
-      {plan.data && !plan.data.features.cashRegister && <PlanUpsell plans="Cadena" />}
+      {plan.data && !plan.data.features.cashRegister && <PlanUpsell feature="cashRegister" />}
       {keys.isPending && <Spinner />}
       {keys.error && <p className="text-sm text-slate-500">Todavía no está disponible.</p>}
       {keys.data && keys.data.length > 0 && (
