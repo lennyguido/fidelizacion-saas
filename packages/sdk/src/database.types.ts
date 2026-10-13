@@ -31,6 +31,26 @@ isOneToOne: false
       referencedColumns: ["business_id","id"]
     }
                   ]
+                },"calendar_feeds": {
+                  Row: {
+                    "business_id": string,"created_at": string,"staff_id": string,"token": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "business_id": string,"created_at"?: string,"staff_id": string,"token": string
+                  }
+                  Update: {
+                    "business_id"?: string,"created_at"?: string,"staff_id"?: string,"token"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "calendar_feeds_business_id_staff_id_fkey"
+      columns: ["business_id","staff_id"]
+isOneToOne: true
+      referencedRelation: "staff"
+      referencedColumns: ["business_id","id"]
+    }
+                  ]
                 },"hours": {
                   Row: {
                     "business_id": string,"end_time": string,"id": string,"staff_id": string,"start_time": string,"weekday": number
@@ -123,6 +143,14 @@ isOneToOne: false
         isOneToOne: true
         isSetofReturn: false
       } },
+"calendar_events":
+{ Args: { "p_token": string }; Returns: {
+              "business_name": string,"customer_name": string,"customer_phone": string,"ends_at": string,"id": string,"service_name": string,"staff_name": string,"starts_at": string,"status": string
+            }[]
+                           },
+"calendar_token":
+{ Args: { "p_rotate"?: boolean,"p_staff_id": string }; Returns: string
+                           },
 "cancel_by_customer":
 { Args: { "p_token": string }; Returns: string
                            },
