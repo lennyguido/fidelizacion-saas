@@ -2066,7 +2066,7 @@ isOneToOne: false
             }[]
                            },
 "update_tag":
-{ Args: { "p_active": boolean,"p_destination": string,"p_label": string,"p_tag_id": string }; Returns: {
+{ Args: { "p_active"?: boolean,"p_destination"?: string,"p_label"?: string,"p_tag_id": string }; Returns: {
               "active": boolean,
 "business_id": string,
 "code": string,
