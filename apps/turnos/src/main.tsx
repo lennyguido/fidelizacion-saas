@@ -4,6 +4,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { initSupabase, readPublicEnv } from '@plataforma/sdk'
 import { ErrorBoundary } from '@plataforma/ui'
 import { App } from '@/App'
+import '@fontsource-variable/bricolage-grotesque'
+import '@fontsource/figtree/400.css'
+import '@fontsource/figtree/600.css'
 import '@/index.css'
 
 const rootElement = document.getElementById('root')

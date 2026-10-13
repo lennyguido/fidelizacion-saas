@@ -42,6 +42,8 @@ export type BookStatus =
   | 'unavailable'
 
 export interface AppointmentView {
+  serviceId: string
+  staffId: string
   status: 'booked' | 'cancelled' | 'attended' | 'no_show'
   startsAt: string
   endsAt: string
@@ -408,4 +410,116 @@ export const WEEKDAYS = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', '
 export const BOOKING_BASE_URL = 'https://turnos.neriva.net'
 export function publicBookingUrl(slug: string): string {
   return `${BOOKING_BASE_URL}/${slug}`
+}
+
+// Reprogramar, mover y clientes (D-050) -------------------------------------------------
+
+export type RescheduleResult =
+  | 'rescheduled'
+  | 'taken'
+  | 'too_late'
+  | 'not_booked'
+  | 'not_found'
+  | 'unavailable'
+
+export async function reschedule(token: string, startsAt: string): Promise<RescheduleResult> {
+  const { data, error } = await db().rpc('reschedule', { p_token: token, p_starts_at: startsAt })
+  if (error) throw fromPostgrestError(error)
+  return data as RescheduleResult
+}
+
+export async function moveAppointment(
+  appointmentId: string,
+  staffId: string,
+  startsAt: string,
+): Promise<'moved' | 'taken'> {
+  const { data, error } = await db().rpc('move_appointment', {
+    p_appointment_id: appointmentId,
+    p_staff_id: staffId,
+    p_starts_at: startsAt,
+  })
+  if (error) throw fromPostgrestError(error)
+  return data as 'moved' | 'taken'
+}
+
+export interface BookingClient {
+  customerId: string
+  name: string
+  phone: string | null
+  bookings: number
+  attended: number
+  noShows: number
+  spentMinor: number
+  lastAt: string | null
+  nextAt: string | null
+}
+
+export async function clients(businessId: string, search: string): Promise<BookingClient[]> {
+  const { data, error } = await db().rpc('clients', {
+    p_business_id: businessId,
+    p_search: search,
+  })
+  if (error) throw fromPostgrestError(error)
+  return (data ?? []).map((row) => ({
+    customerId: row.customer_id,
+    name: row.name,
+    phone: row.phone,
+    bookings: Number(row.bookings),
+    attended: Number(row.attended),
+    noShows: Number(row.no_shows),
+    spentMinor: Number(row.spent_minor),
+    lastAt: row.last_at,
+    nextAt: row.next_at,
+  }))
+}
+
+export interface ClientVisit {
+  id: string
+  startsAt: string
+  status: AppointmentView['status']
+  serviceName: string
+  staffName: string
+  priceMinor: number | null
+}
+
+export async function clientHistory(businessId: string, customerId: string): Promise<ClientVisit[]> {
+  const { data, error } = await db().rpc('client_history', {
+    p_business_id: businessId,
+    p_customer_id: customerId,
+  })
+  if (error) throw fromPostgrestError(error)
+  return (data ?? []).map((row) => ({
+    id: row.id,
+    startsAt: row.starts_at,
+    status: row.status as ClientVisit['status'],
+    serviceName: row.service_name,
+    staffName: row.staff_name,
+    priceMinor: row.price_minor,
+  }))
+}
+
+/** Suma días a una fecha AAAA-MM-DD. */
+export function addDays(day: string, delta: number): string {
+  const [y, m, d] = day.split('-').map(Number)
+  return new Date(Date.UTC(y!, m! - 1, d! + delta)).toISOString().slice(0, 10)
+}
+
+/** Lunes de la semana de esa fecha (AAAA-MM-DD). */
+export function weekStart(day: string): string {
+  const [y, m, d] = day.split('-').map(Number)
+  const dow = new Date(Date.UTC(y!, m! - 1, d!)).getUTCDay()
+  return addDays(day, -((dow + 6) % 7))
+}
+
+/** Minutos desde la medianoche (hora del negocio) de un instante. */
+export function minutesOfDay(iso: string, timeZone: string): number {
+  const parts = new Intl.DateTimeFormat('en-GB', {
+    timeZone,
+    hour: '2-digit',
+    minute: '2-digit',
+    hourCycle: 'h23',
+  }).formatToParts(new Date(iso))
+  const h = Number(parts.find((p) => p.type === 'hour')?.value ?? 0)
+  const m = Number(parts.find((p) => p.type === 'minute')?.value ?? 0)
+  return h * 60 + m
 }

@@ -12,3 +12,36 @@ body {
   font-size: 17px;
   letter-spacing: -0.022em;
 }
+
+/* Página de venta (D-050): paleta "esmalte". */
+.sales {
+  --ink: #1e1b2e;
+  --lacquer: #b0175a;
+  --lilac: #efe9f7;
+  --paper: #f7f7fa;
+  --saved: #2e7d5b;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Figtree', system-ui, sans-serif;
+  letter-spacing: -0.01em;
+}
+.sales .display {
+  font-family: 'Bricolage Grotesque Variable', 'Figtree', sans-serif;
+  font-variation-settings: 'wdth' 85;
+  letter-spacing: -0.035em;
+  line-height: 0.95;
+}
+.sales input[type='range'] {
+  accent-color: var(--lacquer);
+}
+.sales a:focus-visible,
+.sales button:focus-visible,
+.sales input:focus-visible {
+  outline: 3px solid var(--lacquer);
+  outline-offset: 3px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .sales .count {
+    transition: color 0.2s;
+  }
+}

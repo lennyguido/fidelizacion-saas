@@ -50,3 +50,25 @@ export function useInvalidateBooking(businessId: string) {
   const client = useQueryClient()
   return () => client.invalidateQueries({ queryKey: bookingKeys.all(businessId) })
 }
+
+export function useWeek(businessId: string, from: string) {
+  return useQuery({
+    queryKey: [...bookingKeys.all(businessId), 'week', from],
+    queryFn: () => booking.agenda(businessId, from, booking.addDays(from, 6)),
+  })
+}
+
+export function useClients(businessId: string, search: string) {
+  return useQuery({
+    queryKey: [...bookingKeys.all(businessId), 'clients', search],
+    queryFn: () => booking.clients(businessId, search),
+  })
+}
+
+export function useClientHistory(businessId: string, customerId: string | null) {
+  return useQuery({
+    queryKey: [...bookingKeys.all(businessId), 'history', customerId],
+    queryFn: () => booking.clientHistory(businessId, customerId ?? ''),
+    enabled: Boolean(customerId),
+  })
+}
