@@ -380,6 +380,93 @@ function StaffHours({ member, ranges }: { member: StaffMember; ranges: HoursRang
       >
         Guardar horarios
       </Button>
+      <PhoneCalendar member={member} />
+    </div>
+  )
+}
+
+/** "Agregar a mi calendario": los turnos aparecen en el calendario del celular (D-051). */
+function PhoneCalendar({ member }: { member: StaffMember }) {
+  const { business } = usePanel()
+  const toast = useToast()
+  const [token, setToken] = useState<string | null>(null)
+  const canManage = business.role === 'owner' || business.role === 'admin'
+
+  const load = useMutation({
+    mutationFn: (rotate: boolean) => booking.calendarToken(member.id, rotate),
+    onSuccess: (value, rotate) => {
+      setToken(value)
+      if (rotate) toast.show('Link nuevo creado. El anterior ya no funciona.', 'success')
+    },
+    onError: (err) => toast.show(errorMessage(err), 'error'),
+  })
+
+  if (!canManage) return null
+  if (!token) {
+    return (
+      <Button
+        variant="secondary"
+        className="w-fit"
+        loading={load.isPending}
+        onClick={() => load.mutate(false)}
+      >
+        Agregar a mi calendario
+      </Button>
+    )
+  }
+
+  const urls = booking.calendarFeedUrls(token)
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(urls.https)
+      toast.show('Link copiado', 'success')
+    } catch {
+      toast.show('No se pudo copiar: mantené apretado el link y copialo a mano.', 'error')
+    }
+  }
+
+  return (
+    <div className="flex flex-col gap-3 rounded-xl bg-white p-3 text-sm ring-1 ring-slate-200">
+      <p className="font-medium">Turnos de {member.name} en el calendario del celular</p>
+      <div className="flex flex-wrap gap-2">
+        <a
+          href={urls.webcal}
+          className="inline-flex h-10 items-center rounded-full bg-action px-4 font-medium text-white"
+        >
+          Abrir en iPhone
+        </a>
+        <Button variant="secondary" onClick={() => void copy()}>
+          Copiar link
+        </Button>
+      </div>
+      <p className="break-all rounded-lg bg-slate-50 px-3 py-2 font-mono text-xs">{urls.https}</p>
+      <div className="text-slate-600">
+        <p>
+          <strong>iPhone:</strong> tocá “Abrir en iPhone” desde el celular y aceptá “Suscribirse”.
+        </p>
+        <p>
+          <strong>Google Calendar:</strong> en la compu, entrá a calendar.google.com → “Otros
+          calendarios” → “+” → “Desde URL”, pegá el link y tocá “Agregar calendario”. Después
+          aparece solo en el celular.
+        </p>
+        <p className="mt-1">
+          El calendario se actualiza solo: iPhone cada 15 minutos aprox.; Google puede tardar
+          varias horas. Mirá siempre el panel para lo urgente.
+        </p>
+      </div>
+      <p className="text-xs text-slate-500">
+        Quien tenga este link ve los turnos (nombre y celular de los clientes). Si se lo pasaste a
+        alguien que ya no trabaja con vos,{' '}
+        <button
+          type="button"
+          className="font-medium underline"
+          disabled={load.isPending}
+          onClick={() => load.mutate(true)}
+        >
+          creá un link nuevo
+        </button>
+        .
+      </p>
     </div>
   )
 }

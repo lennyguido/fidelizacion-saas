@@ -526,3 +526,24 @@ export function minutesOfDay(iso: string, timeZone: string): number {
   const m = Number(parts.find((p) => p.type === 'minute')?.value ?? 0)
   return h * 60 + m
 }
+
+// Calendario del celular (D-051) --------------------------------------------------------
+
+/**
+ * Link secreto del calendario de un profesional (dueño o admin). Se crea la primera vez;
+ * con `rotate` se cambia y el link viejo deja de funcionar.
+ */
+export async function calendarToken(staffId: string, rotate = false): Promise<string> {
+  const { data, error } = await db().rpc('calendar_token', {
+    p_staff_id: staffId,
+    p_rotate: rotate,
+  })
+  if (error) throw fromPostgrestError(error)
+  return data as string
+}
+
+/** Dirección del calendario para Google/Outlook (https) y para iPhone (webcal). */
+export function calendarFeedUrls(token: string): { https: string; webcal: string } {
+  const https = `${BOOKING_BASE_URL}/cal/${token}.ics`
+  return { https, webcal: https.replace(/^https:/, 'webcal:') }
+}

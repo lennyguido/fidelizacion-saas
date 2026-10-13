@@ -104,6 +104,7 @@ select set_eq(
        ('booking.move_appointment(uuid,uuid,timestamp with time zone)'),
        ('booking.clients(uuid,text)'),
        ('booking.client_history(uuid,uuid)'),
+       ('booking.calendar_token(uuid,boolean)'),
        ('reputation.create_tag(uuid,text,text)'),
        ('reputation.update_tag(uuid,text,text,boolean)'),
        ('reputation.tag_stats(uuid)'),

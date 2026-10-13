@@ -93,6 +93,15 @@ Rama `fix/archive-owner-admin-only` (commit `62a7b19`):
 
 Limitación: los tests de punta a punta corren contra un Supabase **local** en CI. El panel todavía **no se probó contra el proyecto de desarrollo remoto**. Eso es lo que falta validar ahora.
 
+## Martes 13 — Turnos en el calendario del celular (D-051)
+
+* Configuración → Profesionales → **"Agregar a mi calendario"**: link secreto por profesional (`turnos.neriva.net/cal/<código>.ics`) para iPhone (webcal), Google y Outlook. Solo dueño/admin lo ve; se puede cambiar el link. Migración `20261014010000_booking_calendar_feed` (aplicada en desarrollo), Edge Function `calendar` (sin login; el código es la llave), tests `072-booking-calendar` (6) y Deno.
+* Solo lectura: los cambios se hacen en el panel. Google tarda horas en refrescar; iPhone ~15 min.
+
+## Martes 13 — Turnos con panel propio (D-050)
+
+* Panel en turnos.neriva.net/panel (calendario semanal, clientes con historial, mover/reprogramar). Migración `20261014000000_booking_clients_reschedule`.
+
 ## Lunes 12 (noche) — Turnos (D-049)
 
 * App pública `apps/turnos` (turnos.neriva.net): reservar sin cuenta, ver/cancelar con link. Panel: módulo Turnos (agenda, configuración). Migración `20261013040000_booking_core`. Tests `070-booking` (20), `booking.test.ts`.
