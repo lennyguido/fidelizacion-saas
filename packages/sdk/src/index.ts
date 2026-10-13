@@ -70,6 +70,18 @@ export type { IntegrationKey, SimulatedSale } from './integrations.ts'
 export * as access from './access.ts'
 export * as plans from './plans.ts'
 export * as reputation from './reputation.ts'
+export * as booking from './booking.ts'
+export type {
+  AgendaItem,
+  AppointmentView,
+  BookingSettings,
+  HoursRange,
+  PublicPage,
+  PublicService,
+  Service,
+  Slot,
+  StaffMember,
+} from './booking.ts'
 export type { ReviewTag } from './reputation.ts'
 export type { CatalogPlan, PlanFeature, PlanLimit } from './plans.ts'
 export {

@@ -65,8 +65,13 @@ select set_eq(
             ('loyalty.self_signup(text,text,text,boolean,boolean)'),
             ('loyalty.submit_feedback(text,uuid,integer,text)'),
             ('loyalty.request_redemption(text,uuid)'),
-            ('loyalty.get_redemption_request(text,uuid)') $$,
-  'anon can execute only the public card functions (card, self-signup, feedback, mobile redemption)'
+            ('loyalty.get_redemption_request(text,uuid)'),
+            ('booking.get_public_page(text)'),
+            ('booking.available_slots(text,uuid,uuid,date)'),
+            ('booking.book(text,uuid,uuid,timestamp with time zone,text,text,boolean)'),
+            ('booking.get_appointment(text)'),
+            ('booking.cancel_by_customer(text)') $$,
+  'anon can execute only the public card and booking functions'
 );
 
 -- 5. Ninguna función queda ejecutable por PUBLIC (default de Postgres).
@@ -86,6 +91,14 @@ select set_eq(
       where n.nspname in (select name from platform_schemas)
         and has_function_privilege('authenticated', p.oid, 'execute') $$,
   $$ values
+       ('booking.get_public_page(text)'),
+       ('booking.available_slots(text,uuid,uuid,date)'),
+       ('booking.book(text,uuid,uuid,timestamp with time zone,text,text,boolean)'),
+       ('booking.get_appointment(text)'),
+       ('booking.cancel_by_customer(text)'),
+       ('booking.agenda(uuid,date,date)'),
+       ('booking.book_from_panel(uuid,uuid,uuid,timestamp with time zone,text,text)'),
+       ('booking.set_status(uuid,text)'),
        ('reputation.create_tag(uuid,text,text)'),
        ('reputation.update_tag(uuid,text,text,boolean)'),
        ('reputation.tag_stats(uuid)'),

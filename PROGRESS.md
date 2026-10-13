@@ -93,6 +93,10 @@ Rama `fix/archive-owner-admin-only` (commit `62a7b19`):
 
 Limitación: los tests de punta a punta corren contra un Supabase **local** en CI. El panel todavía **no se probó contra el proyecto de desarrollo remoto**. Eso es lo que falta validar ahora.
 
+## Lunes 12 (noche) — Turnos (D-049)
+
+* App pública `apps/turnos` (turnos.neriva.net): reservar sin cuenta, ver/cancelar con link. Panel: módulo Turnos (agenda, configuración). Migración `20261013040000_booking_core`. Tests `070-booking` (20), `booking.test.ts`.
+
 ## Lunes 12 (noche) — carteles de reseñas NFC/QR (D-048)
 
 * Módulo **Reseñas**: crear cartel, link para grabar en el chip (NFC Tools), QR para imprimir, cambiar destino sin regrabar, toques por mes; tarjeta en Inicio. Link corto `neriva.net/r/<código>` (Vercel → Edge Function `tap`).

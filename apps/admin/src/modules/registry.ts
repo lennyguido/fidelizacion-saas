@@ -1,3 +1,4 @@
+import { bookingManifest } from './booking/manifest'
 import { loyaltyManifest } from './loyalty/manifest'
 import { recoveryManifest } from './recovery/manifest'
 import { reputationManifest } from './reputation/manifest'
@@ -8,4 +9,5 @@ export const moduleManifests: ModuleManifest[] = [
   loyaltyManifest,
   recoveryManifest,
   reputationManifest,
+  bookingManifest,
 ]

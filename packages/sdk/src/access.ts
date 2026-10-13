@@ -3,12 +3,13 @@
 import { getSupabase } from './client.ts'
 import { AppError, fromPostgrestError } from './errors.ts'
 
-export type SalesPlan = 'barrio' | 'local' | 'cadena'
+export type SalesPlan = 'barrio' | 'local' | 'cadena' | 'turnos'
 
 export const SALES_PLANS: { id: SalesPlan; name: string }[] = [
   { id: 'barrio', name: 'Barrio' },
   { id: 'local', name: 'Local' },
   { id: 'cadena', name: 'Cadena' },
+  { id: 'turnos', name: 'Turnos (solo turnos)' },
 ]
 
 export type GrantStatus = 'pending' | 'used' | 'revoked'

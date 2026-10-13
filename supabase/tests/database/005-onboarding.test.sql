@@ -33,7 +33,7 @@ select is(
   'a main location is created');
 select set_eq(
   format('select module_id from core.business_modules where business_id = %L', :'biz'),
-  $$ values ('loyalty'), ('recovery'), ('reputation') $$,
+  $$ values ('loyalty'), ('recovery'), ('reputation'), ('booking') $$,
   'pilot plan modules are enabled');
 select results_eq(
   format('select plan_id, status from core.subscriptions where business_id = %L', :'biz'),

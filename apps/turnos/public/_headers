@@ -1,0 +1,5 @@
+# Encabezados de seguridad (si se publica en Cloudflare Pages). En Vercel van en vercel.json.
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: no-referrer
