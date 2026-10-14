@@ -39,6 +39,16 @@ function brand(value: unknown): string {
   return typeof value === 'string' && /^#[0-9a-f]{6}$/i.test(value) ? value : '#b0175a'
 }
 
+/** Texto blanco u oscuro según qué se lee mejor sobre el color del negocio. */
+function onBrand(hex: string): string {
+  const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255) as [
+    number,
+    number,
+    number,
+  ]
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b > 0.6 ? '#1e1b2e' : '#ffffff'
+}
+
 /** "jueves 16 de octubre · 15:30" en la hora del negocio. */
 export function formatWhen(iso: string, timeZone: string): string {
   const date = new Date(iso)
@@ -65,6 +75,7 @@ export function bookingConfirmation(p: Record<string, unknown>): Email | null {
   const first = str(p.customerName).trim().split(/\s+/)[0] ?? ''
   const what = `${str(p.serviceName)} con ${str(p.staffName)}`
   const color = brand(p.color)
+  const ink = onBrand(color)
   const note = str(p.message)
 
   const text = [
@@ -82,7 +93,7 @@ export function bookingConfirmation(p: Record<string, unknown>): Email | null {
   const html = `<!doctype html><html lang="es"><body style="margin:0;background:#f4f3f7;font-family:Arial,Helvetica,sans-serif;color:#1e1b2e">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f3f7;padding:24px 12px"><tr><td align="center">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:480px;background:#ffffff;border-radius:20px;overflow:hidden">
-<tr><td style="background:${color};padding:28px 28px 24px;color:#ffffff">
+<tr><td style="background:${color};padding:28px 28px 24px;color:${ink}">
 <p style="margin:0;font-size:14px;opacity:.85">Turno confirmado en</p>
 <p style="margin:4px 0 0;font-size:28px;font-weight:bold;line-height:1.1">${esc(business)}</p>
 </td></tr>
@@ -91,7 +102,7 @@ export function bookingConfirmation(p: Record<string, unknown>): Email | null {
 <p style="margin:0;font-size:20px;font-weight:bold">${esc(when)}</p>
 <p style="margin:4px 0 0;font-size:16px">${esc(what)}</p>
 ${note ? `<p style="margin:16px 0 0;font-size:14px;color:#5b5870">${esc(note)}</p>` : ''}
-<p style="margin:28px 0 8px"><a href="${esc(link)}" style="display:inline-block;background:${color};color:#ffffff;text-decoration:none;font-weight:bold;padding:14px 24px;border-radius:999px">Ver, cambiar o cancelar</a></p>
+<p style="margin:28px 0 8px"><a href="${esc(link)}" style="display:inline-block;background:${color};color:${ink};text-decoration:none;font-weight:bold;padding:14px 24px;border-radius:999px">Ver, cambiar o cancelar</a></p>
 <p style="margin:0;font-size:12px;color:#8a8799">Este link es solo tuyo: no lo compartas.</p>
 </td></tr></table>
 <p style="font-size:12px;color:#8a8799;margin:16px 0 0">Reservado con Neriva Turnos</p>
