@@ -1,10 +1,4 @@
-import {
-  useEffect,
-  useRef,
-  useState,
-  type FormEvent,
-  type ReactNode,
-} from 'react'
+import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import {
   booking,
@@ -435,7 +429,9 @@ function ContactForm(props: {
   const problems: Record<FieldName, string | null> = {
     name: name.trim().length < 2 ? 'Escribí tu nombre y apellido.' : null,
     phone:
-      normalized === null ? 'Escribí tu celular con característica, por ejemplo 11 2233 4455.' : null,
+      normalized === null
+        ? 'Escribí tu celular con característica, por ejemplo 11 2233 4455.'
+        : null,
     terms: terms ? null : 'Marcá esta casilla para poder guardar tu turno.',
   }
   const errorOf = (f: FieldName) => (shown.has(f) ? problems[f] : null)

@@ -63,9 +63,7 @@ export function AppointmentPage({ token }: { token: string | null }) {
           )}
           <p className="text-sm font-semibold opacity-80">{STATUS_TEXT[a.status]}</p>
           <div>
-            <p className="display text-[clamp(2.4rem,11vw,3.75rem)] font-bold capitalize">
-              {day}
-            </p>
+            <p className="display text-[clamp(2.4rem,11vw,3.75rem)] font-bold capitalize">{day}</p>
             <p className="display text-[clamp(2.4rem,11vw,3.75rem)] font-bold">{time}</p>
           </div>
           <p className="text-lg">
@@ -160,7 +158,8 @@ function EmailIt({ token }: { token: string }) {
   const send = useMutation({
     mutationFn: async () => {
       const queued = await booking.sendByEmail(token, email)
-      if (queued !== 'queued') return { ok: false, text: EMAIL_TEXT[queued] ?? EMAIL_TEXT.not_found! }
+      if (queued !== 'queued')
+        return { ok: false, text: EMAIL_TEXT[queued] ?? EMAIL_TEXT.not_found! }
       const res = await fetch('/api/send-email', { method: 'POST' }).catch(() => null)
       const body = (res?.ok ? await res.json().catch(() => null) : null) as {
         configured?: boolean

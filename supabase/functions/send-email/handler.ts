@@ -142,7 +142,11 @@ export function createHandler(deps: HandlerDeps): (req: Request) => Promise<Resp
       if (email) {
         const res = await fetchFn('https://api.brevo.com/v3/smtp/email', {
           method: 'POST',
-          headers: { 'api-key': apiKey, 'Content-Type': 'application/json', accept: 'application/json' },
+          headers: {
+            'api-key': apiKey,
+            'Content-Type': 'application/json',
+            accept: 'application/json',
+          },
           body: JSON.stringify({
             sender: { name: email.senderName.slice(0, 70), email: from },
             to: [{ email: row.to_email }],

@@ -639,7 +639,10 @@ export async function sendByEmail(token: string, email: string): Promise<SendByE
 }
 
 function icsStamp(iso: string): string {
-  return new Date(iso).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '')
+  return new Date(iso)
+    .toISOString()
+    .replace(/[-:]/g, '')
+    .replace(/\.\d{3}/, '')
 }
 
 function icsText(text: string): string {
