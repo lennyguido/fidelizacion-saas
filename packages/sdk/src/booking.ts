@@ -610,8 +610,7 @@ export function gapOfferMessage(input: {
   bookingUrl: string
 }): string {
   const first = input.clientName.trim().split(/\s+/)[0] ?? ''
-  const offer =
-    input.discountPercent > 0 ? ` con ${input.discountPercent}% de descuento` : ''
+  const offer = input.discountPercent > 0 ? ` con ${input.discountPercent}% de descuento` : ''
   return (
     `¡Hola ${first}! Hace rato no te vemos por ${input.businessName}. ` +
     `Nos quedó un lugar ${input.day} a las ${input.time}${offer}. ` +

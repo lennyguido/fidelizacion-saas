@@ -294,14 +294,17 @@ function GapsDemo() {
             {name} no viene hace {row.away} días
           </p>
           <p className="max-w-[34ch] self-end rounded-2xl rounded-br-sm bg-[#d9fdd3] px-4 py-3 text-sm leading-relaxed">
-            ¡Hola {name}! Hace rato no te vemos por Barbería Sol. Nos quedó un lugar el jueves a
-            las {row.time} con 20% de descuento. Si lo querés, reservalo acá: turnos.neriva.net/…
+            ¡Hola {name}! Hace rato no te vemos por Barbería Sol. Nos quedó un lugar el jueves a las{' '}
+            {row.time} con 20% de descuento. Si lo querés, reservalo acá: turnos.neriva.net/…
           </p>
           <button
             type="button"
             onClick={() => {
               setFilled([...filled, row.time])
-              setOpen(DEMO_DAY.find((r) => !r.who && r.time !== row.time && !filled.includes(r.time))?.time ?? null)
+              setOpen(
+                DEMO_DAY.find((r) => !r.who && r.time !== row.time && !filled.includes(r.time))
+                  ?.time ?? null,
+              )
             }}
             className="h-11 rounded-full bg-[#1f8f4e] text-sm font-semibold text-white hover:opacity-90"
           >

@@ -1,12 +1,6 @@
 import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import {
-  booking,
-  customers,
-  errorMessage,
-  formatPhone,
-  type BookingClient,
-} from '@plataforma/sdk'
+import { booking, customers, errorMessage, formatPhone, type BookingClient } from '@plataforma/sdk'
 import { Alert, Button, EmptyState, Spinner, TextField } from '@plataforma/ui'
 import { usePanel } from './context'
 import { useClientHistory, useClients } from './queries'
@@ -164,7 +158,10 @@ function PromosConsent({ customerId }: { customerId: string }) {
   const { business } = usePanel()
   const client = useQueryClient()
   const key = ['customers', business.id, 'booking', 'consent', customerId]
-  const consent = useQuery({ queryKey: key, queryFn: () => customers.getWhatsappConsent(customerId) })
+  const consent = useQuery({
+    queryKey: key,
+    queryFn: () => customers.getWhatsappConsent(customerId),
+  })
   const save = useMutation({
     mutationFn: (granted: boolean) =>
       customers.setWhatsappConsent(business.id, customerId, granted, 'admin'),

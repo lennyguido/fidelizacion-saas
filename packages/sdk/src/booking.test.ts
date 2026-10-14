@@ -45,7 +45,16 @@ describe('turnos', () => {
     })
     expect(text).toContain('¡Hola Juan!')
     expect(text).toContain('mañana a las 15:00 con 20% de descuento')
-    expect(gapOfferMessage({ clientName: 'Ana', businessName: 'X', day: 'hoy', time: '10:00', discountPercent: 0, bookingUrl: 'u' })).not.toContain('descuento')
+    expect(
+      gapOfferMessage({
+        clientName: 'Ana',
+        businessName: 'X',
+        day: 'hoy',
+        time: '10:00',
+        discountPercent: 0,
+        bookingUrl: 'u',
+      }),
+    ).not.toContain('descuento')
     expect(whatsappLink('+54 9 11 5555-0001', 'hola')).toBe('https://wa.me/5491155550001?text=hola')
   })
 })
