@@ -71,7 +71,8 @@ select set_eq(
             ('booking.book(text,uuid,uuid,timestamp with time zone,text,text,boolean,boolean)'),
             ('booking.get_appointment(text)'),
             ('booking.cancel_by_customer(text)'),
-            ('booking.reschedule(text,timestamp with time zone)') $$,
+            ('booking.reschedule(text,timestamp with time zone)'),
+            ('booking.send_by_email(text,text)') $$,
   'anon can execute only the public card and booking functions'
 );
 
@@ -101,6 +102,7 @@ select set_eq(
        ('booking.book_from_panel(uuid,uuid,uuid,timestamp with time zone,text,text)'),
        ('booking.set_status(uuid,text)'),
        ('booking.reschedule(text,timestamp with time zone)'),
+       ('booking.send_by_email(text,text)'),
        ('booking.move_appointment(uuid,uuid,timestamp with time zone)'),
        ('booking.clients(uuid,text)'),
        ('booking.client_history(uuid,uuid)'),

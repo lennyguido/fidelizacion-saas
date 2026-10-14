@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { booking, errorMessage, type GapSlot, type LapsedClient } from '@plataforma/sdk'
-import { Alert, EmptyState, Spinner } from '@plataforma/ui'
+import { Alert, Spinner } from '@plataforma/ui'
 import { usePanel } from './context'
 import { useGapSlots, useLapsedClients } from './queries'
 
@@ -62,7 +62,7 @@ export function FillGapsPage() {
               setDay(d)
               setPicked(null)
             }}
-            className={`shrink-0 rounded-full px-4 py-2 text-sm font-medium capitalize ring-1 ring-inset ${
+            className={`min-h-11 shrink-0 rounded-full px-4 text-sm font-medium capitalize ring-1 ring-inset ${
               d === day ? 'bg-slate-900 text-white ring-slate-900' : 'bg-white ring-slate-300'
             }`}
           >
@@ -85,7 +85,7 @@ export function FillGapsPage() {
           <select
             value={discount}
             onChange={(e) => setDiscount(Number(e.target.value))}
-            className="h-10 rounded-lg border border-slate-300 bg-white px-3"
+            className="h-11 rounded-lg border border-slate-300 bg-white px-3"
           >
             {DISCOUNTS.map((p) => (
               <option key={p} value={p}>
@@ -99,7 +99,7 @@ export function FillGapsPage() {
           <select
             value={minDays}
             onChange={(e) => setMinDays(Number(e.target.value))}
-            className="h-10 rounded-lg border border-slate-300 bg-white px-3"
+            className="h-11 rounded-lg border border-slate-300 bg-white px-3"
           >
             {AWAY_OPTIONS.map((n) => (
               <option key={n} value={n}>
@@ -113,10 +113,19 @@ export function FillGapsPage() {
       {clients.isPending && <Spinner />}
       {clients.error && <Alert tone="error">{errorMessage(clients.error)}</Alert>}
       {clients.data && clients.data.length === 0 && (
-        <EmptyState
-          title="Nadie para invitar todavía"
-          description={`Acá aparecen los clientes que vinieron, no vuelven hace ${minDays} días o más y aceptaron recibir promociones (lo marcan al reservar, o lo marcás vos en su ficha en Clientes).`}
-        />
+        <div className="flex flex-col items-start gap-3 rounded-2xl bg-white p-5 ring-1 ring-slate-200">
+          <h2 className="font-semibold">Nadie para invitar todavía</h2>
+          <p className="max-w-prose text-slate-600">
+            Acá aparecen los clientes que vinieron, no vuelven hace {minDays} días o más y aceptaron
+            recibir promociones. Lo marcan al reservar, o lo marcás vos en su ficha.
+          </p>
+          <a
+            href="/panel/clientes"
+            className="inline-flex min-h-11 items-center rounded-full bg-slate-900 px-5 text-sm font-semibold text-white"
+          >
+            Ir a Clientes
+          </a>
+        </div>
       )}
       {clients.data && clients.data.length > 0 && (
         <ul className="divide-y divide-slate-100 rounded-2xl bg-white ring-1 ring-slate-200">
@@ -168,7 +177,7 @@ function SlotPicker(props: {
             type="button"
             aria-pressed={s.startsAt === selected}
             onClick={() => onPick(s.startsAt)}
-            className={`rounded-full px-3 py-1.5 text-sm font-medium ring-1 ring-inset ${
+            className={`min-h-11 rounded-full px-3 text-sm font-medium ring-1 ring-inset ${
               s.startsAt === selected
                 ? 'bg-action text-white ring-action'
                 : 'bg-white ring-slate-300 hover:bg-slate-50'
@@ -222,7 +231,7 @@ function ClientRow(props: {
           target="_blank"
           rel="noreferrer"
           onClick={onSent}
-          className={`inline-flex h-10 items-center rounded-full px-4 text-sm font-semibold ${
+          className={`inline-flex h-11 items-center rounded-full px-4 text-sm font-semibold ${
             sent ? 'bg-slate-100 text-slate-600' : 'bg-[#1f8f4e] text-white hover:opacity-90'
           }`}
         >

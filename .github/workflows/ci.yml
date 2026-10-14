@@ -96,6 +96,15 @@ jobs:
             echo "::error title=calendar::${msg}"
             exit 1
           }
+      - name: send-email (deno check + deno test)
+        working-directory: supabase/functions/send-email
+        run: |
+          set -o pipefail
+          { deno check index.ts tests/*.ts && deno test tests/; } 2>&1 | tee out.txt || {
+            msg="$(grep -E 'FAILED|error|Error|TS[0-9]+|=>|Actual|Expected' out.txt | head -40 | sed ':a;N;$!ba;s/\n/%0A/g')"
+            echo "::error title=send-email::${msg}"
+            exit 1
+          }
       - name: tap (deno check + deno test)
         working-directory: supabase/functions/tap
         run: |

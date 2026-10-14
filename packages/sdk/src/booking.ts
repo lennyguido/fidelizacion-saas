@@ -55,6 +55,10 @@ export interface AppointmentView {
   priceMinor: number | null
   canCancel: boolean
   cancelNoticeMinutes: number
+  /** Color y logo del negocio, y su mensaje (por ejemplo, la dirección). */
+  color?: string | null
+  logoPath?: string | null
+  message?: string | null
 }
 
 export async function getPublicPage(slug: string): Promise<PublicPage | null> {
@@ -621,4 +625,50 @@ export function gapOfferMessage(input: {
 /** Link de WhatsApp con el texto listo para enviar. */
 export function whatsappLink(phone: string, text: string): string {
   return `https://wa.me/${phone.replace(/\D/g, '')}?text=${encodeURIComponent(text)}`
+}
+
+// Guardar el turno: mail, WhatsApp y calendario (D-055) ---------------------------------
+
+export type SendByEmailResult = 'queued' | 'invalid_email' | 'not_found' | 'limit'
+
+/** El cliente pide su turno por mail (queda en la bandeja de mails del núcleo). */
+export async function sendByEmail(token: string, email: string): Promise<SendByEmailResult> {
+  const { data, error } = await db().rpc('send_by_email', { p_token: token, p_email: email })
+  if (error) throw fromPostgrestError(error)
+  return data as SendByEmailResult
+}
+
+function icsStamp(iso: string): string {
+  return new Date(iso)
+    .toISOString()
+    .replace(/[-:]/g, '')
+    .replace(/\.\d{3}/, '')
+}
+
+function icsText(text: string): string {
+  return text.replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n')
+}
+
+/** Archivo .ics del turno para el calendario del cliente, con aviso 1 hora antes. */
+export function appointmentIcs(view: AppointmentView, link: string, now = new Date()): string {
+  return [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//Neriva//Turnos//ES',
+    'BEGIN:VEVENT',
+    `UID:${icsStamp(view.startsAt)}-${view.serviceId}@turnos.neriva.net`,
+    `DTSTAMP:${icsStamp(now.toISOString())}`,
+    `DTSTART:${icsStamp(view.startsAt)}`,
+    `DTEND:${icsStamp(view.endsAt)}`,
+    `SUMMARY:${icsText(`${view.serviceName} en ${view.businessName}`)}`,
+    `DESCRIPTION:${icsText(`Con ${view.staffName}.\nPara cambiarlo o cancelarlo: ${link}`)}`,
+    `URL:${link}`,
+    'BEGIN:VALARM',
+    'ACTION:DISPLAY',
+    'DESCRIPTION:Tenés turno en una hora',
+    'TRIGGER:-PT1H',
+    'END:VALARM',
+    'END:VEVENT',
+    'END:VCALENDAR',
+  ].join('\r\n')
 }
