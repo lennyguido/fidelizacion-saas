@@ -72,3 +72,17 @@ export function useClientHistory(businessId: string, customerId: string | null) 
     enabled: Boolean(customerId),
   })
 }
+
+export function useGapSlots(businessId: string, day: string) {
+  return useQuery({
+    queryKey: [...bookingKeys.all(businessId), 'gaps', day],
+    queryFn: () => booking.gapSlots(businessId, day),
+  })
+}
+
+export function useLapsedClients(businessId: string, minDays: number) {
+  return useQuery({
+    queryKey: [...bookingKeys.all(businessId), 'lapsed', minDays],
+    queryFn: () => booking.lapsedClients(businessId, minDays),
+  })
+}

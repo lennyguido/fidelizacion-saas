@@ -203,6 +203,7 @@ function ContactForm(props: {
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
   const [terms, setTerms] = useState(false)
+  const [promos, setPromos] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
   const normalized = normalizePhone(phone)
   const phoneInvalid = phone.trim() !== '' && normalized === null
@@ -217,6 +218,7 @@ function ContactForm(props: {
         name: name.trim(),
         phone: normalized ?? '',
         termsAccepted: terms,
+        promos,
       }),
     onSuccess: (result) => {
       if (result.status === 'booked' && result.token) {
@@ -273,6 +275,17 @@ function ContactForm(props: {
           <span>
             Acepto que {page.name} guarde mi nombre y celular para gestionar mis turnos y
             contactarme por ellos.
+          </span>
+        </label>
+        <label className="flex items-start gap-2 text-sm text-slate-700">
+          <input
+            type="checkbox"
+            checked={promos}
+            onChange={(e) => setPromos(e.target.checked)}
+            className="mt-1"
+          />
+          <span>
+            Quiero que {page.name} me avise por WhatsApp de descuentos y lugares libres (opcional).
           </span>
         </label>
         <Button

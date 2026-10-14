@@ -77,6 +77,8 @@ export type {
   BookingClient,
   BookingSettings,
   ClientVisit,
+  GapSlot,
+  LapsedClient,
   HoursRange,
   PublicPage,
   PublicService,
