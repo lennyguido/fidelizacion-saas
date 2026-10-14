@@ -17,11 +17,11 @@ const payload = {
 Deno.test('builds the confirmation in the business time zone, escaped', () => {
   const email = bookingConfirmation(payload)
   assert.ok(email)
-  assert.ok(email.subject.includes('15:30'))
-  assert.ok(email.html.includes('Barbería &lt;Sol&gt;'))
-  assert.ok(!email.html.includes('<Sol>'))
-  assert.ok(email.html.includes('#123456'))
-  assert.ok(email.text.includes('¡Hola Ana!'))
+  assert.match(email.subject, /15:30/, email.subject)
+  assert.ok(email.html.includes('Barbería &lt;Sol&gt;'), 'business name is escaped')
+  assert.ok(!email.html.includes('<Sol>'), 'no raw html from data')
+  assert.ok(email.html.includes('#123456'), 'uses the business color')
+  assert.match(email.text, /¡Hola Ana!/, email.text)
 })
 
 Deno.test('refuses links that are not ours', () => {

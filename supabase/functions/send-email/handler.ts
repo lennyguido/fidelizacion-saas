@@ -62,6 +62,7 @@ export function formatWhen(iso: string, timeZone: string): string {
     timeZone,
     hour: '2-digit',
     minute: '2-digit',
+    hourCycle: 'h23',
   }).format(date)
   return `${day} · ${time}`
 }
