@@ -2,7 +2,6 @@ import {
   useEffect,
   useRef,
   useState,
-  type CSSProperties,
   type FormEvent,
   type ReactNode,
 } from 'react'
@@ -17,6 +16,7 @@ import {
   type Slot,
 } from '@plataforma/sdk'
 import { Alert, FullPageSpinner, Spinner } from '@plataforma/ui'
+import { brandStyle } from './brand'
 
 const BOOK_MESSAGES: Record<string, string> = {
   taken: 'Ese horario se acaba de ocupar. Elegí otro.',
@@ -25,20 +25,6 @@ const BOOK_MESSAGES: Record<string, string> = {
   terms_required: 'Tenés que aceptar para seguir.',
   rate_limited: 'Hay muchas reservas en este momento. Probá en unos minutos.',
   unavailable: 'Este negocio no está tomando turnos online ahora.',
-}
-
-const DEFAULT_BRAND = '#b0175a'
-
-/** Color del negocio y el color de texto que se lee encima (blanco u oscuro). */
-function brandStyle(color: string | null): CSSProperties {
-  const brand = color && /^#[0-9a-f]{6}$/i.test(color) ? color : DEFAULT_BRAND
-  const [r, g, b] = [1, 3, 5].map((i) => parseInt(brand.slice(i, i + 2), 16) / 255) as [
-    number,
-    number,
-    number,
-  ]
-  const light = 0.2126 * r + 0.7152 * g + 0.0722 * b > 0.6
-  return { '--brand': brand, '--on-brand': light ? '#1e1b2e' : '#ffffff' } as CSSProperties
 }
 
 function formatPrice(minor: number): string {
@@ -114,7 +100,7 @@ function Booking({ slug, page }: { slug: string; page: PublicPage }) {
           )}
           <div>
             <p className="text-sm font-semibold opacity-80">Reservá tu turno en</p>
-            <h1 className="display mt-1 text-[clamp(2.6rem,12vw,4.25rem)] font-extrabold break-words">
+            <h1 className="display mt-1 text-[clamp(2.6rem,12vw,4.25rem)] font-bold break-words">
               {page.name}
             </h1>
           </div>
@@ -266,7 +252,7 @@ function Done({ label, value, onChange }: { label: string; value: string; onChan
       <button
         type="button"
         onClick={onChange}
-        className="shrink-0 text-sm font-semibold text-[var(--brand)] underline-offset-4 hover:underline"
+        className="-mr-2 min-h-11 shrink-0 rounded-full px-3 text-sm font-semibold text-[var(--brand)] underline-offset-4 hover:underline"
       >
         Cambiar
       </button>
@@ -354,9 +340,18 @@ function SlotPicker(props: {
       {slots.isPending && <Spinner />}
       {slots.error && <Alert tone="error">{errorMessage(slots.error)}</Alert>}
       {slots.data && slots.data.length === 0 && (
-        <p className="rounded-2xl bg-[var(--paper)] p-4 text-center opacity-80">
-          No quedan horarios este día. Probá con otro.
-        </p>
+        <div className="flex flex-col items-center gap-3 rounded-2xl bg-[var(--paper)] p-4 text-center">
+          <p className="opacity-80">No quedan horarios este día.</p>
+          {days.indexOf(day) < days.length - 1 && (
+            <button
+              type="button"
+              onClick={() => setDay(days[days.indexOf(day) + 1] ?? day)}
+              className="min-h-11 rounded-full bg-[var(--brand)] px-5 font-semibold text-[var(--on-brand)]"
+            >
+              Ver el día siguiente
+            </button>
+          )}
+        </div>
       )}
       {slots.data &&
         PARTS.map(([label, inPart]) => {
@@ -376,7 +371,7 @@ function SlotPicker(props: {
                       type="button"
                       aria-pressed={on}
                       onClick={() => onSelect(s)}
-                      className={`rounded-xl py-2.5 text-[15px] font-semibold tabular-nums ${
+                      className={`min-h-11 rounded-xl py-3 text-[15px] font-semibold tabular-nums ${
                         on
                           ? 'bg-[var(--brand)] text-[var(--on-brand)]'
                           : 'ring-1 ring-[var(--line)] ring-inset hover:ring-[var(--brand)]'
@@ -394,6 +389,31 @@ function SlotPicker(props: {
   )
 }
 
+const DRAFT_KEY = 'neriva-turnos-datos'
+
+/** Nombre y celular guardados en este dispositivo para la próxima reserva. */
+function loadDraft(): { name: string; phone: string } {
+  try {
+    const raw = JSON.parse(localStorage.getItem(DRAFT_KEY) ?? '{}') as Record<string, unknown>
+    return {
+      name: typeof raw.name === 'string' ? raw.name : '',
+      phone: typeof raw.phone === 'string' ? raw.phone : '',
+    }
+  } catch {
+    return { name: '', phone: '' }
+  }
+}
+
+function saveDraft(name: string, phone: string) {
+  try {
+    localStorage.setItem(DRAFT_KEY, JSON.stringify({ name, phone }))
+  } catch {
+    // Sin almacenamiento (modo privado): no pasa nada.
+  }
+}
+
+type FieldName = 'name' | 'phone' | 'terms'
+
 function ContactForm(props: {
   slug: string
   page: PublicPage
@@ -403,14 +423,31 @@ function ContactForm(props: {
   onTaken: () => void
 }) {
   const { slug, page, service, staffId, slot, onTaken } = props
-  const [name, setName] = useState('')
-  const [phone, setPhone] = useState('')
+  const [draft] = useState(loadDraft)
+  const [name, setName] = useState(draft.name)
+  const [phone, setPhone] = useState(draft.phone)
   const [terms, setTerms] = useState(false)
   const [promos, setPromos] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
+  const [shown, setShown] = useState<Set<FieldName>>(new Set())
   const normalized = normalizePhone(phone)
-  const phoneInvalid = phone.trim() !== '' && normalized === null
-  const ready = name.trim().length >= 2 && normalized !== null && terms
+
+  const problems: Record<FieldName, string | null> = {
+    name: name.trim().length < 2 ? 'Escribí tu nombre y apellido.' : null,
+    phone:
+      normalized === null ? 'Escribí tu celular con característica, por ejemplo 11 2233 4455.' : null,
+    terms: terms ? null : 'Marcá esta casilla para poder guardar tu turno.',
+  }
+  const errorOf = (f: FieldName) => (shown.has(f) ? problems[f] : null)
+  const show = (f: FieldName) => setShown((prev) => new Set(prev).add(f))
+  const hide = (f: FieldName) =>
+    setShown((prev) => {
+      const next = new Set(prev)
+      next.delete(f)
+      return next
+    })
+
+  useEffect(() => saveDraft(name, phone), [name, phone])
 
   const book = useMutation({
     mutationFn: () =>
@@ -438,6 +475,12 @@ function ContactForm(props: {
   function handleSubmit(event: FormEvent) {
     event.preventDefault()
     setMessage(null)
+    const first = (['name', 'phone', 'terms'] as FieldName[]).find((f) => problems[f])
+    if (first) {
+      setShown(new Set(['name', 'phone', 'terms'] as FieldName[]))
+      document.getElementById(`reserva-${first}`)?.focus()
+      return
+    }
     book.mutate()
   }
 
@@ -447,46 +490,62 @@ function ContactForm(props: {
     <Panel title="Tus datos">
       <form id="reserva" onSubmit={handleSubmit} className="flex flex-col gap-4" noValidate>
         {message && <Alert tone="error">{message}</Alert>}
-        <Field label="Nombre y apellido">
+        <Field label="Nombre y apellido" htmlFor="reserva-name" error={errorOf('name')}>
           <input
+            id="reserva-name"
             autoComplete="name"
             maxLength={60}
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => {
+              setName(e.target.value)
+              hide('name')
+            }}
+            onBlur={() => show('name')}
+            aria-invalid={Boolean(errorOf('name'))}
             className="h-12 w-full rounded-xl bg-[var(--paper)] px-4 text-base"
           />
         </Field>
         <Field
           label="Celular"
-          hint={
-            phoneInvalid
-              ? 'Escribilo con característica, por ejemplo 11 2233 4455.'
-              : 'Para avisarte si hay algún cambio.'
-          }
-          error={phoneInvalid}
+          htmlFor="reserva-phone"
+          hint="Para avisarte si hay algún cambio."
+          error={errorOf('phone')}
         >
           <input
+            id="reserva-phone"
             type="tel"
             autoComplete="tel"
             inputMode="tel"
+            placeholder="11 2233 4455"
             value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            aria-invalid={phoneInvalid}
+            onChange={(e) => {
+              setPhone(e.target.value)
+              hide('phone')
+            }}
+            onBlur={() => show('phone')}
+            aria-invalid={Boolean(errorOf('phone'))}
             className="h-12 w-full rounded-xl bg-[var(--paper)] px-4 text-base"
           />
         </Field>
-        <label className="flex items-start gap-3 text-sm">
-          <input
-            type="checkbox"
-            checked={terms}
-            onChange={(e) => setTerms(e.target.checked)}
-            className="mt-0.5 h-5 w-5 shrink-0"
-          />
-          <span className="opacity-80">
-            Acepto que {page.name} guarde mi nombre y celular para gestionar mis turnos y
-            contactarme por ellos.
-          </span>
-        </label>
+        <div className="flex flex-col gap-1">
+          <label className="flex items-start gap-3 text-sm">
+            <input
+              id="reserva-terms"
+              type="checkbox"
+              checked={terms}
+              onChange={(e) => {
+                setTerms(e.target.checked)
+                hide('terms')
+              }}
+              className="mt-0.5 h-5 w-5 shrink-0"
+            />
+            <span className="opacity-80">
+              Acepto que {page.name} guarde mi nombre y celular para gestionar mis turnos y
+              contactarme por ellos.
+            </span>
+          </label>
+          {errorOf('terms') && <p className="pl-8 text-sm text-red-700">{errorOf('terms')}</p>}
+        </div>
         <label className="flex items-start gap-3 text-sm">
           <input
             type="checkbox"
@@ -500,7 +559,7 @@ function ContactForm(props: {
         </label>
       </form>
 
-      <div className="fixed inset-x-0 bottom-0 z-10 border-t border-[var(--line)] bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur">
+      <div className="fixed inset-x-0 bottom-0 z-10 border-t border-[var(--line)] bg-white pb-[env(safe-area-inset-bottom)]">
         <div className="mx-auto flex max-w-lg items-center gap-3 px-4 py-3">
           <p className="min-w-0 flex-1 text-sm">
             <span className="block truncate font-semibold">{service.name}</span>
@@ -509,8 +568,8 @@ function ContactForm(props: {
           <button
             type="submit"
             form="reserva"
-            disabled={!ready || book.isPending}
-            className="h-12 shrink-0 rounded-full bg-[var(--brand)] px-6 font-semibold text-[var(--on-brand)] disabled:opacity-40"
+            aria-busy={book.isPending}
+            className="h-12 shrink-0 rounded-full bg-[var(--brand)] px-6 font-semibold text-[var(--on-brand)]"
           >
             {book.isPending ? 'Reservando…' : 'Confirmar turno'}
           </button>
@@ -520,16 +579,24 @@ function ContactForm(props: {
   )
 }
 
-function Field(props: { label: string; hint?: string; error?: boolean; children: ReactNode }) {
+function Field(props: {
+  label: string
+  htmlFor: string
+  hint?: string
+  error?: string | null
+  children: ReactNode
+}) {
   return (
-    <label className="flex flex-col gap-1.5">
-      <span className="text-sm font-semibold">{props.label}</span>
+    <div className="flex flex-col gap-1.5">
+      <label htmlFor={props.htmlFor} className="text-sm font-semibold">
+        {props.label}
+      </label>
       {props.children}
-      {props.hint && (
-        <span className={`text-sm ${props.error ? 'text-red-700' : 'opacity-60'}`}>
-          {props.hint}
-        </span>
+      {props.error ? (
+        <p className="text-sm text-red-700">{props.error}</p>
+      ) : (
+        props.hint && <p className="text-sm opacity-60">{props.hint}</p>
       )}
-    </label>
+    </div>
   )
 }

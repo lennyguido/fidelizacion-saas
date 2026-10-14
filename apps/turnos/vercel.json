@@ -5,6 +5,10 @@
       "source": "/cal/:token",
       "destination": "https://dqpnqcumlyfifewgzyvh.supabase.co/functions/v1/calendar/:token"
     },
+    {
+      "source": "/api/send-email",
+      "destination": "https://dqpnqcumlyfifewgzyvh.supabase.co/functions/v1/send-email"
+    },
     { "source": "/(.*)", "destination": "/index.html" }
   ],
   "headers": [

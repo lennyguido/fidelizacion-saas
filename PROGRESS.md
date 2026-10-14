@@ -93,6 +93,12 @@ Rama `fix/archive-owner-admin-only` (commit `62a7b19`):
 
 Limitación: los tests de punta a punta corren contra un Supabase **local** en CI. El panel todavía **no se probó contra el proyecto de desarrollo remoto**. Eso es lo que falta validar ahora.
 
+## Martes 13 — Página de reservas nueva (D-054) y guardar el turno (D-055)
+
+* Página de reservas con la identidad del negocio, pasos que se achican y barra fija para confirmar. Página del turno rediseñada con "Agregar a mi calendario", "Mandármelo por WhatsApp" y "Mandámelo por mail".
+* Mails: migración `20261014030000_core_email_outbox_booking_email`, Edge Function `send-email`, tests `074-booking-email` (10) y Deno. **Falta (dueño):** cuenta de Brevo y clave en Supabase → `docs/turnos/MAILS.md`.
+* Script de prueba `scripts/demo-barberia.sql` (barbería con 40 clientes y 4 meses de turnos).
+
 ## Martes 13 — Llenar huecos (D-053) y plan web (D-052)
 
 * Panel de Turnos → **Llenar huecos**: horarios libres + clientes que no vienen hace rato y aceptaron promos → botón "Mandar oferta" (abre WhatsApp con el texto listo). Casillero opcional de promos al reservar y en la ficha del cliente. Migración `20261014020000_booking_fill_gaps`, tests `073-booking-fill-gaps` (8).
