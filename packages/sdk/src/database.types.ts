@@ -130,7 +130,7 @@ isOneToOne: false
             }[]
                            },
 "book":
-{ Args: { "p_name": string,"p_phone": string,"p_service_id": string,"p_slug": string,"p_staff_id": string,"p_starts_at": string,"p_terms_accepted": boolean }; Returns: Json
+{ Args: { "p_name": string,"p_phone": string,"p_promos"?: boolean,"p_service_id": string,"p_slug": string,"p_staff_id": string,"p_starts_at": string,"p_terms_accepted": boolean }; Returns: Json
                            },
 "book_from_panel":
 { Args: { "p_business_id": string,"p_name": string,"p_phone": string,"p_service_id": string,"p_staff_id": string,"p_starts_at": string }; Returns: Json
@@ -172,14 +172,27 @@ isOneToOne: false
               "staff_id": string,"starts_at": string
             }[]
                            },
+"gap_slots":
+{ Args: { "p_business_id": string,"p_day": string }; Returns: {
+              "service_name": string,"staff_id": string,"staff_name": string,"starts_at": string
+            }[]
+                           },
 "get_appointment":
 { Args: { "p_token": string }; Returns: Json
                            },
 "get_public_page":
 { Args: { "p_slug": string }; Returns: Json
                            },
+"lapsed_clients":
+{ Args: { "p_business_id": string,"p_min_days"?: number }; Returns: {
+              "customer_id": string,"days_away": number,"last_at": string,"last_service": string,"name": string,"phone": string,"visits": number
+            }[]
+                           },
 "move_appointment":
 { Args: { "p_appointment_id": string,"p_staff_id": string,"p_starts_at": string }; Returns: string
+                           },
+"reference_service":
+{ Args: { "p_business_id": string }; Returns: string
                            },
 "reschedule":
 { Args: { "p_starts_at": string,"p_token": string }; Returns: string
