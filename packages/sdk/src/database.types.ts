@@ -197,6 +197,9 @@ isOneToOne: false
 "reschedule":
 { Args: { "p_starts_at": string,"p_token": string }; Returns: string
                            },
+"send_by_email":
+{ Args: { "p_email": string,"p_token": string }; Returns: string
+                           },
 "set_status":
 { Args: { "p_appointment_id": string,"p_status": string }; Returns: string
                            }
@@ -497,6 +500,32 @@ isOneToOne: false
                   Relationships: [
                     {
       foreignKeyName: "customers_business_id_fkey"
+      columns: ["business_id"]
+isOneToOne: false
+      referencedRelation: "businesses"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"email_outbox": {
+                  Row: {
+                    "attempts": number,"business_id": string,"created_at": string,"customer_id": string | null,"error": string | null,"id": string,"kind": string,"payload": Json | null,"ref": string,"sent_at": string | null,"status": string,"to_email": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "attempts"?: number,"business_id": string,"created_at"?: string,"customer_id"?: string | null,"error"?: string | null,"id"?: string,"kind": string,"payload"?: Json | null,"ref": string,"sent_at"?: string | null,"status"?: string,"to_email": string
+                  }
+                  Update: {
+                    "attempts"?: number,"business_id"?: string,"created_at"?: string,"customer_id"?: string | null,"error"?: string | null,"id"?: string,"kind"?: string,"payload"?: Json | null,"ref"?: string,"sent_at"?: string | null,"status"?: string,"to_email"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "email_outbox_business_id_customer_id_fkey"
+      columns: ["business_id","customer_id"]
+isOneToOne: false
+      referencedRelation: "customers"
+      referencedColumns: ["business_id","id"]
+    },{
+      foreignKeyName: "email_outbox_business_id_fkey"
       columns: ["business_id"]
 isOneToOne: false
       referencedRelation: "businesses"
@@ -1149,6 +1178,14 @@ isOneToOne: false
         isOneToOne: true
         isSetofReturn: false
       } },
+"email_batch":
+{ Args: { "p_limit"?: number }; Returns: {
+              "id": string,"kind": string,"payload": Json,"to_email": string
+            }[]
+                           },
+"email_result":
+{ Args: { "p_error"?: string,"p_id": string,"p_ok": boolean }; Returns: undefined
+                           },
 "emit_event":
 { Args: { "p_business_id": string,"p_payload"?: Json,"p_type": string }; Returns: number
                            },
@@ -1382,6 +1419,9 @@ isOneToOne: false
 { Args: { "p_business_id": string,"p_segment": Json }; Returns: {
               "busy": number,"matching": number,"reachable": number
             }[]
+                           },
+"queue_email":
+{ Args: { "p_business_id": string,"p_customer_id": string,"p_kind": string,"p_payload": Json,"p_ref": string,"p_to": string }; Returns: string
                            },
 "raise_forbidden":
 { Args: { "p_message"?: string }; Returns: undefined
