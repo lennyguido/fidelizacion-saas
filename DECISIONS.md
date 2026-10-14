@@ -245,3 +245,7 @@ Pedido del dueño: ofrecer una web propia para cada negocio con los turnos integ
 
 Idea del dueño: cuando hay horarios libres, ofrecerle el lugar con descuento a clientes que no vienen hace rato. Panel de Turnos → **Llenar huecos**: horarios libres del día (`booking.gap_slots`, con el servicio más pedido como medida) y clientes que vinieron, no vuelven hace N días, no tienen turno pendiente y **aceptaron promociones por WhatsApp** (`booking.lapsed_clients`). El botón abre el WhatsApp del dueño con el mensaje listo (`wa.me`): **no se envía nada automático** (la API oficial de WhatsApp sigue siendo checkpoint humano). Consentimiento: casillero opcional al reservar (`booking.book` suma `p_promos`, se guarda en `core.customer_consents` con source `customer_app`) o lo marca el negocio en la ficha del cliente (source `admin`). El descuento es solo texto del mensaje (no cambia el precio en el sistema). Pendiente posible: medir cuántos volvieron por la oferta.
 
+
+## D-054 — Página de reservas rediseñada (2026-10-13, vigente)
+
+Pedido del dueño ("no está muy lindo"). La página `turnos.neriva.net/<negocio>` usa el **color y el logo del negocio** (texto blanco u oscuro según el color), el nombre en grande como cartel, pasos que se achican a una línea con "Cambiar" al elegir, profesionales con iniciales, días como hojas de almanaque, horarios agrupados en mañana/tarde/noche y una barra fija abajo con el resumen y "Confirmar turno". La lógica no cambió (mismas funciones del SDK).
