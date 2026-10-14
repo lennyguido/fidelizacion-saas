@@ -278,28 +278,64 @@ function Compare() {
   )
 }
 
+const WEB_PRICE = 34900
+const WEB_SETUP = 60000
+const WEB_LINK = wa(
+  '¡Hola! Quiero mi propia página web con turnos (plan Turnos + Web). Mi negocio es: ',
+)
+
 function Pricing() {
   return (
-    <section className="mx-auto grid max-w-6xl items-center gap-10 px-5 py-20 md:grid-cols-2">
-      <div>
-        <h2 className="display text-[clamp(2.2rem,5vw,3.75rem)] font-bold">Un solo precio.</h2>
-        <p className="mt-4 max-w-[44ch] text-lg leading-relaxed opacity-80">
-          Reservas y profesionales sin límite, agenda semanal y la ficha de tus clientes. 30 días
-          gratis para probarlo con tu agenda real.
-        </p>
-      </div>
-      <div className="rounded-[2rem] bg-white p-8 ring-2 ring-[var(--ink)]">
-        <p className="display text-6xl font-extrabold">{pesos(PRICE)}</p>
-        <p className="mt-1 opacity-70">por mes, todo incluido</p>
-        <a
-          href={TRY_LINK}
-          target="_blank"
-          rel="noreferrer"
-          className="mt-6 inline-flex h-13 w-full items-center justify-center rounded-full bg-[var(--lacquer)] text-base font-semibold text-white hover:opacity-90"
-        >
-          Probar 30 días gratis
-        </a>
-        <p className="mt-3 text-center text-sm opacity-60">Si no te sirve, no pagás nada.</p>
+    <section id="precios" className="mx-auto max-w-6xl px-5 py-20">
+      <h2 className="display text-[clamp(2.2rem,5vw,3.75rem)] font-bold">Precios claros.</h2>
+      <p className="mt-4 max-w-[52ch] text-lg leading-relaxed opacity-80">
+        Reservas y profesionales sin límite, agenda semanal y la ficha de tus clientes. 30 días
+        gratis para probarlo con tu agenda real.
+      </p>
+      <div className="mt-10 grid gap-6 md:grid-cols-2">
+        <div className="flex flex-col rounded-[2rem] bg-white p-8 ring-2 ring-[var(--ink)]">
+          <p className="text-lg font-semibold">Turnos</p>
+          <p className="display mt-2 text-6xl font-extrabold">{pesos(PRICE)}</p>
+          <p className="mt-1 opacity-70">por mes, todo incluido</p>
+          <ul className="mt-6 flex flex-1 list-disc flex-col gap-2 pl-5 leading-relaxed">
+            <li>Tu link de reservas para Instagram, Google Maps y WhatsApp</li>
+            <li>Agenda en el celular y en la compu</li>
+            <li>Los turnos aparecen en el calendario de cada profesional</li>
+          </ul>
+          <a
+            href={TRY_LINK}
+            target="_blank"
+            rel="noreferrer"
+            className="mt-8 inline-flex h-13 w-full items-center justify-center rounded-full bg-[var(--lacquer)] text-base font-semibold text-white hover:opacity-90"
+          >
+            Probar 30 días gratis
+          </a>
+          <p className="mt-3 text-center text-sm opacity-60">Si no te sirve, no pagás nada.</p>
+        </div>
+        <div className="flex flex-col rounded-[2rem] bg-[var(--ink)] p-8 text-white">
+          <p className="text-lg font-semibold">Turnos + tu página web</p>
+          <p className="display mt-2 text-6xl font-extrabold">{pesos(WEB_PRICE)}</p>
+          <p className="mt-1 opacity-70">
+            por mes, más {pesos(WEB_SETUP)} una sola vez por el armado
+          </p>
+          <ul className="mt-6 flex flex-1 list-disc flex-col gap-2 pl-5 leading-relaxed">
+            <li>Todo lo del plan Turnos</li>
+            <li>Tu web con fotos, servicios, precios y el botón de reservar adentro</li>
+            <li>Tu dominio propio (tunegocio.com.ar): el primer año va incluido en el armado</li>
+            <li>
+              La armamos nosotros. Si cambiás un precio en tu agenda, la web se actualiza sola
+            </li>
+          </ul>
+          <a
+            href={WEB_LINK}
+            target="_blank"
+            rel="noreferrer"
+            className="mt-8 inline-flex h-13 w-full items-center justify-center rounded-full bg-white text-base font-semibold text-[var(--ink)] hover:opacity-90"
+          >
+            Quiero mi web
+          </a>
+          <p className="mt-3 text-center text-sm opacity-60">Te escribimos por WhatsApp.</p>
+        </div>
       </div>
     </section>
   )
@@ -321,6 +357,14 @@ const FAQ = [
   [
     '¿Necesito una computadora?',
     'No. La agenda funciona en el celular. En una compu se ve la semana entera más cómoda.',
+  ],
+  [
+    '¿Los turnos aparecen en el calendario de mi celular?',
+    'Sí. Cada profesional agrega su link al calendario del iPhone o a Google Calendar y ve sus turnos ahí, junto con el resto de sus cosas.',
+  ],
+  [
+    '¿Puedo tener mi propia página web?',
+    'Sí, con el plan Turnos + Web. La armamos nosotros con tus fotos y servicios, con tu dominio propio y los turnos adentro. El dominio queda a tu nombre.',
   ],
 ] as const
 
