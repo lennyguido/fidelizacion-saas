@@ -88,6 +88,8 @@ export async function book(input: {
   name: string
   phone: string
   termsAccepted: boolean
+  /** Acepta recibir promociones del negocio por WhatsApp (D-053). */
+  promos?: boolean
 }): Promise<{ status: BookStatus; token?: string }> {
   const { data, error } = await db().rpc('book', {
     p_slug: input.slug,
@@ -97,6 +99,7 @@ export async function book(input: {
     p_name: input.name,
     p_phone: input.phone,
     p_terms_accepted: input.termsAccepted,
+    p_promos: input.promos ?? false,
   })
   if (error) throw fromPostgrestError(error)
   const result = (data ?? {}) as { status?: BookStatus; token?: string }
@@ -546,4 +549,77 @@ export async function calendarToken(staffId: string, rotate = false): Promise<st
 export function calendarFeedUrls(token: string): { https: string; webcal: string } {
   const https = `${BOOKING_BASE_URL}/cal/${token}.ics`
   return { https, webcal: https.replace(/^https:/, 'webcal:') }
+}
+
+// Llenar huecos (D-053) -----------------------------------------------------------------
+
+export interface GapSlot {
+  startsAt: string
+  staffId: string
+  staffName: string
+  serviceName: string
+}
+
+/** Horarios libres de un día (miembros del negocio). */
+export async function gapSlots(businessId: string, day: string): Promise<GapSlot[]> {
+  const { data, error } = await db().rpc('gap_slots', { p_business_id: businessId, p_day: day })
+  if (error) throw fromPostgrestError(error)
+  return (data ?? []).map((r) => ({
+    startsAt: r.starts_at,
+    staffId: r.staff_id,
+    staffName: r.staff_name,
+    serviceName: r.service_name,
+  }))
+}
+
+export interface LapsedClient {
+  customerId: string
+  name: string
+  phone: string
+  lastAt: string
+  visits: number
+  daysAway: number
+  lastService: string | null
+}
+
+/** Clientes que no vienen hace `minDays` días y aceptaron promociones por WhatsApp. */
+export async function lapsedClients(businessId: string, minDays: number): Promise<LapsedClient[]> {
+  const { data, error } = await db().rpc('lapsed_clients', {
+    p_business_id: businessId,
+    p_min_days: minDays,
+  })
+  if (error) throw fromPostgrestError(error)
+  return (data ?? []).map((r) => ({
+    customerId: r.customer_id,
+    name: r.name,
+    phone: r.phone,
+    lastAt: r.last_at,
+    visits: Number(r.visits),
+    daysAway: r.days_away,
+    lastService: r.last_service,
+  }))
+}
+
+/** Texto de la oferta para mandar por WhatsApp (el dueño lo puede editar antes). */
+export function gapOfferMessage(input: {
+  clientName: string
+  businessName: string
+  day: string
+  time: string
+  discountPercent: number
+  bookingUrl: string
+}): string {
+  const first = input.clientName.trim().split(/\s+/)[0] ?? ''
+  const offer =
+    input.discountPercent > 0 ? ` con ${input.discountPercent}% de descuento` : ''
+  return (
+    `¡Hola ${first}! Hace rato no te vemos por ${input.businessName}. ` +
+    `Nos quedó un lugar ${input.day} a las ${input.time}${offer}. ` +
+    `Si lo querés, reservalo acá: ${input.bookingUrl}`
+  )
+}
+
+/** Link de WhatsApp con el texto listo para enviar. */
+export function whatsappLink(phone: string, text: string): string {
+  return `https://wa.me/${phone.replace(/\D/g, '')}?text=${encodeURIComponent(text)}`
 }

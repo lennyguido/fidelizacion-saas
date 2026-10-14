@@ -4,11 +4,13 @@ import { auth, booking, businesses, errorMessage, type Session } from '@platafor
 import { Alert, Button, FullPageSpinner, TextField, ToastProvider } from '@plataforma/ui'
 import { CalendarPage } from './CalendarPage'
 import { ClientsPage } from './ClientsPage'
+import { FillGapsPage } from './FillGapsPage'
 import { PanelContext, usePanel } from './context'
 import { BookingSetupPage } from './SetupPage'
 
 const VIEWS = [
   { path: '/panel', label: 'Calendario' },
+  { path: '/panel/huecos', label: 'Llenar huecos' },
   { path: '/panel/clientes', label: 'Clientes' },
   { path: '/panel/configuracion', label: 'Configuración' },
 ] as const
@@ -172,14 +174,14 @@ function Shell() {
           ) : (
             <span className="text-sm text-slate-600">{business.name}</span>
           )}
-          <nav className="flex gap-1">
+          <nav className="-mx-1 flex max-w-full gap-1 overflow-x-auto px-1">
             {VIEWS.map((v) => (
               <button
                 key={v.path}
                 type="button"
                 onClick={() => go(v.path)}
                 aria-current={v.path === view.path ? 'page' : undefined}
-                className={`rounded-full px-3 py-1.5 text-sm font-medium ${
+                className={`shrink-0 rounded-full px-3 py-1.5 text-sm font-medium whitespace-nowrap ${
                   v.path === view.path
                     ? 'bg-slate-900 text-white'
                     : 'text-slate-700 hover:bg-slate-100'
@@ -206,6 +208,7 @@ function Shell() {
       </header>
       <main className="mx-auto max-w-6xl px-4 py-6">
         {view.path === '/panel' && <CalendarPage />}
+        {view.path === '/panel/huecos' && <FillGapsPage />}
         {view.path === '/panel/clientes' && <ClientsPage />}
         {view.path === '/panel/configuracion' && <BookingSetupPage />}
       </main>

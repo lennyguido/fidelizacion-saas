@@ -1,5 +1,12 @@
 import { useState } from 'react'
-import { booking, errorMessage, formatPhone, type BookingClient } from '@plataforma/sdk'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import {
+  booking,
+  customers,
+  errorMessage,
+  formatPhone,
+  type BookingClient,
+} from '@plataforma/sdk'
 import { Alert, Button, EmptyState, Spinner, TextField } from '@plataforma/ui'
 import { usePanel } from './context'
 import { useClientHistory, useClients } from './queries'
@@ -117,6 +124,7 @@ function ClientSheet({ client, onClose }: { client: BookingClient; onClose: () =
             WhatsApp · {formatPhone(client.phone)}
           </a>
         )}
+        <PromosConsent customerId={client.customerId} />
         <h3 className="font-semibold">Historial</h3>
         {history.isPending && <Spinner />}
         <ul className="divide-y divide-slate-100 text-sm">
@@ -148,5 +156,38 @@ function Stat({ label, value }: { label: string; value: string }) {
       <dt className="text-xs text-slate-500">{label}</dt>
       <dd className="font-semibold">{value}</dd>
     </div>
+  )
+}
+
+/** Si aceptó recibir promociones por WhatsApp (queda registrado con fecha, D-053). */
+function PromosConsent({ customerId }: { customerId: string }) {
+  const { business } = usePanel()
+  const client = useQueryClient()
+  const key = ['customers', business.id, 'booking', 'consent', customerId]
+  const consent = useQuery({ queryKey: key, queryFn: () => customers.getWhatsappConsent(customerId) })
+  const save = useMutation({
+    mutationFn: (granted: boolean) =>
+      customers.setWhatsappConsent(business.id, customerId, granted, 'admin'),
+    onSuccess: () => client.invalidateQueries({ queryKey: ['customers', business.id, 'booking'] }),
+  })
+  const granted = consent.data?.granted ?? false
+
+  return (
+    <label className="flex items-start gap-2 rounded-xl bg-slate-50 p-3 text-sm">
+      <input
+        type="checkbox"
+        className="mt-1"
+        checked={granted}
+        disabled={consent.isPending || save.isPending}
+        onChange={(e) => save.mutate(e.target.checked)}
+      />
+      <span>
+        Aceptó recibir promociones por WhatsApp
+        <span className="block text-slate-500">
+          Marcalo solo si te lo dijo. Así aparece en Llenar huecos.
+        </span>
+        {save.error && <span className="block text-red-700">{errorMessage(save.error)}</span>}
+      </span>
+    </label>
   )
 }

@@ -27,6 +27,7 @@ export function HomePage() {
       <main>
         <Hero />
         <Calculator />
+        <FillGaps />
         <Features />
         <Compare />
         <Pricing />
@@ -186,6 +187,143 @@ function Calculator() {
   )
 }
 
+type DemoRow = { time: string; who: string | null; away?: number }
+
+const DEMO_DAY: DemoRow[] = [
+  { time: '10:00', who: 'Martín' },
+  { time: '11:00', who: null, away: 42 },
+  { time: '12:00', who: 'Lucas' },
+  { time: '15:00', who: null, away: 35 },
+  { time: '16:00', who: 'Nico' },
+  { time: '17:00', who: null, away: 58 },
+]
+const DEMO_NAMES: Record<string, string> = { '11:00': 'Juan', '15:00': 'Tomás', '17:00': 'Fede' }
+
+/** Llenar huecos (D-053): la agenda del jueves con huecos que se llenan con un mensaje. */
+function FillGaps() {
+  return (
+    <section className="mx-auto grid max-w-6xl items-center gap-12 px-5 py-20 md:grid-cols-[1fr_1.05fr]">
+      <div className="flex flex-col gap-6">
+        <h2 className="display text-[clamp(2.2rem,5vw,3.75rem)] font-bold">
+          Un hueco en la agenda es plata que no entra.
+        </h2>
+        <p className="max-w-[46ch] text-lg leading-relaxed opacity-80">
+          Neriva Turnos te muestra los horarios libres del día y los clientes que hace rato no
+          vuelven. Les mandás una oferta por WhatsApp con un toque y el lugar se llena.
+        </p>
+        <ol className="flex flex-col gap-4">
+          {[
+            ['Ves los huecos', 'Hoy, mañana o cualquier día de la semana.'],
+            [
+              'Elegís a quién invitar',
+              'Solo aparecen los que aceptaron recibir promociones, así nadie lo siente como spam.',
+            ],
+            [
+              'Mandás la oferta',
+              'Se abre tu WhatsApp con el mensaje listo: nombre, horario, descuento y tu link.',
+            ],
+          ].map(([title, text], i) => (
+            <li key={title} className="grid grid-cols-[2.25rem_1fr] gap-3">
+              <span className="display flex h-9 w-9 items-center justify-center rounded-full bg-[var(--lacquer)] font-bold text-white">
+                {i + 1}
+              </span>
+              <span>
+                <span className="block font-semibold">{title}</span>
+                <span className="block opacity-75">{text}</span>
+              </span>
+            </li>
+          ))}
+        </ol>
+      </div>
+      <GapsDemo />
+    </section>
+  )
+}
+
+function GapsDemo() {
+  const [open, setOpen] = useState<string | null>('11:00')
+  const [filled, setFilled] = useState<string[]>([])
+  const row = DEMO_DAY.find((r) => r.time === open)
+  const name = open ? DEMO_NAMES[open] : undefined
+  const left = DEMO_DAY.filter((r) => !r.who && !filled.includes(r.time)).length
+
+  return (
+    <div className="flex flex-col gap-4 rounded-[2rem] bg-[var(--lilac)] p-5 sm:p-7">
+      <div className="flex items-baseline justify-between gap-3">
+        <p className="display text-2xl font-bold">Jueves</p>
+        <p className="text-sm font-semibold" aria-live="polite">
+          {left === 0 ? '¡Agenda llena!' : `${left} ${left === 1 ? 'hueco' : 'huecos'}`}
+        </p>
+      </div>
+      <ul className="flex flex-col gap-2">
+        {DEMO_DAY.map((r) => {
+          const isFilled = filled.includes(r.time)
+          const isHole = !r.who && !isFilled
+          return (
+            <li key={r.time} className="grid grid-cols-[3.25rem_1fr] items-center gap-3">
+              <span className="text-sm font-semibold tabular-nums opacity-70">{r.time}</span>
+              {isHole ? (
+                <button
+                  type="button"
+                  onClick={() => setOpen(r.time)}
+                  aria-pressed={open === r.time}
+                  className={`h-11 rounded-xl border-2 border-dashed px-4 text-left text-sm font-semibold ${
+                    open === r.time
+                      ? 'border-[var(--lacquer)] bg-white text-[var(--lacquer)]'
+                      : 'border-[var(--ink)]/30 hover:border-[var(--lacquer)]'
+                  }`}
+                >
+                  Libre · ofrecer a {DEMO_NAMES[r.time]}
+                </button>
+              ) : (
+                <span
+                  className={`flex h-11 items-center rounded-xl px-4 text-sm font-semibold ${
+                    isFilled ? 'bg-[var(--lacquer)] text-white' : 'bg-[var(--ink)] text-white'
+                  }`}
+                >
+                  {isFilled ? `${DEMO_NAMES[r.time]} · volvió con la oferta` : r.who}
+                </span>
+              )}
+            </li>
+          )
+        })}
+      </ul>
+      {row && name && !filled.includes(row.time) ? (
+        <div className="flex flex-col gap-3 rounded-2xl bg-white p-4">
+          <p className="text-xs font-semibold opacity-60">
+            {name} no viene hace {row.away} días
+          </p>
+          <p className="max-w-[34ch] self-end rounded-2xl rounded-br-sm bg-[#d9fdd3] px-4 py-3 text-sm leading-relaxed">
+            ¡Hola {name}! Hace rato no te vemos por Barbería Sol. Nos quedó un lugar el jueves a
+            las {row.time} con 20% de descuento. Si lo querés, reservalo acá: turnos.neriva.net/…
+          </p>
+          <button
+            type="button"
+            onClick={() => {
+              setFilled([...filled, row.time])
+              setOpen(DEMO_DAY.find((r) => !r.who && r.time !== row.time && !filled.includes(r.time))?.time ?? null)
+            }}
+            className="h-11 rounded-full bg-[#1f8f4e] text-sm font-semibold text-white hover:opacity-90"
+          >
+            Mandar por WhatsApp
+          </button>
+        </div>
+      ) : (
+        <button
+          type="button"
+          onClick={() => {
+            setFilled([])
+            setOpen('11:00')
+          }}
+          className="h-11 rounded-full text-sm font-semibold ring-2 ring-inset ring-[var(--ink)]"
+        >
+          Ver de nuevo
+        </button>
+      )}
+    </div>
+  )
+}
+
 const FEATURES = [
   {
     title: 'Reservas solas, las 24 horas',
@@ -208,8 +346,8 @@ const FEATURES = [
     text: 'Cuántas veces vino, cuánto gastó y cuántas veces faltó. Sabés a quién cuidar y a quién pedirle que avise.',
   },
   {
-    title: 'Los que dejaron de venir, vuelven',
-    text: 'Si además usás Neriva, cada turno suma a su tarjeta de puntos y te avisamos cuando alguien hace mucho que no viene.',
+    title: 'En el calendario de tu celular',
+    text: 'Cada profesional ve sus turnos en el calendario del iPhone o en Google Calendar, junto con el resto de sus cosas.',
   },
 ]
 
@@ -300,6 +438,7 @@ function Pricing() {
           <ul className="mt-6 flex flex-1 list-disc flex-col gap-2 pl-5 leading-relaxed">
             <li>Tu link de reservas para Instagram, Google Maps y WhatsApp</li>
             <li>Agenda en el celular y en la compu</li>
+            <li>Llenar huecos: ofertas por WhatsApp a quien no viene hace rato</li>
             <li>Los turnos aparecen en el calendario de cada profesional</li>
           </ul>
           <a
