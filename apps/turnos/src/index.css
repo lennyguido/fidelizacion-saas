@@ -45,3 +45,29 @@ body {
     transition: color 0.2s;
   }
 }
+
+/* Página de reservas de cada negocio (D-054): el color es el del negocio. */
+.book {
+  --ink: #1e1b2e;
+  --paper: #f4f3f7;
+  --line: #e2e0ea;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Figtree', system-ui, sans-serif;
+  letter-spacing: -0.01em;
+}
+.book .display {
+  font-family: 'Bricolage Grotesque Variable', 'Figtree', sans-serif;
+  font-variation-settings: 'wdth' 85;
+  letter-spacing: -0.035em;
+  line-height: 0.95;
+}
+.book a:focus-visible,
+.book button:focus-visible,
+.book input:focus-visible {
+  outline: 3px solid var(--brand);
+  outline-offset: 2px;
+}
+.book input[type='checkbox'] {
+  accent-color: var(--brand);
+}
