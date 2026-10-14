@@ -1,4 +1,11 @@
-import { useEffect, useRef, useState, type CSSProperties, type FormEvent, type ReactNode } from 'react'
+import {
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type FormEvent,
+  type ReactNode,
+} from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import {
   booking,
@@ -111,7 +118,9 @@ function Booking({ slug, page }: { slug: string; page: PublicPage }) {
               {page.name}
             </h1>
           </div>
-          {page.message && <p className="max-w-[40ch] leading-relaxed opacity-90">{page.message}</p>}
+          {page.message && (
+            <p className="max-w-[40ch] leading-relaxed opacity-90">{page.message}</p>
+          )}
         </div>
       </header>
 
