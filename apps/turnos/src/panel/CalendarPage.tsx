@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+import { useEffect, useState, type FormEvent } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import {
   booking,
@@ -10,14 +10,12 @@ import {
 import { Alert, Button, Spinner, TextField, useToast } from '@plataforma/ui'
 import { usePanel } from './context'
 import { useHours, useInvalidateBooking, useServices, useStaff, useWeek } from './queries'
+import { placeInLanes, staffColor, type StaffColor } from './calendarLayout'
 
-const HOUR_PX = 56
-const STATUS_STYLE: Record<AgendaItem['status'], string> = {
-  booked: 'bg-action/10 ring-action text-slate-900',
-  attended: 'bg-emerald-50 ring-emerald-400 text-emerald-900',
-  no_show: 'bg-red-50 ring-red-300 text-red-900 line-through',
-  cancelled: 'bg-slate-100 ring-slate-300 text-slate-500 line-through',
-}
+/** Alto de una hora: alcanza para dos líneas en un turno de 30 minutos. */
+const HOUR_PX = 88
+/** Debajo de este alto el turno se muestra en una sola línea. */
+const ONE_LINE_PX = 40
 const STATUS_LABEL: Record<AgendaItem['status'], string> = {
   booked: 'Pendiente',
   attended: 'Asistió',
@@ -25,55 +23,82 @@ const STATUS_LABEL: Record<AgendaItem['status'], string> = {
   cancelled: 'Cancelado',
 }
 
+/** En pantallas chicas se ve un día a la vez. */
+function useIsNarrow() {
+  const query = '(max-width: 767px)'
+  const [narrow, setNarrow] = useState(() => window.matchMedia(query).matches)
+  useEffect(() => {
+    const media = window.matchMedia(query)
+    const onChange = () => setNarrow(media.matches)
+    media.addEventListener('change', onChange)
+    return () => media.removeEventListener('change', onChange)
+  }, [])
+  return narrow
+}
+
 /** Calendario semanal por profesional (D-050). */
 export function CalendarPage() {
   const { business } = usePanel()
   const today = booking.dayInTimeZone(new Date(), business.timezone)
-  const [from, setFrom] = useState(booking.weekStart(today))
+  const narrow = useIsNarrow()
+  const [focus, setFocus] = useState(today)
   const [staffFilter, setStaffFilter] = useState<string>('all')
   const [selected, setSelected] = useState<AgendaItem | null>(null)
   const [creating, setCreating] = useState(false)
+  const from = booking.weekStart(focus)
   const week = useWeek(business.id, from)
   const staff = useStaff(business.id)
   const hours = useHours(business.id)
 
-  const days = Array.from({ length: 7 }, (_, i) => booking.addDays(from, i))
+  const weekDays = Array.from({ length: 7 }, (_, i) => booking.addDays(from, i))
+  const days = narrow ? [focus] : weekDays
+  const step = narrow ? 1 : 7
+  const staffIds = (staff.data ?? []).map((s) => s.id)
+  const dayOf = (iso: string) => booking.dayInTimeZone(new Date(iso), business.timezone)
+  const minuteOf = (iso: string) => booking.minutesOfDay(iso, business.timezone)
+  const endMinuteOf = (a: AgendaItem) =>
+    minuteOf(a.startsAt) + (new Date(a.endsAt).getTime() - new Date(a.startsAt).getTime()) / 60_000
   const items = (week.data ?? []).filter(
     (a) => a.status !== 'cancelled' && (staffFilter === 'all' || a.staffId === staffFilter),
   )
   const ranges = hours.data ?? []
   const startHour = Math.min(8, ...ranges.map((r) => Number(r.startTime.slice(0, 2))))
   const endHour = Math.max(20, ...ranges.map((r) => Math.ceil(Number(r.endTime.slice(0, 2)))))
-  const pending = items.filter((a) => a.status === 'booked').length
+  const totalPx = (endHour - startHour) * HOUR_PX
+  const pending = items.filter(
+    (a) => a.status === 'booked' && days.includes(dayOf(a.startsAt)),
+  ).length
 
   return (
     <section className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center gap-2">
         <Button
           variant="secondary"
-          onClick={() => setFrom(booking.addDays(from, -7))}
-          aria-label="Semana anterior"
+          onClick={() => setFocus(booking.addDays(focus, -step))}
+          aria-label={narrow ? 'Día anterior' : 'Semana anterior'}
         >
           ←
         </Button>
         <Button
           variant="secondary"
-          onClick={() => setFrom(booking.addDays(from, 7))}
-          aria-label="Semana siguiente"
+          onClick={() => setFocus(booking.addDays(focus, step))}
+          aria-label={narrow ? 'Día siguiente' : 'Semana siguiente'}
         >
           →
         </Button>
-        <Button variant="ghost" onClick={() => setFrom(booking.weekStart(today))}>
+        <Button variant="ghost" onClick={() => setFocus(today)}>
           Hoy
         </Button>
         <p className="font-semibold capitalize">
-          {booking.formatDay(days[0]!)} – {booking.formatDay(days[6]!)}
+          {narrow
+            ? booking.formatDay(focus)
+            : `${booking.formatDay(weekDays[0]!)} – ${booking.formatDay(weekDays[6]!)}`}
         </p>
         <span className="text-sm text-slate-500">{pending} pendientes</span>
-        <div className="ml-auto flex items-center gap-2">
+        <div className="flex w-full items-center gap-2 sm:ml-auto sm:w-auto">
           <select
             aria-label="Profesional"
-            className="h-10 rounded-lg border border-slate-300 bg-white px-3 text-sm"
+            className="h-10 flex-1 rounded-lg border border-slate-300 bg-white px-3 text-sm sm:flex-none"
             value={staffFilter}
             onChange={(e) => setStaffFilter(e.target.value)}
           >
@@ -88,12 +113,29 @@ export function CalendarPage() {
         </div>
       </div>
 
+      {staffIds.length > 1 && (
+        <ul className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-slate-600" aria-label="Colores">
+          {(staff.data ?? []).map((s) => (
+            <li key={s.id} className="flex items-center gap-1.5">
+              <span
+                className="size-2.5 rounded-full"
+                style={{ background: staffColor(staffIds, s.id).bar }}
+              />
+              {s.name}
+            </li>
+          ))}
+        </ul>
+      )}
+
       {week.isPending && <Spinner />}
       {week.error && <Alert tone="error">{errorMessage(week.error)}</Alert>}
 
       <div className="overflow-x-auto rounded-2xl bg-white ring-1 ring-slate-200">
-        <div className="grid min-w-[840px]" style={{ gridTemplateColumns: '56px repeat(7, 1fr)' }}>
-          <div />
+        <div
+          className={`grid ${narrow ? '' : 'min-w-[840px]'}`}
+          style={{ gridTemplateColumns: `56px repeat(${days.length}, minmax(0, 1fr))` }}
+        >
+          <div className="border-b border-slate-100" />
           {days.map((d) => (
             <div
               key={d}
@@ -104,59 +146,55 @@ export function CalendarPage() {
               {booking.formatDay(d)}
             </div>
           ))}
-          <div className="relative" style={{ height: (endHour - startHour) * HOUR_PX }}>
+          <div className="relative" style={{ height: totalPx }}>
             {Array.from({ length: endHour - startHour }, (_, i) => (
               <span
                 key={i}
-                className="absolute right-2 text-xs text-slate-400"
-                style={{ top: i * HOUR_PX - 6 }}
+                className="absolute right-2 text-xs tabular-nums text-slate-400"
+                style={{ top: i === 0 ? 2 : i * HOUR_PX - 7 }}
               >
                 {String(startHour + i).padStart(2, '0')}:00
               </span>
             ))}
           </div>
           {days.map((d) => (
-            <div
-              key={d}
-              className="relative border-l border-slate-100"
-              style={{ height: (endHour - startHour) * HOUR_PX }}
-            >
-              {Array.from({ length: endHour - startHour }, (_, i) => (
+            <div key={d} className="relative border-l border-slate-100" style={{ height: totalPx }}>
+              {Array.from({ length: (endHour - startHour) * 2 }, (_, i) => (
                 <div
                   key={i}
-                  className="absolute inset-x-0 border-t border-slate-100"
-                  style={{ top: i * HOUR_PX }}
+                  className={`absolute inset-x-0 border-t ${
+                    i % 2 === 0 ? 'border-slate-200' : 'border-dashed border-slate-100'
+                  }`}
+                  style={{ top: (i * HOUR_PX) / 2 }}
                 />
               ))}
-              {items
-                .filter((a) => booking.dayInTimeZone(new Date(a.startsAt), business.timezone) === d)
-                .map((a) => {
-                  const top =
-                    ((booking.minutesOfDay(a.startsAt, business.timezone) - startHour * 60) / 60) *
-                    HOUR_PX
-                  const height = Math.max(
-                    22,
-                    ((new Date(a.endsAt).getTime() - new Date(a.startsAt).getTime()) / 3_600_000) *
-                      HOUR_PX -
-                      2,
-                  )
-                  return (
-                    <button
-                      key={a.id}
-                      type="button"
-                      onClick={() => setSelected(a)}
-                      className={`absolute inset-x-1 overflow-hidden rounded-lg px-2 py-1 text-left text-xs ring-1 ring-inset ${STATUS_STYLE[a.status]}`}
-                      style={{ top, height }}
-                    >
-                      <span className="font-semibold">
-                        {booking.formatTime(a.startsAt, business.timezone)} {a.customerName}
-                      </span>
-                      <span className="block truncate">
-                        {a.serviceName} · {a.staffName}
-                      </span>
-                    </button>
-                  )
-                })}
+              {placeInLanes(
+                items.filter((a) => dayOf(a.startsAt) === d),
+                (a) => minuteOf(a.startsAt),
+                endMinuteOf,
+              ).map(({ item: a, lane, lanes }) => {
+                const top = ((minuteOf(a.startsAt) - startHour * 60) / 60) * HOUR_PX
+                const height = Math.max(
+                  24,
+                  ((endMinuteOf(a) - minuteOf(a.startsAt)) / 60) * HOUR_PX - 2,
+                )
+                return (
+                  <AppointmentBlock
+                    key={a.id}
+                    item={a}
+                    color={staffColor(staffIds, a.staffId)}
+                    timeZone={business.timezone}
+                    oneLine={height < ONE_LINE_PX}
+                    style={{
+                      top: top + 1,
+                      height,
+                      left: `calc(${(lane / lanes) * 100}% + 2px)`,
+                      width: `calc(${100 / lanes}% - 4px)`,
+                    }}
+                    onClick={() => setSelected(a)}
+                  />
+                )
+              })}
             </div>
           ))}
         </div>
@@ -165,6 +203,52 @@ export function CalendarPage() {
       {selected && <AppointmentSheet item={selected} onClose={() => setSelected(null)} />}
       {creating && <NewAppointmentSheet onClose={() => setCreating(false)} />}
     </section>
+  )
+}
+
+/** Un turno en la grilla: color del profesional, hora y cliente arriba, servicio abajo. */
+function AppointmentBlock({
+  item,
+  color,
+  timeZone,
+  oneLine,
+  style,
+  onClick,
+}: {
+  item: AgendaItem
+  color: StaffColor
+  timeZone: string
+  oneLine: boolean
+  style: React.CSSProperties
+  onClick: () => void
+}) {
+  const time = booking.formatTime(item.startsAt, timeZone)
+  const done = item.status === 'attended'
+  const noShow = item.status === 'no_show'
+  const detail = `${item.serviceName} · ${item.staffName}`
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      title={`${time} ${item.customerName} — ${detail} (${STATUS_LABEL[item.status]})`}
+      className={`absolute flex overflow-hidden rounded-md border-l-[3px] px-1.5 text-left text-xs leading-tight shadow-sm ring-1 ring-black/5 transition-shadow hover:z-10 hover:shadow-md focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-action ${
+        oneLine ? 'items-center' : 'flex-col justify-start py-1'
+      } ${done ? 'opacity-60' : ''}`}
+      style={{
+        ...style,
+        borderLeftColor: noShow ? '#dc2626' : color.bar,
+        background: noShow ? '#fef2f2' : color.bg,
+      }}
+    >
+      <span
+        className={`flex min-w-0 items-baseline gap-1 ${noShow ? 'text-red-800 line-through' : 'text-slate-900'}`}
+      >
+        <span className="shrink-0 tabular-nums text-slate-500">{time}</span>
+        <span className="truncate font-semibold">{item.customerName}</span>
+        {done && <span aria-label="Asistió">✓</span>}
+      </span>
+      {!oneLine && <span className="truncate text-slate-600">{detail}</span>}
+    </button>
   )
 }
 
