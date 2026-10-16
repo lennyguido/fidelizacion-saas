@@ -1,0 +1,179 @@
+/* Estilo propio sobre react-big-calendar (se ve como el resto del panel). */
+.turnos-cal {
+  height: min(78vh, 960px);
+  min-height: 520px;
+  --cal-line: #eef0f4;
+  --cal-line-strong: #e2e5eb;
+  --cal-muted: #94a3b8;
+  font-size: 13px;
+  letter-spacing: -0.01em;
+}
+
+.turnos-cal .rbc-time-view {
+  border: 0;
+}
+.turnos-cal .rbc-time-header-content,
+.turnos-cal .rbc-day-slot,
+.turnos-cal .rbc-time-header-content > .rbc-row.rbc-row-resource {
+  border-left: 1px solid var(--cal-line-strong);
+}
+.turnos-cal .rbc-time-header.rbc-overflowing {
+  border-right-color: var(--cal-line-strong);
+}
+.turnos-cal .rbc-header {
+  border-bottom: 1px solid var(--cal-line-strong);
+  border-left: 0;
+  padding: 10px 4px;
+  font-weight: 600;
+  font-size: 13px;
+  text-transform: capitalize;
+  color: #0f172a;
+}
+.turnos-cal .rbc-header + .rbc-header {
+  border-left: 1px solid var(--cal-line-strong);
+}
+.turnos-cal .rbc-header.rbc-today,
+.turnos-cal .rbc-today {
+  background: transparent;
+}
+.turnos-cal .rbc-header.rbc-today {
+  color: var(--color-action, #2563eb);
+}
+.turnos-cal .rbc-time-header .rbc-allday-cell,
+.turnos-cal .rbc-time-header-cell-single-day {
+  display: none;
+}
+.turnos-cal .rbc-time-content {
+  border-top: 1px solid var(--cal-line-strong);
+}
+.turnos-cal .rbc-time-content > * + * > * {
+  border-left: 1px solid var(--cal-line-strong);
+}
+
+/* Una hora = 4 franjas de 15 min; línea fuerte cada hora, punteada a la media. */
+.turnos-cal .rbc-timeslot-group {
+  min-height: 88px;
+  border-bottom: 1px solid var(--cal-line-strong);
+}
+.turnos-cal .rbc-day-slot .rbc-time-slot {
+  border-top: 0;
+}
+.turnos-cal .rbc-day-slot .rbc-time-slot:nth-child(3) {
+  border-top: 1px dashed var(--cal-line);
+}
+.turnos-cal .rbc-time-gutter .rbc-timeslot-group {
+  border-bottom-color: transparent;
+}
+.turnos-cal .rbc-label {
+  padding: 0 8px;
+  font-size: 12px;
+  color: var(--cal-muted);
+  font-variant-numeric: tabular-nums;
+}
+.turnos-cal .rbc-time-gutter .rbc-time-slot {
+  position: relative;
+  top: -8px;
+}
+
+/* Hueco elegido para cargar un turno. */
+.turnos-cal .rbc-slot-selection {
+  background: color-mix(in srgb, var(--color-action, #2563eb) 14%, transparent);
+  border-radius: 6px;
+  color: #0f172a;
+  font-size: 12px;
+}
+
+/* Línea de "ahora". */
+.turnos-cal .rbc-current-time-indicator {
+  height: 2px;
+  background: #ef4444;
+}
+.turnos-cal .rbc-current-time-indicator::before {
+  content: '';
+  position: absolute;
+  left: -5px;
+  top: -4px;
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  background: #ef4444;
+}
+
+/* Turnos. */
+.turnos-cal .rbc-event,
+.turnos-cal .rbc-day-slot .rbc-background-event {
+  border: 0;
+  border-left: 3px solid;
+  border-radius: 6px;
+  padding: 3px 6px;
+  color: #0f172a;
+  box-shadow:
+    0 1px 2px rgb(15 23 42 / 0.06),
+    inset 0 0 0 1px rgb(15 23 42 / 0.05);
+  transition: box-shadow 150ms ease;
+}
+.turnos-cal .rbc-day-slot .rbc-event {
+  border: 0;
+  border-left: 3px solid;
+}
+.turnos-cal .rbc-event:hover {
+  z-index: 3;
+  box-shadow:
+    0 4px 12px rgb(15 23 42 / 0.12),
+    inset 0 0 0 1px rgb(15 23 42 / 0.06);
+}
+.turnos-cal .rbc-event.rbc-selected {
+  box-shadow:
+    0 0 0 2px var(--color-action, #2563eb),
+    0 4px 12px rgb(15 23 42 / 0.12);
+}
+.turnos-cal .rbc-event:focus-visible {
+  outline: 2px solid var(--color-action, #2563eb);
+  outline-offset: 1px;
+}
+.turnos-cal .rbc-event-label {
+  display: none;
+}
+.turnos-cal .rbc-event-content {
+  font-size: 12px;
+  line-height: 1.3;
+}
+.turnos-cal .ev-time {
+  color: #64748b;
+}
+.turnos-cal .ev-name {
+  font-weight: 600;
+}
+.turnos-cal .ev-detail {
+  color: #475569;
+}
+.turnos-cal .rbc-event.is-attended {
+  opacity: 0.6;
+}
+.turnos-cal .rbc-event.is-no_show .ev-name,
+.turnos-cal .rbc-event.is-no_show .ev-time {
+  color: #991b1b;
+  text-decoration: line-through;
+}
+.turnos-cal .rbc-addons-dnd .rbc-addons-dnd-dragged-event {
+  opacity: 0.4;
+}
+
+/* En la semana las columnas son angostas: la hora ya la da la posición. */
+.turnos-cal.is-week .ev-time {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .turnos-cal .rbc-event {
+    transition: none;
+  }
+}
+
+/* Aire entre el turno y las líneas de la columna. */
+.turnos-cal .rbc-day-slot .rbc-events-container {
+  margin: 0 6px 0 4px;
+}
+.turnos-cal .rbc-time-gutter .rbc-timeslot-group:first-child .rbc-time-slot {
+  top: 2px;
+}
