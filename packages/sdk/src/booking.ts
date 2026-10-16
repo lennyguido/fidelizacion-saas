@@ -1,7 +1,8 @@
 // Turnos online (D-049, módulo `booking`). La página pública vive en turnos.neriva.net
 // y no necesita cuenta; el panel usa las funciones de agenda y estado.
+import { LOGO_BUCKET } from './branding.ts'
 import { getSupabase } from './client.ts'
-import { fromPostgrestError } from './errors.ts'
+import { AppError, fromPostgrestError } from './errors.ts'
 
 function db() {
   return getSupabase().schema('booking')
@@ -14,6 +15,21 @@ export interface PublicService {
   name: string
   durationMinutes: number
   priceMinor: number | null
+  description?: string | null
+}
+
+export interface PublicStaff {
+  id: string
+  name: string
+  photoPath?: string | null
+  bio?: string | null
+}
+
+/** Horario del local de un día (0 = domingo), para mostrar en la página. */
+export interface OpeningDay {
+  weekday: number
+  opens: string
+  closes: string
 }
 
 export interface PublicPage {
@@ -24,7 +40,15 @@ export interface PublicPage {
   message: string | null
   maxDaysAhead: number
   services: PublicService[]
-  staff: { id: string; name: string }[]
+  staff: PublicStaff[]
+  // "Mi página" (D-057). Opcionales: los negocios que no la configuraron no los tienen.
+  headline?: string | null
+  about?: string | null
+  coverPath?: string | null
+  address?: string | null
+  instagram?: string | null
+  whatsapp?: string | null
+  hours?: OpeningDay[]
 }
 
 export interface Slot {
@@ -260,12 +284,15 @@ export interface Service {
   durationMinutes: number
   priceMinor: number | null
   active: boolean
+  description?: string | null
 }
 
 export interface StaffMember {
   id: string
   name: string
   active: boolean
+  photoPath?: string | null
+  bio?: string | null
 }
 
 export interface HoursRange {
@@ -310,10 +337,101 @@ export async function saveSettings(businessId: string, settings: BookingSettings
   if (error) throw fromPostgrestError(error)
 }
 
+// "Mi página" (D-057) ----------------------------------------------------------------
+
+export interface PageSettings {
+  headline: string | null
+  message: string | null
+  about: string | null
+  coverPath: string | null
+  address: string | null
+  instagram: string | null
+  whatsapp: string | null
+  showHours: boolean
+}
+
+export const EMPTY_PAGE: PageSettings = {
+  headline: null,
+  message: null,
+  about: null,
+  coverPath: null,
+  address: null,
+  instagram: null,
+  whatsapp: null,
+  showHours: true,
+}
+
+export async function getPageSettings(businessId: string): Promise<PageSettings> {
+  const { data, error } = await db()
+    .from('settings')
+    .select('headline, message, about, cover_path, address, instagram, whatsapp, show_hours')
+    .eq('business_id', businessId)
+    .maybeSingle()
+  if (error) throw fromPostgrestError(error)
+  if (!data) return EMPTY_PAGE
+  return {
+    headline: data.headline,
+    message: data.message,
+    about: data.about,
+    coverPath: data.cover_path,
+    address: data.address,
+    instagram: data.instagram,
+    whatsapp: data.whatsapp,
+    showHours: data.show_hours,
+  }
+}
+
+/** "@barberia.sol", "instagram.com/barberia.sol/" → "barberia.sol". */
+export function instagramHandle(input: string): string | null {
+  const handle = input
+    .trim()
+    .replace(/^https?:\/\/(www\.)?instagram\.com\//i, '')
+    .replace(/^@/, '')
+    .replace(/[/?#].*$/, '')
+  return /^[A-Za-z0-9._]{1,30}$/.test(handle) ? handle : null
+}
+
+export async function savePageSettings(businessId: string, page: PageSettings): Promise<void> {
+  const clean = (value: string | null) => value?.trim() || null
+  const { error } = await db()
+    .from('settings')
+    .upsert({
+      business_id: businessId,
+      headline: clean(page.headline),
+      message: clean(page.message),
+      about: clean(page.about),
+      cover_path: page.coverPath,
+      address: clean(page.address),
+      instagram: page.instagram ? instagramHandle(page.instagram) : null,
+      whatsapp: clean(page.whatsapp),
+      show_hours: page.showHours,
+      updated_at: new Date().toISOString(),
+    })
+  if (error) throw fromPostgrestError(error)
+}
+
+/**
+ * Sube una foto de la página (portada o profesional) a la carpeta del negocio en el
+ * bucket público de imágenes. Llega ya achicada a WebP desde el navegador.
+ */
+export async function uploadPageImage(
+  businessId: string,
+  kind: string,
+  image: Blob,
+): Promise<string> {
+  const ext = image.type === 'image/jpeg' ? 'jpg' : 'webp'
+  const path = `${businessId}/${kind}-${Date.now()}.${ext}`
+  const { error } = await getSupabase()
+    .storage.from(LOGO_BUCKET)
+    .upload(path, image, { contentType: image.type, cacheControl: '31536000', upsert: false })
+  if (error) throw new AppError('upload_failed', error.message)
+  return path
+}
+
 export async function listServices(businessId: string): Promise<Service[]> {
   const { data, error } = await db()
     .from('services')
-    .select('id, name, duration_minutes, price_minor, active')
+    .select('id, name, duration_minutes, price_minor, active, description')
     .eq('business_id', businessId)
     .order('sort')
     .order('name')
@@ -324,6 +442,7 @@ export async function listServices(businessId: string): Promise<Service[]> {
     durationMinutes: row.duration_minutes,
     priceMinor: row.price_minor,
     active: row.active,
+    description: row.description,
   }))
 }
 
@@ -337,6 +456,9 @@ export async function saveService(
     duration_minutes: service.durationMinutes,
     price_minor: service.priceMinor,
     active: service.active,
+    ...(service.description !== undefined && {
+      description: service.description?.trim() || null,
+    }),
   }
   const { error } = service.id
     ? await db().from('services').update(row).eq('id', service.id)
@@ -347,19 +469,31 @@ export async function saveService(
 export async function listStaff(businessId: string): Promise<StaffMember[]> {
   const { data, error } = await db()
     .from('staff')
-    .select('id, name, active')
+    .select('id, name, active, photo_path, bio')
     .eq('business_id', businessId)
     .order('sort')
     .order('name')
   if (error) throw fromPostgrestError(error)
-  return data ?? []
+  return (data ?? []).map((row) => ({
+    id: row.id,
+    name: row.name,
+    active: row.active,
+    photoPath: row.photo_path,
+    bio: row.bio,
+  }))
 }
 
 export async function saveStaff(
   businessId: string,
   member: Omit<StaffMember, 'id'> & { id?: string },
 ): Promise<string> {
-  const row = { business_id: businessId, name: member.name, active: member.active }
+  const row = {
+    business_id: businessId,
+    name: member.name,
+    active: member.active,
+    ...(member.bio !== undefined && { bio: member.bio?.trim() || null }),
+    ...(member.photoPath !== undefined && { photo_path: member.photoPath }),
+  }
   const { data, error } = member.id
     ? await db().from('staff').update(row).eq('id', member.id).select('id').single()
     : await db().from('staff').insert(row).select('id').single()

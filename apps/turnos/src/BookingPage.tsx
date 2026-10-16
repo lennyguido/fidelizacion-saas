@@ -2,7 +2,6 @@ import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'rea
 import { useMutation, useQuery } from '@tanstack/react-query'
 import {
   booking,
-  businesses,
   errorMessage,
   normalizePhone,
   type PublicPage,
@@ -11,6 +10,7 @@ import {
 } from '@plataforma/sdk'
 import { Alert, FullPageSpinner, Spinner } from '@plataforma/ui'
 import { brandStyle } from './brand'
+import { PageHero, PageInfo, StaffAvatar } from './PageSections'
 
 const BOOK_MESSAGES: Record<string, string> = {
   taken: 'Ese horario se acaba de ocupar. Elegí otro.',
@@ -63,7 +63,6 @@ function Booking({ slug, page }: { slug: string; page: PublicPage }) {
   const [staffId, setStaffId] = useState<string | null>(null)
   const [staffChosen, setStaffChosen] = useState(!askStaff)
   const [slot, setSlot] = useState<Slot | null>(null)
-  const logo = businesses.logoUrl(page.logoPath)
   const staffName = page.staff.find((s) => s.id === staffId)?.name ?? 'El primero libre'
 
   const staffRef = useRef<HTMLElement>(null)
@@ -83,26 +82,7 @@ function Booking({ slug, page }: { slug: string; page: PublicPage }) {
 
   return (
     <main className="book min-h-dvh pb-40" style={brandStyle(page.color)}>
-      <header className="bg-[var(--brand)] text-[var(--on-brand)]">
-        <div className="mx-auto flex max-w-lg flex-col gap-4 px-5 pt-10 pb-8">
-          {logo && (
-            <img
-              src={logo}
-              alt=""
-              className="h-16 w-16 rounded-2xl object-cover ring-2 ring-[var(--on-brand)]/30"
-            />
-          )}
-          <div>
-            <p className="text-sm font-semibold opacity-80">Reservá tu turno en</p>
-            <h1 className="display mt-1 text-[clamp(2.6rem,12vw,4.25rem)] font-bold break-words">
-              {page.name}
-            </h1>
-          </div>
-          {page.message && (
-            <p className="max-w-[40ch] leading-relaxed opacity-90">{page.message}</p>
-          )}
-        </div>
-      </header>
+      <PageHero page={page} />
 
       <div className="mx-auto flex max-w-lg flex-col gap-3 px-4 pt-5">
         {page.services.length === 0 ? (
@@ -132,6 +112,11 @@ function Booking({ slug, page }: { slug: string; page: PublicPage }) {
                     <span>
                       <span className="block text-lg font-semibold">{s.name}</span>
                       <span className="block text-sm opacity-60">{s.durationMinutes} min</span>
+                      {s.description && (
+                        <span className="mt-0.5 block text-sm leading-snug opacity-75">
+                          {s.description}
+                        </span>
+                      )}
                     </span>
                     <span className="flex items-center gap-3">
                       {s.priceMinor !== null && (
@@ -166,7 +151,7 @@ function Booking({ slug, page }: { slug: string; page: PublicPage }) {
                 <div className="grid grid-cols-3 gap-3 sm:grid-cols-4">
                   <StaffChoice
                     name="El primero libre"
-                    initials="✦"
+                    special
                     onClick={() => {
                       setStaffId(null)
                       setStaffChosen(true)
@@ -176,7 +161,8 @@ function Booking({ slug, page }: { slug: string; page: PublicPage }) {
                     <StaffChoice
                       key={s.id}
                       name={s.name}
-                      initials={s.name.slice(0, 1).toUpperCase()}
+                      photoPath={s.photoPath}
+                      bio={s.bio}
                       onClick={() => {
                         setStaffId(s.id)
                         setStaffChosen(true)
@@ -214,6 +200,13 @@ function Booking({ slug, page }: { slug: string; page: PublicPage }) {
             />
           </section>
         )}
+
+        <PageInfo
+          page={page}
+          today={new Date(
+            `${booking.dayInTimeZone(new Date(), page.timezone)}T12:00:00Z`,
+          ).getUTCDay()}
+        />
 
         <p className="pt-8 text-center text-xs opacity-50">
           Reservas con{' '}
@@ -254,17 +247,30 @@ function Done({ label, value, onChange }: { label: string; value: string; onChan
   )
 }
 
-function StaffChoice(props: { name: string; initials: string; onClick: () => void }) {
+function StaffChoice(props: {
+  name: string
+  photoPath?: string | null
+  bio?: string | null
+  special?: boolean
+  onClick: () => void
+}) {
   return (
     <button
       type="button"
       onClick={props.onClick}
       className="group flex flex-col items-center gap-2 rounded-2xl p-2 text-center hover:bg-[var(--paper)]"
     >
-      <span className="display flex h-16 w-16 items-center justify-center rounded-full bg-[var(--paper)] text-2xl font-bold ring-2 ring-transparent group-hover:ring-[var(--brand)]">
-        {props.initials}
+      <span className="rounded-full ring-2 ring-transparent ring-offset-2 group-hover:ring-[var(--brand)]">
+        {props.special ? (
+          <span className="display flex h-16 w-16 items-center justify-center rounded-full bg-[var(--paper)] text-2xl font-bold">
+            ✦
+          </span>
+        ) : (
+          <StaffAvatar name={props.name} photoPath={props.photoPath} />
+        )}
       </span>
       <span className="text-sm leading-tight font-semibold">{props.name}</span>
+      {props.bio && <span className="text-xs leading-snug opacity-60">{props.bio}</span>}
     </button>
   )
 }

@@ -118,13 +118,13 @@ function SettingsCard() {
           onChange={(v) => set({ cancelNoticeMinutes: v })}
         />
       </div>
-      <TextField
-        label="Mensaje para tus clientes (opcional)"
-        maxLength={300}
-        value={current.message ?? ''}
-        placeholder="Ej.: Si llegás 10 minutos tarde, perdés el turno."
-        onChange={(e) => set({ message: e.target.value || null })}
-      />
+      <p className="text-sm text-slate-600">
+        La foto, los textos y el mensaje para tus clientes se cambian en{' '}
+        <a href="/panel/pagina" className="underline">
+          Mi página
+        </a>
+        .
+      </p>
       <Button
         className="w-fit"
         loading={save.isPending}

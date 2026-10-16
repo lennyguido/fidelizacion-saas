@@ -71,3 +71,16 @@ body {
 .book input[type='checkbox'] {
   accent-color: var(--brand);
 }
+.book .info-link {
+  display: flex;
+  min-height: 52px;
+  align-items: center;
+  gap: 12px;
+  border-radius: 16px;
+  background: var(--paper);
+  padding: 10px 14px;
+  transition: background-color 150ms ease;
+}
+.book .info-link:hover {
+  background: color-mix(in srgb, var(--brand) 8%, var(--paper));
+}
