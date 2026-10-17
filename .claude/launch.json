@@ -12,6 +12,12 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev", "-w", "@plataforma/landing"],
       "port": 5175
+    },
+    {
+      "name": "turnos",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "-w", "@plataforma/turnos"],
+      "port": 5176
     }
   ]
 }
