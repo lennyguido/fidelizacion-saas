@@ -5,6 +5,7 @@ import {
   dayInTimeZone,
   gapOfferMessage,
   minutesOfDay,
+  reminderMessage,
   nextDays,
   tokenFromHash,
   weekStart,
@@ -82,5 +83,19 @@ describe('turnos', () => {
     expect(ics).toContain('DTSTART:20261016T183000Z')
     expect(ics).toContain('SUMMARY:Corte en Barbería Sol\\, Palermo')
     expect(ics).toContain('TRIGGER:-PT1H')
+  })
+
+  it('arma el recordatorio del turno con el primer nombre', () => {
+    const text = reminderMessage({
+      clientName: 'Juan Pérez',
+      businessName: 'Barbería Sol',
+      day: 'mañana',
+      time: '15:00',
+      serviceName: 'Corte',
+      staffName: 'Tony',
+    })
+    expect(text).toContain('¡Hola Juan!')
+    expect(text).toContain('turno de Corte mañana a las 15:00 con Tony en Barbería Sol')
+    expect(text).toContain('Si no podés venir')
   })
 })

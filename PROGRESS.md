@@ -310,6 +310,8 @@ HUMAN ACTION REQUIRED:
 4. `apps/admin/.env.local` (no `.envlocal`) con la URL y la publishable key de desarrollo.
 5. Validar el mostrador en el navegador con datos de prueba.
 
+* 2026-10-17: Turnos suma la pantalla Recordatorios (D-059): WhatsApp de recordatorio listo para cada turno de mañana, sin migraciones.
+
 ## Important decisions
 
 * Plataforma núcleo (`core`) + módulos por esquema; los módulos nunca dependen entre sí (D-005).

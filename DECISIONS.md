@@ -273,3 +273,7 @@ Pedido del dueño: que los precios coincidan en todas las páginas. Quedan los d
 ## Precios subidos al techo de un local de barrio
 
 Pedido del dueño: subir los precios a lo máximo que pagaría un local de barrio. Referencias del mercado argentino (octubre 2026): turnos para un profesional $24.900 (Turnify Pro, AgendAR Starter), fidelización desde $55.000 (Tienda de Puntos). Nuevos precios: Solo Turnos $29.900, Solo Fidelización / Barrio $39.900, Paquete $54.900 (ahorro $14.900), Local $59.900, Cadena $99.900; anuales a 10 meses. Turnos + web: $29.900 por mes más $60.000 de armado. Los primeros locales (Akimelukeo y los que cierren en esta etapa) entran con precio de lanzamiento: Paquete $34.900 fijo por 6 meses.
+
+## D-059 — Turnos: recordatorios por WhatsApp desde el panel
+
+Pedido del dueño: sumar funciones que agreguen valor sin pedirle aprobación, reutilizando código. Recordatorios estaba pendiente en Turnos. Nueva pantalla `turnos.neriva.net/panel/recordatorios`: muestra los turnos reservados de un día (por defecto, mañana) y arma para cada cliente con teléfono un link `wa.me` con el recordatorio (`booking.reminderMessage`). El dueño lo envía desde su WhatsApp, igual que en Llenar huecos (D-053): sin API de WhatsApp, sin costo y sin tocar la base de datos (usa `booking.agenda`). Los recordatorios automáticos por la API de WhatsApp siguen siendo checkpoint humano (Fase 6).
