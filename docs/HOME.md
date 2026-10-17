@@ -4,6 +4,27 @@
 uno (D-058). Es estática, no habla con Supabase. La página de venta de Fidelización
 (`apps/landing`) se muda a **fidelizacion.neriva.net** sin cambios.
 
+## Cómo quedó publicado (2026-10-16)
+
+| Dirección                 | Qué es                    | Proyecto de Vercel                      |
+| ------------------------- | ------------------------- | --------------------------------------- |
+| `neriva.net` (y `www`)    | Esta home                 | el proyecto nuevo de la home            |
+| `fidelizacion.neriva.net` | Página de Fidelización    | `neriva-landing`                        |
+| `turnos.neriva.net`       | Neriva Turnos             | `neriva-turnos`                         |
+| `tienda.neriva.net`       | Tienda (otro público)     | `neriva` (no es de este repositorio)    |
+
+Cada vez que algo entra a `main`, Vercel vuelve a publicar la home sola.
+
+## Cambiar cosas
+
+- **Textos de las secciones:** `apps/home/src/Sections.tsx` (y el título de arriba).
+- **Productos (estaciones):** `apps/home/src/products.ts`.
+- **Precios y WhatsApp:** `apps/home/src/site.ts`.
+- **Colores, tipografía y dibujo de la línea:** `apps/home/src/index.css`.
+- **Menú:** `apps/home/src/Header.tsx`.
+
+Lo más fácil: pedírselo a Claude Code en el proyecto ("cambiá el precio del paquete a …").
+
 ## Agregar un producto
 
 1. Abrí `apps/home/src/products.ts`.
