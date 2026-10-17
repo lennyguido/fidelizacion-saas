@@ -80,7 +80,7 @@ export function OnboardingPage() {
         </p>
         <div className="mt-4 flex gap-2">
           <a
-            href="https://neriva.net/#planes"
+            href="https://fidelizacion.neriva.net/#planes"
             className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white"
           >
             Ver planes
