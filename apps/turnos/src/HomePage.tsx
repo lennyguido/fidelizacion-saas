@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 const SALES_WHATSAPP = '5491128330853'
-const PRICE = 19900
+const PRICE = 29900
 const COMMISSION = 0.2
 
 function wa(text: string): string {
@@ -419,7 +419,7 @@ function Compare() {
   )
 }
 
-const WEB_PRICE = 19900
+const WEB_PRICE = 29900
 const WEB_SETUP = 60000
 const WEB_LINK = wa(
   '¡Hola! Quiero mi propia página web con turnos (plan Turnos + Web). Mi negocio es: ',

@@ -269,3 +269,7 @@ Pedido del dueño: que quien entre a neriva.net vea todos sus productos y vaya a
 ## Precios unificados entre neriva.net y turnos.neriva.net
 
 Pedido del dueño: que los precios coincidan en todas las páginas. Quedan los de la home: Solo Turnos $19.900, Solo Fidelización $24.900 y Paquete $34.900 (web incluida si se queda 6 meses). En turnos.neriva.net, Turnos baja de $24.900 a $19.900 y "Turnos + tu página web" pasa a $19.900 por mes más $60.000 de armado único.
+
+## Precios subidos al techo de un local de barrio
+
+Pedido del dueño: subir los precios a lo máximo que pagaría un local de barrio. Referencias del mercado argentino (octubre 2026): turnos para un profesional $24.900 (Turnify Pro, AgendAR Starter), fidelización desde $55.000 (Tienda de Puntos). Nuevos precios: Solo Turnos $29.900, Solo Fidelización / Barrio $39.900, Paquete $54.900 (ahorro $14.900), Local $59.900, Cadena $99.900; anuales a 10 meses. Turnos + web: $29.900 por mes más $60.000 de armado. Los primeros locales (Akimelukeo y los que cierren en esta etapa) entran con precio de lanzamiento: Paquete $34.900 fijo por 6 meses.

@@ -14,8 +14,8 @@ export const PLANS: Plan[] = [
   {
     id: 'barrio',
     name: 'Barrio',
-    price: 24900,
-    yearly: 249000,
+    price: 39900,
+    yearly: 399000,
     tagline: 'Para el local que arranca.',
     features: [
       '1 sucursal · 1.000 clientes',
@@ -29,8 +29,8 @@ export const PLANS: Plan[] = [
   {
     id: 'local',
     name: 'Local',
-    price: 44900,
-    yearly: 449000,
+    price: 59900,
+    yearly: 599000,
     tagline: 'El que trabaja solo mientras vos atendés.',
     highlight: true,
     features: [
@@ -45,8 +45,8 @@ export const PLANS: Plan[] = [
   {
     id: 'cadena',
     name: 'Cadena',
-    price: 79900,
-    yearly: 799000,
+    price: 99900,
+    yearly: 999000,
     tagline: 'Varios locales, una sola vista.',
     features: [
       'Hasta 5 sucursales · 20.000 clientes',

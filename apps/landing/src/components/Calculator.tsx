@@ -69,7 +69,7 @@ export function Calculator() {
               +{formatPesos(recovered)}
             </p>
             <p className="mt-1 text-white/80">
-              por mes. El plan Barrio cuesta {formatPesos(24900)}.
+              por mes. El plan Barrio cuesta {formatPesos(39900)}.
             </p>
           </div>
           <p className="text-xs text-piedra">

@@ -4,13 +4,13 @@
 
 ## Principio
 
-Cobrar **menos que lo que el sistema le devuelve**, y mostrarlo. Si en un mes volvieron $150.000 en compras por Vueltita, pagar $24.900 tiene que parecer obvio.
+Cobrar **menos que lo que el sistema le devuelve**, y mostrarlo. Si en un mes volvieron $150.000 en compras por Vueltita, pagar $39.900 tiene que parecer obvio.
 
 ## Planes
 
 | | **Barrio** | **Local** | **Cadena** |
 |---|---|---|---|
-| Precio mensual | **$24.900** | **$44.900** | **$79.900** |
+| Precio mensual | **$39.900** | **$59.900** | **$99.900** |
 | Pago anual (2 meses gratis) | $249.000 | $449.000 | $799.000 |
 | Sucursales | 1 | 1 | hasta 5 |
 | Clientes guardados | 1.000 | 5.000 | 20.000 |
