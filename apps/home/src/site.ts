@@ -23,14 +23,14 @@ export interface Plan {
 export const BUNDLE: Plan = {
   id: 'paquete',
   name: 'Paquete Neriva',
-  price: 34900,
+  price: 54900,
   includes: 'Turnos + Fidelización',
-  note: 'Te ahorrás $9.900 por mes, y si te quedás 6 meses la web va incluida.',
+  note: 'Te ahorrás $14.900 por mes, y si te quedás 6 meses la web va incluida.',
 }
 
 export const SINGLE_PLANS: Plan[] = [
-  { id: 'turnos', name: 'Solo Turnos', price: 19900, includes: 'Neriva Turnos' },
-  { id: 'fidelizacion', name: 'Solo Fidelización', price: 24900, includes: 'Neriva Fidelización' },
+  { id: 'turnos', name: 'Solo Turnos', price: 29900, includes: 'Neriva Turnos' },
+  { id: 'fidelizacion', name: 'Solo Fidelización', price: 39900, includes: 'Neriva Fidelización' },
 ]
 
 export function formatPrice(price: number | null): string {
