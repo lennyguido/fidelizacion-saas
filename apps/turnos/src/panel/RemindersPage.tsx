@@ -73,8 +73,8 @@ export function RemindersPage() {
       {items.length > 0 && (
         <>
           <p className="text-sm text-slate-600">
-            {items.length === 1 ? '1 turno' : `${items.length} turnos`} para{' '}
-            {dayWords(day, today)}. Mandados: {items.filter((a) => sent.has(a.id)).length}.
+            {items.length === 1 ? '1 turno' : `${items.length} turnos`} para {dayWords(day, today)}.
+            Mandados: {items.filter((a) => sent.has(a.id)).length}.
           </p>
           <ul className="divide-y divide-slate-100 rounded-2xl bg-white ring-1 ring-slate-200">
             {items.map((a) => (
