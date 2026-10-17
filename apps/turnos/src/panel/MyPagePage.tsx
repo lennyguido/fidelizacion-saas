@@ -207,7 +207,8 @@ function Editor({
           <div>
             <h1 className="text-xl font-semibold">Mi página</h1>
             <p className="text-sm text-slate-600">
-              Así te ven tus clientes cuando sacan turno. Los cambios se ven a la derecha.
+              Así te ven tus clientes cuando sacan turno.{' '}
+              <span className="hidden lg:inline">Los cambios se ven a la derecha.</span>
             </p>
           </div>
           <a href={publicUrl} target="_blank" rel="noreferrer" className="text-sm underline">
@@ -400,11 +401,12 @@ function Editor({
 
       <div className="fixed inset-x-0 bottom-0 z-10 border-t border-slate-200 bg-white/95 px-4 py-3 backdrop-blur">
         <div className="mx-auto flex max-w-5xl items-center justify-end gap-3">
-          <span className="mr-auto text-sm text-slate-500">
+          <span className="mr-auto hidden text-sm text-slate-500 sm:inline">
             {dirty ? 'Tenés cambios sin guardar' : 'Todo guardado'}
           </span>
           <MobilePreviewButton page={preview} />
           <Button
+            className="flex-1 sm:flex-none"
             loading={save.isPending}
             onClick={() => {
               if (whatsappError || instagramError) {
@@ -628,7 +630,11 @@ function MobilePreviewButton({ page }: { page: PublicPage }) {
   const [open, setOpen] = useState(false)
   return (
     <>
-      <Button variant="secondary" className="lg:hidden" onClick={() => setOpen(true)}>
+      <Button
+        variant="secondary"
+        className="flex-1 sm:flex-none lg:hidden"
+        onClick={() => setOpen(true)}
+      >
         Ver cómo queda
       </Button>
       {open && (
