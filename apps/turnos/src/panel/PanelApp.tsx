@@ -5,6 +5,7 @@ import { Alert, Button, FullPageSpinner, TextField, ToastProvider } from '@plata
 import { CalendarPage } from './CalendarPage'
 import { ClientsPage } from './ClientsPage'
 import { FillGapsPage } from './FillGapsPage'
+import { MyPagePage } from './MyPagePage'
 import { PanelContext, usePanel } from './context'
 import { BookingSetupPage } from './SetupPage'
 
@@ -12,6 +13,7 @@ const VIEWS = [
   { path: '/panel', label: 'Calendario' },
   { path: '/panel/huecos', label: 'Llenar huecos' },
   { path: '/panel/clientes', label: 'Clientes' },
+  { path: '/panel/pagina', label: 'Mi página' },
   { path: '/panel/configuracion', label: 'Configuración' },
 ] as const
 
@@ -210,6 +212,7 @@ function Shell() {
         {view.path === '/panel' && <CalendarPage />}
         {view.path === '/panel/huecos' && <FillGapsPage />}
         {view.path === '/panel/clientes' && <ClientsPage />}
+        {view.path === '/panel/pagina' && <MyPagePage />}
         {view.path === '/panel/configuracion' && <BookingSetupPage />}
       </main>
     </div>

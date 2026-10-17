@@ -73,42 +73,42 @@ isOneToOne: false
                   ]
                 },"services": {
                   Row: {
-                    "active": boolean,"business_id": string,"created_at": string,"duration_minutes": number,"id": string,"name": string,"price_minor": number | null,"sort": number
+                    "active": boolean,"business_id": string,"created_at": string,"description": string | null,"duration_minutes": number,"id": string,"name": string,"price_minor": number | null,"sort": number
                   }
                   ComputedFields: never
                   Insert: {
-                    "active"?: boolean,"business_id": string,"created_at"?: string,"duration_minutes": number,"id"?: string,"name": string,"price_minor"?: number | null,"sort"?: number
+                    "active"?: boolean,"business_id": string,"created_at"?: string,"description"?: string | null,"duration_minutes": number,"id"?: string,"name": string,"price_minor"?: number | null,"sort"?: number
                   }
                   Update: {
-                    "active"?: boolean,"business_id"?: string,"created_at"?: string,"duration_minutes"?: number,"id"?: string,"name"?: string,"price_minor"?: number | null,"sort"?: number
+                    "active"?: boolean,"business_id"?: string,"created_at"?: string,"description"?: string | null,"duration_minutes"?: number,"id"?: string,"name"?: string,"price_minor"?: number | null,"sort"?: number
                   }
                   Relationships: [
                     
                   ]
                 },"settings": {
                   Row: {
-                    "business_id": string,"cancel_notice_minutes": number,"enabled": boolean,"max_days_ahead": number,"message": string | null,"min_notice_minutes": number,"slot_minutes": number,"updated_at": string
+                    "about": string | null,"address": string | null,"business_id": string,"cancel_notice_minutes": number,"cover_path": string | null,"enabled": boolean,"headline": string | null,"instagram": string | null,"max_days_ahead": number,"message": string | null,"min_notice_minutes": number,"show_hours": boolean,"slot_minutes": number,"updated_at": string,"whatsapp": string | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "business_id": string,"cancel_notice_minutes"?: number,"enabled"?: boolean,"max_days_ahead"?: number,"message"?: string | null,"min_notice_minutes"?: number,"slot_minutes"?: number,"updated_at"?: string
+                    "about"?: string | null,"address"?: string | null,"business_id": string,"cancel_notice_minutes"?: number,"cover_path"?: string | null,"enabled"?: boolean,"headline"?: string | null,"instagram"?: string | null,"max_days_ahead"?: number,"message"?: string | null,"min_notice_minutes"?: number,"show_hours"?: boolean,"slot_minutes"?: number,"updated_at"?: string,"whatsapp"?: string | null
                   }
                   Update: {
-                    "business_id"?: string,"cancel_notice_minutes"?: number,"enabled"?: boolean,"max_days_ahead"?: number,"message"?: string | null,"min_notice_minutes"?: number,"slot_minutes"?: number,"updated_at"?: string
+                    "about"?: string | null,"address"?: string | null,"business_id"?: string,"cancel_notice_minutes"?: number,"cover_path"?: string | null,"enabled"?: boolean,"headline"?: string | null,"instagram"?: string | null,"max_days_ahead"?: number,"message"?: string | null,"min_notice_minutes"?: number,"show_hours"?: boolean,"slot_minutes"?: number,"updated_at"?: string,"whatsapp"?: string | null
                   }
                   Relationships: [
                     
                   ]
                 },"staff": {
                   Row: {
-                    "active": boolean,"business_id": string,"created_at": string,"id": string,"name": string,"sort": number
+                    "active": boolean,"bio": string | null,"business_id": string,"created_at": string,"id": string,"name": string,"photo_path": string | null,"sort": number
                   }
                   ComputedFields: never
                   Insert: {
-                    "active"?: boolean,"business_id": string,"created_at"?: string,"id"?: string,"name": string,"sort"?: number
+                    "active"?: boolean,"bio"?: string | null,"business_id": string,"created_at"?: string,"id"?: string,"name": string,"photo_path"?: string | null,"sort"?: number
                   }
                   Update: {
-                    "active"?: boolean,"business_id"?: string,"created_at"?: string,"id"?: string,"name"?: string,"sort"?: number
+                    "active"?: boolean,"bio"?: string | null,"business_id"?: string,"created_at"?: string,"id"?: string,"name"?: string,"photo_path"?: string | null,"sort"?: number
                   }
                   Relationships: [
                     
