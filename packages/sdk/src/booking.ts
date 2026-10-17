@@ -756,6 +756,23 @@ export function gapOfferMessage(input: {
   )
 }
 
+/** Recordatorio de un turno para mandar por WhatsApp (el dueño lo puede editar antes). */
+export function reminderMessage(input: {
+  clientName: string
+  businessName: string
+  day: string
+  time: string
+  serviceName: string
+  staffName: string
+}): string {
+  const first = input.clientName.trim().split(/\s+/)[0] ?? ''
+  return (
+    `¡Hola ${first}! Te recordamos tu turno de ${input.serviceName} ${input.day} a las ` +
+    `${input.time} con ${input.staffName} en ${input.businessName}. ` +
+    `Si no podés venir, avisanos respondiendo este mensaje así le damos el lugar a otra persona.`
+  )
+}
+
 /** Link de WhatsApp con el texto listo para enviar. */
 export function whatsappLink(phone: string, text: string): string {
   return `https://wa.me/${phone.replace(/\D/g, '')}?text=${encodeURIComponent(text)}`
