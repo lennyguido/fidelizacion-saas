@@ -61,7 +61,7 @@ export function LoginPage() {
             Olvidé mi contraseña
           </Link>
           <a
-            href="https://neriva.net/#planes"
+            href="https://fidelizacion.neriva.net/#planes"
             className="font-medium text-slate-900 underline-offset-4 hover:underline"
           >
             ¿No tenés cuenta? Ver planes
