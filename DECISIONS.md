@@ -265,3 +265,7 @@ Pedido del dueño: que cada barbería o local arme su propia página. Nueva pest
 ## D-058 — neriva.net pasa a ser la home de la marca (2026-10-16, vigente)
 
 Pedido del dueño: que quien entre a neriva.net vea todos sus productos y vaya al que quiera. Nueva app estática `apps/home` (React + Vite + Tailwind, sin 3D). Idea: Neriva es la "línea N" del Subte y cada producto una estación; la línea se dibuja una vez al cargar (sin animación con reducir movimiento), es vertical en el celular, se pierde punteada (vienen más) y termina en la terminal "Tu local" sobre el contacto. Colores y tipografía (Archivo, títulos al 125 % de ancho) pedidos por el dueño. Una sola lista, `src/products.ts`, alimenta el mapa, la sección de productos y el footer: sumar un producto es agregar un bloque. Tienda Neriva va solo en menú y footer. Precios por local propuestos por Claude a pedido del dueño: Solo Turnos $19.900, Solo Fidelización $24.900 (igual al plan Barrio) y Paquete $34.900 (ahorro $9.900). La página de Fidelización se muda a `fidelizacion.neriva.net` sin cambios; los links "Ver planes" del panel apuntan ahí. Publicación: `docs/HOME.md`.
+
+## Precios unificados entre neriva.net y turnos.neriva.net
+
+Pedido del dueño: que los precios coincidan en todas las páginas. Quedan los de la home: Solo Turnos $19.900, Solo Fidelización $24.900 y Paquete $34.900 (web incluida si se queda 6 meses). En turnos.neriva.net, Turnos baja de $24.900 a $19.900 y "Turnos + tu página web" pasa a $19.900 por mes más $60.000 de armado único.
